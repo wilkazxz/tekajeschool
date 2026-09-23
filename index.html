@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Aplikasi resmi Jurusan Teknik Jaringan Komputer (TKJ) SMKN 2 Tembilahan.">
-    <meta name="theme-color" content="#0a0e1a">
+    <meta name="theme-color" content="#0a1628">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TKJ SMKN 2">
     
     <title>TKJ SMKN 2 Tembilahan</title>
     
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22TKJ%20SMKN%202%20Tembilahan%22%2C%22short_name%22%3A%22TKJ%20SMKN2%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230a0e1a%22%2C%22theme_color%22%3A%22%23fbbf24%22%2C%22orientation%22%3A%22portrait%22%7D">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22TKJ%20SMKN%202%20Tembilahan%22%2C%22short_name%22%3A%22TKJ%20SMKN2%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230a1628%22%2C%22theme_color%22%3A%22%2310b981%22%2C%22orientation%22%3A%22portrait%22%7D">
     <link rel="icon" href="tkj.jpeg">
     <link rel="apple-touch-icon" href="tkj.jpeg">
     
@@ -21,13 +21,14 @@
             theme: {
                 extend: {
                     colors: {
-                        navy: { 900: '#0a0e1a', 800: '#111827', 700: '#1a2332', 600: '#243041', 500: '#334155' },
-                        gold: { 300: '#fde68a', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
-                        cyan: { 400: '#22d3ee', 500: '#06b6d4' }
+                        ocean: { 900: '#0a1628', 800: '#0f1e33', 700: '#152a47', 600: '#1e3a5f' },
+                        emerald: { 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857' },
+                        coral: { 400: '#fb7185', 500: '#f43f5e' }
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace']
+                        mono: ['Fira Code', 'monospace'],
+                        display: ['Space Grotesk', 'sans-serif']
                     }
                 }
             }
@@ -36,28 +37,25 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        html { scroll-behavior: smooth; scroll-padding-top: 100px; -webkit-overflow-scrolling: touch; }
-        html, body { overscroll-behavior-y: contain; }
         
-        .card, .glass, .logo-wrap, .blob, .tool-card {
-            will-change: transform;
-            transform: translateZ(0);
-            backface-visibility: hidden;
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
         }
         
+        html, body {
+            overscroll-behavior-y: contain;
+        }
+        
+        /* === BODY: SOLID COLOR, NO GRADIENT FIXED === */
         body {
             font-family: 'Inter', sans-serif;
-            background: 
-                radial-gradient(ellipse at 0% 0%, rgba(251, 191, 36, 0.08), transparent 40%),
-                radial-gradient(ellipse at 100% 0%, rgba(34, 211, 238, 0.06), transparent 40%),
-                radial-gradient(ellipse at 50% 100%, rgba(251, 191, 36, 0.05), transparent 50%),
-                linear-gradient(180deg, #0a0e1a 0%, #111827 50%, #0a0e1a 100%);
-            background-attachment: fixed;
+            background-color: #0a1628;
             color: #e2e8f0;
             padding-bottom: env(safe-area-inset-bottom);
             -webkit-user-select: none;
@@ -66,528 +64,400 @@
             position: relative;
         }
         
+        /* Radial gradient hanya di atas halaman — tidak mengikuti scroll */
         body::before {
             content: '';
-            position: fixed;
-            inset: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(251, 191, 36, 0.05), transparent 30%),
-                radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.04), transparent 30%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 600px;
+            background: radial-gradient(ellipse at top, rgba(16, 185, 129, 0.12), transparent 60%);
             pointer-events: none;
             z-index: 0;
         }
         
         input, textarea, .selectable { -webkit-user-select: text; user-select: text; }
         
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0e1a; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #fbbf24, #d97706); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #f59e0b, #b45309); }
+        /* Scrollbar minimal */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0a1628; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 4px; }
         
         .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         
+        /* === CARD: SOLID, NO BLUR, NO WILL-CHANGE === */
         .card {
-            background: linear-gradient(135deg, rgba(26, 35, 50, 0.8), rgba(17, 24, 39, 0.7));
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(251, 191, 36, 0.15);
-            border-radius: 20px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.08);
+            background: #0f1e33;
+            border: 1px solid #1e3a5f;
+            border-radius: 16px;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
             position: relative;
-            overflow: hidden;
         }
-        .card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.05) 0%, transparent 50%, rgba(34, 211, 238, 0.03) 100%);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .card:hover::after { opacity: 1; }
-        .card:hover {
-            border-color: rgba(251, 191, 36, 0.45);
-            box-shadow: 0 8px 32px rgba(251, 191, 36, 0.15), 0 0 0 1px rgba(251, 191, 36, 0.1), inset 0 1px 0 rgba(251, 191, 36, 0.15);
-            transform: translateY(-3px);
+        @media (hover: hover) {
+            .card:hover {
+                border-color: #10b981;
+                background: #152a47;
+            }
         }
         
+        /* === GLASS: NO BLUR, SOLID SEMI-TRANSPARENT === */
         .glass {
-            background: rgba(17, 24, 39, 0.75);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(251, 191, 36, 0.12);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            background: rgba(10, 22, 40, 0.95);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+        }
+        /* Desktop: pakai blur (masih OK karena desktop kuat) */
+        @media (min-width: 1024px) {
+            .glass {
+                background: rgba(10, 22, 40, 0.85);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+            }
         }
         
+        /* === TEXT GRADIENTS: NO ANIMATION === */
         .gradient-text {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 30%, #22d3ee 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 5s ease-in-out infinite;
-        }
-        @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-        
-        .gradient-gold {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
-            background-size: 200% auto;
+            background: linear-gradient(135deg, #6ee7b7, #10b981);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
         .logo-wrap {
-            background: rgba(255, 255, 255, 0.95);
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding: 5px;
+            padding: 4px;
         }
         .logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
         
+        /* === FADE IN: SIMPLE & CHEAP === */
         .fade-in {
             opacity: 0;
-            transform: translate3d(0, 20px, 0);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            transition: opacity 0.4s ease-out;
         }
-        .fade-in.visible { opacity: 1; transform: translate3d(0, 0, 0); }
+        .fade-in.visible { opacity: 1; }
         
-        .cursor-blink::after { content: '▊'; animation: blink 1s step-end infinite; color: #fbbf24; }
+        .cursor-blink::after {
+            content: '▊';
+            animation: blink 1s step-end infinite;
+            color: #34d399;
+        }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         
-        .gold-grid {
-            background-image: 
-                linear-gradient(to right, rgba(251, 191, 36, 0.06) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(251, 191, 36, 0.06) 1px, transparent 1px);
-            background-size: 4rem 4rem;
-        }
-        
-        /* SPLASH */
+        /* === SPLASH === */
         #splash-screen {
             position: fixed; inset: 0; z-index: 9999;
-            background: linear-gradient(135deg, #0a0e1a 0%, #1a2332 50%, #0a0e1a 100%);
+            background: #0a1628;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
-            overflow: hidden;
+            transition: opacity 0.4s ease-out;
         }
         #splash-screen.hidden-splash { opacity: 0; visibility: hidden; pointer-events: none; }
         .splash-logo {
-            width: 130px; height: 130px;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 34px;
+            width: 110px; height: 110px;
+            background: #ffffff;
+            border-radius: 28px;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 25px 70px rgba(251, 191, 36, 0.4), 0 0 0 12px rgba(251, 191, 36, 0.15);
-            animation: splashPulse 1.8s ease-in-out infinite;
-            overflow: hidden; padding: 12px;
-            position: relative; z-index: 1;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+            overflow: hidden; padding: 10px;
         }
         .splash-logo img { width: 100%; height: 100%; object-fit: contain; }
-        @keyframes splashPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .splash-loader {
-            width: 48px; height: 4px; background: rgba(251, 191, 36, 0.2);
-            border-radius: 4px; overflow: hidden; margin-top: 44px;
-            position: relative; z-index: 1;
+            width: 48px; height: 3px; background: rgba(110, 231, 183, 0.2);
+            border-radius: 4px; overflow: hidden; margin-top: 32px;
         }
         .splash-loader::after {
             content: ''; display: block; width: 50%; height: 100%;
-            background: linear-gradient(90deg, #fbbf24, #22d3ee); border-radius: 4px;
-            animation: splashLoad 1.4s ease-in-out infinite;
+            background: #10b981; border-radius: 4px;
+            animation: splashLoad 1.2s ease-in-out infinite;
         }
         @keyframes splashLoad { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
         
-        /* BOTTOM NAV */
+        /* === BOTTOM NAV: SOLID === */
         #bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 55;
-            background: rgba(10, 14, 26, 0.9);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-top: 1px solid rgba(251, 191, 36, 0.15);
+            background: #0f1e33;
+            border-top: 1px solid #1e3a5f;
             padding-bottom: env(safe-area-inset-bottom);
             display: none;
-            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
         }
         #bottom-nav.show { display: block; }
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 8px 4px; color: #64748b; font-size: 10px; font-weight: 600;
+            padding: 10px 4px; color: #64748b; font-size: 10px; font-weight: 600;
             transition: color 0.2s ease; position: relative; flex: 1; text-decoration: none;
         }
-        .bottom-nav-item i { font-size: 18px; margin-bottom: 3px; transition: transform 0.25s ease; }
-        .bottom-nav-item.active { color: #fbbf24; }
-        .bottom-nav-item.active i { transform: scale(1.15) translateY(-2px); }
+        .bottom-nav-item i { font-size: 18px; margin-bottom: 3px; }
+        .bottom-nav-item.active { color: #34d399; }
         .bottom-nav-item.active::before {
             content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 32px; height: 3px;
-            background: linear-gradient(to right, #fbbf24, #22d3ee);
+            width: 28px; height: 3px;
+            background: #10b981;
             border-radius: 0 0 4px 4px;
         }
         
-        #install-banner {
-            position: fixed; bottom: 80px; left: 12px; right: 12px; z-index: 58;
-            background: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(251, 191, 36, 0.5);
-            border-radius: 18px;
-            padding: 14px 16px;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-            display: none; align-items: center; gap: 12px;
-        }
-        #install-banner.show { display: flex; }
-        
+        /* === TOAST === */
         #toast-container {
-            position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
             z-index: 80; display: flex; flex-direction: column; gap: 8px;
             pointer-events: none; width: calc(100% - 24px); max-width: 400px;
         }
         .toast {
-            background: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(20px);
-            border-left: 4px solid #fbbf24;
-            padding: 12px 16px; border-radius: 14px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+            background: #0f1e33;
+            border-left: 4px solid #10b981;
+            border-top: 1px solid #1e3a5f;
+            border-right: 1px solid #1e3a5f;
+            border-bottom: 1px solid #1e3a5f;
+            padding: 12px 16px; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             display: flex; align-items: center; gap: 12px;
             pointer-events: auto;
         }
-        .toast.success { border-left-color: #16a34a; }
-        .toast.error { border-left-color: #dc2626; }
-        .toast.info { border-left-color: #22d3ee; }
+        .toast.success { border-left-color: #10b981; }
+        .toast.error { border-left-color: #f43f5e; }
+        .toast.info { border-left-color: #34d399; }
         
-        .ripple { position: relative; overflow: hidden; }
-        .ripple::after {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.3) 10%, transparent 10.01%);
-            background-position: center; background-repeat: no-repeat;
-            background-size: 1000% 1000%; opacity: 0;
-            transition: background-size 0.4s, opacity 0.6s; pointer-events: none;
+        /* === INSTALL BANNER === */
+        #install-banner {
+            position: fixed; bottom: 80px; left: 12px; right: 12px; z-index: 58;
+            background: #0f1e33;
+            border: 1px solid #10b981;
+            border-radius: 16px;
+            padding: 14px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            display: none; align-items: center; gap: 12px;
         }
-        .ripple:active::after { background-size: 0% 0%; opacity: 1; transition: 0s; }
+        #install-banner.show { display: flex; }
         
+        /* === RIPPLE (simple) === */
+        .ripple:active { transform: scale(0.98); }
+        .ripple { transition: transform 0.15s ease; }
+        
+        /* === APP MODE === */
         body.app-mode { padding-bottom: 70px; }
         body.app-mode header { padding-top: env(safe-area-inset-top); }
-        body.app-mode #banner-visual { padding-top: calc(4rem + env(safe-area-inset-top)); }
         
         @media (max-width: 1023px) {
             body.app-mode #bottom-nav { display: block; }
         }
         
-        body.app-mode { scroll-padding-top: 80px; }
-        
         .section-pad { padding-top: 3rem; padding-bottom: 3rem; }
         @media (min-width: 1024px) {
-            .section-pad { padding-top: 5rem; padding-bottom: 5rem; }
+            .section-pad { padding-top: 4.5rem; padding-bottom: 4.5rem; }
         }
 
-        .jam-wib { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+        .jam-wib { font-variant-numeric: tabular-nums; }
         
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            pointer-events: none;
-            opacity: 0.4;
-        }
-        
-        .section-glass {
-            background: linear-gradient(180deg, 
-                rgba(26, 35, 50, 0.4) 0%, 
-                rgba(17, 24, 39, 0.5) 50%, 
-                rgba(26, 35, 50, 0.3) 100%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        
-        /* === MARKET TICKER (BUKAN SALDO) === */
+        /* === MARKET TICKER === */
         .market-ticker {
-            background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(26, 35, 50, 0.85));
-            border: 1px solid rgba(251, 191, 36, 0.25);
-            border-radius: 14px;
-            padding: 8px 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
+            gap: 8px;
+            padding: 6px 10px;
+            background: #0f1e33;
+            border: 1px solid #1e3a5f;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
-        .market-ticker:hover {
-            border-color: rgba(251, 191, 36, 0.6);
-            box-shadow: 0 4px 16px rgba(251, 191, 36, 0.2);
-        }
-        .market-ticker::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent 0%, rgba(251, 191, 36, 0.06) 50%, transparent 100%);
-            animation: tickerSlide 3s ease-in-out infinite;
-            pointer-events: none;
-        }
-        @keyframes tickerSlide {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .ticker-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 13px;
-            font-weight: 800;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
-        }
-        
-        .ticker-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0px;
-            min-width: 0;
+        @media (hover: hover) {
+            .market-ticker:hover { border-color: #10b981; }
         }
         .ticker-label {
-            font-size: 8px;
+            font-size: 9px;
             font-weight: 700;
             letter-spacing: 0.08em;
             color: #64748b;
             text-transform: uppercase;
-            line-height: 1;
         }
         .ticker-price {
-            font-size: 13px;
-            font-weight: 800;
+            font-size: 12px;
+            font-weight: 700;
             color: #ffffff;
             font-variant-numeric: tabular-nums;
-            letter-spacing: -0.01em;
-            line-height: 1.2;
         }
         .ticker-change {
             font-size: 9px;
             font-weight: 700;
             padding: 2px 6px;
             border-radius: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 2px;
-            flex-shrink: 0;
-            font-variant-numeric: tabular-nums;
         }
-        .ticker-change.up {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-        }
-        .ticker-change.down {
-            background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-        }
+        .ticker-change.up { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .ticker-change.down { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
         
-        /* Sparkline mini */
-        .ticker-spark {
-            width: 44px;
-            height: 24px;
-            flex-shrink: 0;
-            opacity: 0.9;
-        }
-        .ticker-spark path {
-            fill: none;
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        
-        /* Live dot */
-        .live-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: #10b981;
-            flex-shrink: 0;
-            position: relative;
-        }
-        .live-dot::before {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            background: #10b981;
-            opacity: 0.4;
-            animation: livePulse 1.5s ease-in-out infinite;
-        }
-        @keyframes livePulse {
-            0%, 100% { transform: scale(0.8); opacity: 0.6; }
-            50% { transform: scale(1.6); opacity: 0; }
-        }
-        
-        /* Mobile ticker */
-        .market-ticker-mobile {
-            background: rgba(26, 35, 50, 0.85);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            border-radius: 10px;
-            padding: 5px 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .market-ticker-mobile .ticker-icon {
-            width: 20px;
-            height: 20px;
-            font-size: 10px;
-            border-radius: 6px;
+        /* === STAT CARD === */
+        .stat-card {
+            padding: 16px;
+            background: #0f1e33;
+            border: 1px solid #1e3a5f;
+            border-radius: 16px;
         }
         
         /* === TOOL CARD === */
         .tool-card {
-            background: linear-gradient(135deg, rgba(26, 35, 50, 0.9), rgba(17, 24, 39, 0.8));
-            border: 1px solid rgba(251, 191, 36, 0.15);
+            background: #0f1e33;
+            border: 1px solid #1e3a5f;
             border-radius: 16px;
             padding: 16px;
-            transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
         }
-        .tool-card:hover {
-            border-color: rgba(251, 191, 36, 0.5);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.15);
+        @media (hover: hover) {
+            .tool-card:hover { border-color: #10b981; }
         }
-        .tool-card::before {
-            content: '';
+        .tool-number {
             position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, #fbbf24, #22d3ee);
-            opacity: 0;
-            transition: opacity 0.3s;
+            top: 12px;
+            right: 14px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: rgba(16, 185, 129, 0.12);
+            line-height: 1;
+            letter-spacing: -0.05em;
         }
-        .tool-card:hover::before { opacity: 1; }
         
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
+        /* === HERO BADGE === */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 100px;
+            color: #34d399;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        /* === BLOB: matikan total di mobile === */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            opacity: 0.3;
+            display: none;
+        }
+        @media (min-width: 1024px) {
+            .blob { display: block; }
+        }
+        
+        /* === GRID: matikan di mobile === */
+        .ocean-grid {
+            background-image: 
+                linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 5rem 5rem;
+        }
+        @media (max-width: 1023px) {
+            .ocean-grid { background-image: none; }
         }
     </style>
 </head>
-<body class="antialiased selection:bg-gold-400 selection:text-navy-900 overflow-x-hidden">
+<body class="antialiased overflow-x-hidden">
 
     <!-- SPLASH -->
     <div id="splash-screen">
         <div class="splash-logo">
-            <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-6xl text-gold-400\'></i>';">
+            <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-5xl text-emerald-500\'></i>';">
         </div>
-        <h1 class="text-white font-extrabold text-2xl mt-6 tracking-wide relative z-10">TKJ SMKN 2</h1>
-        <p class="text-gold-400/90 text-xs mt-1 font-medium relative z-10 tracking-widest uppercase">Tembilahan • Indragiri Hilir</p>
+        <h1 class="text-white font-extrabold text-xl mt-5 tracking-wide font-display">TKJ SMKN 2</h1>
+        <p class="text-emerald-400 text-[10px] mt-1 font-medium tracking-widest uppercase">Tembilahan • Indragiri Hilir</p>
         <div class="splash-loader"></div>
-        <p class="text-white/40 text-[10px] mt-6 font-mono tracking-widest relative z-10">MEMUAT APLIKASI...</p>
     </div>
 
     <div id="toast-container"></div>
 
     <!-- HEADER -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-gold-400/10" id="navbar">
+    <header class="fixed top-0 left-0 right-0 z-50 glass" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-20">
-                <a href="#beranda" class="flex items-center space-x-3 group">
-                    <div class="logo-wrap w-10 h-10 lg:w-12 lg:h-12 rounded-xl shadow-lg border border-gold-400/40 group-hover:scale-105 transition-transform duration-300">
-                        <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-gold-400 text-lg lg:text-xl\'></i>';">
+                <a href="#beranda" class="flex items-center space-x-3">
+                    <div class="logo-wrap w-10 h-10 lg:w-12 lg:h-12 rounded-2xl border border-emerald-400/40">
+                        <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-emerald-400 text-lg\'></i>';">
                     </div>
                     <div>
-                        <span class="block font-bold text-base lg:text-xl tracking-wide gradient-text">TKJ SMKN 2</span>
-                        <span class="block text-[10px] lg:text-xs text-gold-400/70 font-medium tracking-wider">TEMBILAHAN</span>
+                        <span class="block font-bold text-base lg:text-xl gradient-text font-display">TKJ SMKN 2</span>
+                        <span class="block text-[10px] text-emerald-400/70 font-medium tracking-widest uppercase">Tembilahan</span>
                     </div>
                 </a>
 
                 <nav class="hidden lg:flex items-center space-x-1">
-                    <a href="#beranda" class="px-3 py-2 rounded-lg text-sm font-semibold text-gold-400 bg-gold-400/10 transition-colors">Beranda</a>
-                    <a href="#tentang" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-gold-400 hover:bg-gold-400/10 transition-colors">Tentang</a>
-                    <a href="#kurikulum" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-gold-400 hover:bg-gold-400/10 transition-colors">Kurikulum</a>
-                    <a href="#tools" class="px-3 py-2 rounded-lg text-sm font-semibold text-gold-400 hover:bg-gold-400/10 transition-colors flex items-center gap-1.5">
-                        <i class="fa-solid fa-screwdriver-wrench text-xs"></i> Tools
-                    </a>
-                    <a href="#fasilitas" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-gold-400 hover:bg-gold-400/10 transition-colors">Fasilitas</a>
-                    <a href="#galeri" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-gold-400 hover:bg-gold-400/10 transition-colors">Galeri</a>
-                    <a href="#kontak" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-gold-400 hover:bg-gold-400/10 transition-colors">Kontak</a>
+                    <a href="#beranda" class="px-3 py-2 rounded-lg text-sm font-semibold text-emerald-400 transition-colors">Beranda</a>
+                    <a href="#tentang" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors">Tentang</a>
+                    <a href="#kurikulum" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors">Kurikulum</a>
+                    <a href="#tools" class="px-3 py-2 rounded-lg text-sm font-semibold text-emerald-400 transition-colors">Tools</a>
+                    <a href="#fasilitas" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors">Fasilitas</a>
+                    <a href="#galeri" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors">Galeri</a>
+                    <a href="#kontak" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors">Kontak</a>
                 </nav>
 
-                <div class="hidden lg:flex items-center gap-3">
-                    <!-- MARKET TICKER (bukan saldo) -->
+                <div class="hidden lg:flex items-center gap-2">
                     <button onclick="openBtcDetail()" class="market-ticker">
-                        <div class="live-dot"></div>
-                        <div class="ticker-icon">₿</div>
-                        <div class="ticker-info">
-                            <span class="ticker-label">BTC / USD</span>
-                            <span class="ticker-price" id="btc-price">--,---</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <div class="flex flex-col leading-tight">
+                            <span class="ticker-label">BTC/USD</span>
+                            <span class="ticker-price" id="btc-price">$--,---</span>
                         </div>
                         <span class="ticker-change up" id="btc-change">--%</span>
-                        <svg class="ticker-spark" viewBox="0 0 44 24" id="btc-spark">
-                            <path d="M 0 18 L 8 14 L 16 16 L 24 10 L 32 12 L 44 4" stroke="#fbbf24" />
-                        </svg>
                     </button>
                     
-                    <div class="px-3 py-2 rounded-xl bg-navy-700/60 border border-gold-400/20 flex items-center gap-2">
-                        <i class="fa-solid fa-clock text-gold-400 text-xs"></i>
+                    <div class="px-3 py-2 rounded-xl bg-ocean-800 border border-emerald-400/20 flex items-center gap-2">
+                        <i class="fa-solid fa-clock text-emerald-400 text-xs"></i>
                         <span class="jam-wib text-xs font-bold text-white" id="clock-wib-desktop">--:--:--</span>
                     </div>
                     
-                    <button id="install-btn-desktop" class="hidden px-4 py-2.5 rounded-xl bg-navy-700/60 border border-gold-400/40 text-gold-400 font-semibold text-sm hover:bg-gold-400/10 transition-all items-center gap-2" onclick="installApp()">
+                    <button id="install-btn-desktop" class="hidden px-4 py-2.5 rounded-xl bg-ocean-800 border border-emerald-400/40 text-emerald-400 font-semibold text-sm transition-all items-center gap-2" onclick="installApp()">
                         <i class="fa-solid fa-download"></i> Install
                     </button>
                     
-                    <a href="#tools" class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-xl group bg-gradient-to-br from-gold-400 to-gold-600 text-white shadow-lg transition-transform duration-300 hover:scale-105">
-                        <span class="relative px-5 py-2.5 transition-all duration-300 bg-navy-900 rounded-[10px] group-hover:bg-opacity-0 text-gold-400 group-hover:text-white">
-                            Tools IP <i class="fa-solid fa-bolt ml-2 text-xs"></i>
-                        </span>
+                    <a href="#tools" class="inline-flex items-center text-sm font-semibold rounded-xl bg-emerald-500 text-ocean-900 px-5 py-2.5 transition-transform hover:scale-105">
+                        Tools IP <i class="fa-solid fa-bolt ml-2 text-xs"></i>
                     </a>
                 </div>
 
                 <div class="lg:hidden flex items-center gap-2">
-                    <button onclick="openBtcDetail()" class="market-ticker-mobile">
-                        <div class="live-dot"></div>
-                        <div class="ticker-icon">₿</div>
+                    <button onclick="openBtcDetail()" class="market-ticker" style="padding: 5px 8px;">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                         <span class="text-[10px] font-bold text-white font-mono" id="btc-price-mobile">--k</span>
                     </button>
-                    <button id="install-btn-mobile" class="hidden w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 text-white items-center justify-center shadow-md" onclick="installApp()" aria-label="Install">
+                    <button id="install-btn-mobile" class="hidden w-10 h-10 rounded-xl bg-emerald-500 text-ocean-900 items-center justify-center font-bold" onclick="installApp()" aria-label="Install">
                         <i class="fa-solid fa-download text-sm"></i>
                     </button>
-                    <button id="mobile-menu-btn" class="p-2.5 rounded-xl text-slate-300 hover:text-gold-400 hover:bg-gold-400/10 focus:outline-none transition-all ripple" aria-label="Menu">
+                    <button id="mobile-menu-btn" class="p-2.5 rounded-xl text-slate-300 hover:text-emerald-400 focus:outline-none transition-all" aria-label="Menu">
                         <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden glass border-b border-gold-400/10 px-4 pt-3 pb-5 space-y-2 shadow-lg">
-            <a href="#beranda" class="block px-3 py-2 rounded-md text-base font-semibold text-gold-400 bg-gold-400/10 transition-colors">Beranda</a>
-            <a href="#tentang" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-gold-400/10 hover:text-gold-400 transition-colors">Tentang Jurusan</a>
-            <a href="#kurikulum" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-gold-400/10 hover:text-gold-400 transition-colors">Kurikulum</a>
-            <a href="#tools" class="block px-3 py-2 rounded-md text-base font-medium text-gold-400 hover:bg-gold-400/10 transition-colors">🛠️ Tools TKJ</a>
-            <a href="#fasilitas" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-gold-400/10 hover:text-gold-400 transition-colors">Fasilitas Lab</a>
-            <a href="#galeri" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-gold-400/10 hover:text-gold-400 transition-colors">Galeri Kegiatan</a>
-            <a href="#kontak" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-gold-400/10 hover:text-gold-400 transition-colors">Kontak</a>
+        <div id="mobile-menu" class="hidden lg:hidden bg-ocean-800 border-t border-emerald-400/10 px-4 pt-3 pb-5 space-y-1">
+            <a href="#beranda" class="block px-3 py-2 rounded-md text-base font-semibold text-emerald-400 transition-colors">Beranda</a>
+            <a href="#tentang" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 transition-colors">Tentang Jurusan</a>
+            <a href="#kurikulum" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 transition-colors">Kurikulum</a>
+            <a href="#tools" class="block px-3 py-2 rounded-md text-base font-medium text-emerald-400 transition-colors">🛠️ Tools TKJ</a>
+            <a href="#fasilitas" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 transition-colors">Fasilitas Lab</a>
+            <a href="#galeri" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 transition-colors">Galeri Kegiatan</a>
+            <a href="#kontak" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 transition-colors">Kontak</a>
         </div>
     </header>
 
     <!-- BANNER -->
-    <div id="banner-visual" class="relative pt-20 lg:pt-24 overflow-hidden border-b border-gold-400/10">
+    <div id="banner-visual" class="relative pt-20 lg:pt-24 overflow-hidden border-b border-emerald-400/10">
         <div class="absolute inset-0">
             <img src="smkn.jpeg" alt="SMKN 2 Tembilahan" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
-            <div class="absolute inset-0 bg-gradient-to-b from-navy-900/85 via-navy-900/70 to-navy-900"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-ocean-900/90 via-ocean-900/75 to-ocean-900"></div>
         </div>
         
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 text-center">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-navy-700/80 backdrop-blur border border-gold-400/40 text-gold-400 text-[10px] lg:text-xs font-semibold tracking-wider shadow-lg mb-3">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ocean-800 border border-emerald-400/40 text-emerald-400 text-[10px] lg:text-xs font-semibold tracking-wider mb-3">
                 <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
                 <span>APLIKASI RESMI • LAB TKJ SMKN 2</span>
             </div>
-            <h2 class="text-white font-bold text-xl lg:text-3xl mb-2">Selamat Datang di Portal TKJ</h2>
+            <h2 class="text-white font-bold text-xl lg:text-3xl mb-2 font-display">Selamat Datang di Portal TKJ</h2>
             <p class="text-slate-300 text-xs lg:text-sm max-w-xl mx-auto">
                 Pusat Unggulan Praktik Jaringan Komputer, Perangkat Cisco/MikroTik, dan Fiber Optic.
             </p>
@@ -595,75 +465,53 @@
     </div>
 
     <!-- HERO -->
-    <section id="beranda" class="relative pt-8 pb-12 lg:pt-20 lg:pb-24 overflow-hidden">
-        <div class="absolute inset-0 z-0 opacity-50 pointer-events-none">
-            <div class="blob w-96 h-96 bg-gold-400/20 top-1/4 left-1/4"></div>
-            <div class="blob w-96 h-96 bg-cyan-400/15 bottom-1/4 right-1/4"></div>
-            <div class="absolute inset-0 gold-grid [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-        </div>
-
+    <section id="beranda" class="relative pt-8 pb-12 lg:pt-16 lg:pb-20 overflow-hidden">
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                <div class="lg:col-span-7 space-y-5 lg:space-y-6 text-center lg:text-left fade-in">
-                    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gold-400/10 border border-gold-400/40 text-gold-400 text-[10px] lg:text-sm font-semibold">
-                        <span class="flex h-2 w-2 rounded-full bg-gold-400 animate-pulse"></span>
+                <div class="lg:col-span-7 lg:pr-8 fade-in">
+                    <div class="hero-badge mb-4">
+                        <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
                         <span>SMK PUSAT KEUNGGULAN • TKJ</span>
                     </div>
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight leading-tight text-white">
-                        Cetak Generasi IT Unggul, <span class="gradient-text">Profesional & Siap Kerja</span>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight leading-[1.1] text-white mb-4 font-display">
+                        Cetak Generasi<br>
+                        <span class="gradient-text">IT Unggul,</span><br>
+                        Profesional & Siap Kerja
                     </h1>
-                    <p class="text-sm sm:text-base lg:text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                    <p class="text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl leading-relaxed mb-6">
                         Aplikasi resmi Jurusan Teknik Jaringan Komputer (TKJ) SMKN 2 Tembilahan. Dilengkapi simulator jaringan, kalkulator subnetting, dan tools siap pakai.
                     </p>
-                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
-                        <a href="#tools" class="w-full sm:w-auto px-6 lg:px-8 py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-gold-400 to-gold-600 hover:from-gold-300 hover:to-gold-500 text-navy-900 font-bold shadow-xl shadow-gold-400/20 transition-transform duration-300 hover:-translate-y-1 text-center flex items-center justify-center gap-2 ripple">
-                            <i class="fa-solid fa-screwdriver-wrench"></i> Akses Tools TKJ
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="#tools" class="px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-ocean-900 font-bold transition-transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 ripple">
+                            <i class="fa-solid fa-screwdriver-wrench"></i> Akses Tools
                         </a>
-                        <a href="#tentang" class="w-full sm:w-auto px-6 lg:px-8 py-3.5 lg:py-4 rounded-xl bg-navy-700/60 backdrop-blur hover:bg-navy-700/80 text-white font-semibold transition-transform duration-300 text-center border border-gold-400/30 hover:-translate-y-1 flex items-center justify-center gap-2">
-                            Tentang Jurusan <i class="fa-solid fa-compass text-gold-400"></i>
+                        <a href="#tentang" class="px-6 py-3.5 rounded-2xl bg-ocean-800 hover:bg-ocean-700 text-white font-semibold transition-transform hover:-translate-y-0.5 text-center border border-emerald-400/30 flex items-center justify-center gap-2">
+                            Tentang Jurusan <i class="fa-solid fa-arrow-right text-emerald-400"></i>
                         </a>
                     </div>
                 </div>
 
                 <div class="lg:col-span-5 fade-in">
                     <div class="relative w-full max-w-md mx-auto">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-gold-400/40 via-gold-400/20 to-cyan-400/30 rounded-3xl filter blur-3xl"></div>
-                        
-                        <div class="relative bg-navy-800/80 backdrop-blur-xl rounded-3xl p-3 lg:p-4 border border-gold-400/30 shadow-2xl overflow-hidden">
-                            <div class="absolute top-6 left-6 z-20 w-11 h-11 rounded-xl logo-wrap border border-gold-400/50 shadow-lg">
+                        <div class="bg-ocean-800 rounded-3xl p-3 border border-emerald-400/30 overflow-hidden">
+                            <div class="absolute top-6 left-6 z-20 w-11 h-11 rounded-2xl logo-wrap border border-emerald-400/50">
                                 <img src="tkj.jpeg" alt="TKJ">
                             </div>
-                            <div class="absolute top-6 right-6 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gold-400 text-navy-900 text-[10px] font-bold shadow-lg">
-                                <span class="w-1.5 h-1.5 rounded-full bg-navy-900 animate-pulse"></span>
+                            <div class="absolute top-6 right-6 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-400 text-ocean-900 text-[10px] font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-ocean-900"></span>
                                 AKTIF
                             </div>
                             
-                            <div class="relative aspect-square rounded-2xl overflow-hidden bg-navy-900">
-                                <img src="smkn.jpeg" alt="SMKN 2 Tembilahan" class="w-full h-full object-cover" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center text-gold-400\'><i class=\'fa-solid fa-school text-6xl mb-3\'></i><span class=\'text-xs font-semibold\'>Foto tidak tersedia</span></div>';">
-                                <div class="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/30 to-transparent"></div>
+                            <div class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-ocean-900">
+                                <img src="smkn.jpeg" alt="SMKN 2 Tembilahan" class="w-full h-full object-cover" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center text-emerald-400\'><i class=\'fa-solid fa-school text-6xl mb-3\'></i><span class=\'text-xs font-semibold\'>Foto tidak tersedia</span></div>';">
+                                <div class="absolute inset-0 bg-gradient-to-t from-ocean-900 via-ocean-900/20 to-transparent"></div>
                                 
-                                <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <i class="fa-solid fa-school text-gold-400 text-sm"></i>
-                                        <span class="text-[10px] font-bold uppercase tracking-wider text-gold-400">SMKN 2 TEMBILAHAN</span>
+                                <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
+                                    <div class="inline-block px-2.5 py-1 rounded-full bg-emerald-400/20 border border-emerald-400/40 mb-2">
+                                        <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-300">SMKN 2 TEMBILAHAN</span>
                                     </div>
-                                    <h3 class="font-bold text-base lg:text-lg">Teknik Jaringan Komputer</h3>
-                                    <p class="text-[10px] text-slate-400">Tembilahan • Indragiri Hilir • Riau</p>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-3 gap-2 mt-3 lg:mt-4">
-                                <div class="bg-navy-900/60 backdrop-blur p-2 rounded-xl border border-gold-400/20 text-center">
-                                    <i class="fa-solid fa-network-wired text-gold-400 text-xs mb-1"></i>
-                                    <div class="text-[9px] text-gold-400 font-semibold">NETWORK</div>
-                                </div>
-                                <div class="bg-navy-900/60 backdrop-blur p-2 rounded-xl border border-cyan-400/20 text-center">
-                                    <i class="fa-solid fa-server text-cyan-400 text-xs mb-1"></i>
-                                    <div class="text-[9px] text-cyan-400 font-semibold">SERVER</div>
-                                </div>
-                                <div class="bg-navy-900/60 backdrop-blur p-2 rounded-xl border border-gold-400/20 text-center">
-                                    <i class="fa-solid fa-shield-halved text-gold-400 text-xs mb-1"></i>
-                                    <div class="text-[9px] text-gold-400 font-semibold">SECURITY</div>
+                                    <h3 class="font-bold text-lg font-display">Teknik Jaringan Komputer</h3>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">Tembilahan • Indragiri Hilir • Riau</p>
                                 </div>
                             </div>
                         </div>
@@ -671,168 +519,198 @@
                 </div>
             </div>
 
-            <div class="mt-12 lg:mt-20 grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-6 fade-in">
-                <div class="card p-4 lg:p-6 text-center">
-                    <div class="text-2xl lg:text-3xl font-extrabold gradient-gold mb-1">350+</div>
-                    <div class="text-[10px] lg:text-sm text-slate-400 font-medium">Siswa Aktif</div>
+            <!-- STATS -->
+            <div class="mt-12 lg:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 fade-in">
+                <div class="stat-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-users text-emerald-400 text-sm"></i>
+                        <span class="text-[10px] uppercase tracking-widest text-emerald-400/70 font-bold">Siswa</span>
+                    </div>
+                    <div class="text-3xl lg:text-4xl font-extrabold text-white font-display tracking-tight">350<span class="text-emerald-400">+</span></div>
+                    <div class="text-[10px] text-slate-500 mt-1">Siswa Aktif TKJ</div>
                 </div>
-                <div class="card p-4 lg:p-6 text-center">
-                    <div class="text-2xl lg:text-3xl font-extrabold gradient-gold mb-1">3 Unit</div>
-                    <div class="text-[10px] lg:text-sm text-slate-400 font-medium">Lab Komputer</div>
+                <div class="stat-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-desktop text-emerald-400 text-sm"></i>
+                        <span class="text-[10px] uppercase tracking-widest text-emerald-400/70 font-bold">Lab</span>
+                    </div>
+                    <div class="text-3xl lg:text-4xl font-extrabold text-white font-display tracking-tight">3<span class="text-emerald-400">.</span></div>
+                    <div class="text-[10px] text-slate-500 mt-1">Lab Komputer Modern</div>
                 </div>
-                <div class="card p-4 lg:p-6 text-center">
-                    <div class="text-2xl lg:text-3xl font-extrabold gradient-gold mb-1">A</div>
-                    <div class="text-[10px] lg:text-sm text-slate-400 font-medium">Akreditasi</div>
+                <div class="stat-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-award text-emerald-400 text-sm"></i>
+                        <span class="text-[10px] uppercase tracking-widest text-emerald-400/70 font-bold">Grade</span>
+                    </div>
+                    <div class="text-3xl lg:text-4xl font-extrabold text-white font-display tracking-tight">A<span class="text-emerald-400">+</span></div>
+                    <div class="text-[10px] text-slate-500 mt-1">Akreditasi Unggul</div>
                 </div>
-                <div class="card p-4 lg:p-6 text-center">
-                    <div class="text-2xl lg:text-3xl font-extrabold gradient-gold mb-1">98%</div>
-                    <div class="text-[10px] lg:text-sm text-slate-400 font-medium">Terserap Kerja</div>
+                <div class="stat-card">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-briefcase text-emerald-400 text-sm"></i>
+                        <span class="text-[10px] uppercase tracking-widest text-emerald-400/70 font-bold">Kerja</span>
+                    </div>
+                    <div class="text-3xl lg:text-4xl font-extrabold text-white font-display tracking-tight">98<span class="text-emerald-400">%</span></div>
+                    <div class="text-[10px] text-slate-500 mt-1">Terserap Kerja</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 10 TOOLS TKJ -->
-    <section id="tools" class="section-pad section-glass border-t border-b border-gold-400/10">
+    <!-- 10 TOOLS -->
+    <section id="tools" class="section-pad border-t border-emerald-400/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/40 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/40 text-[10px] font-bold uppercase tracking-widest mb-4">
                     <i class="fa-solid fa-toolbox"></i>
-                    10 Tools Wajib TKJ
+                    10 Tools Wajib
                 </span>
-                <h2 class="text-2xl lg:text-4xl font-extrabold tracking-tight text-white">Tools Favorit Network Engineer</h2>
-                <div class="w-20 h-1 bg-gradient-to-r from-gold-400 to-cyan-400 mx-auto mt-4 rounded-full"></div>
-                <p class="text-slate-400 mt-3 lg:mt-4 text-xs lg:text-base">Tools yang paling sering dipakai praktisi jaringan & siswa TKJ sehari-hari.</p>
+                <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-white font-display">
+                    Tools Favorit<br>
+                    <span class="gradient-text">Network Engineer</span>
+                </h2>
+                <p class="text-slate-400 mt-4 text-sm">Tools yang paling sering dipakai praktisi jaringan & siswa TKJ sehari-hari.</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 text-lg mb-3">
+                    <span class="tool-number">01</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-diagram-project"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">Packet Tracer</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Simulator jaringan Cisco untuk latihan CCNA.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Simulator jaringan Cisco untuk latihan CCNA.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 text-lg mb-3">
+                    <span class="tool-number">02</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-network-wired"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">GNS3</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Simulator jaringan advanced real device.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Simulator jaringan advanced real device.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 text-lg mb-3">
+                    <span class="tool-number">03</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-fish"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">Wireshark</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Packet analyzer / sniffing traffic jaringan.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Packet analyzer / sniffing traffic jaringan.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-red-400/10 border border-red-400/30 flex items-center justify-center text-red-400 text-lg mb-3">
+                    <span class="tool-number">04</span>
+                    <div class="w-11 h-11 rounded-2xl bg-coral-500/10 border border-coral-500/30 flex items-center justify-center text-coral-400 text-lg mb-3">
                         <i class="fa-solid fa-radar"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">Nmap</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Port scanning & network mapping security.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Port scanning & network mapping security.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 text-lg mb-3">
+                    <span class="tool-number">05</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-terminal"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">PuTTY</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">SSH / Telnet client ringan & powerful.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">SSH / Telnet client ringan & powerful.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 text-lg mb-3">
+                    <span class="tool-number">06</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-gauge-high"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">iPerf</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Test throughput & bandwidth real-time.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Test throughput & bandwidth real-time.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 text-lg mb-3">
+                    <span class="tool-number">07</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-satellite-dish"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">TCPing</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Test port spesifik tanpa perlu ping ICMP.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Test port spesifik tanpa perlu ping ICMP.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-green-400/10 border border-green-400/30 flex items-center justify-center text-green-400 text-lg mb-3">
+                    <span class="tool-number">08</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-bolt"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">QuickPing</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Batch ping banyak IP sekaligus cepat.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Batch ping banyak IP sekaligus cepat.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 text-lg mb-3">
+                    <span class="tool-number">09</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">Cacti</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Visualisasi traffic monitoring dengan graph.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Visualisasi traffic monitoring dengan graph.</p>
                 </div>
 
                 <div class="tool-card fade-in">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 text-lg mb-3">
+                    <span class="tool-number">10</span>
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-3">
                         <i class="fa-solid fa-calculator"></i>
                     </div>
                     <h3 class="text-white font-bold text-sm mb-1">Subnet Calc</h3>
-                    <p class="text-slate-400 text-[10px] leading-relaxed">Kalkulator IP & CIDR untuk subnetting.</p>
+                    <p class="text-slate-500 text-[11px] leading-relaxed">Kalkulator IP & CIDR untuk subnetting.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- TOOLS INTERAKTIF -->
-    <section class="section-pad bg-navy-900">
+    <section class="section-pad border-t border-emerald-400/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/40 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/40 text-[10px] font-bold uppercase tracking-widest mb-4">
                     <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
                     Laboratorium Digital
                 </span>
-                <h2 class="text-2xl lg:text-4xl font-extrabold tracking-tight text-white">Tools Interaktif</h2>
-                <div class="w-20 h-1 bg-gradient-to-r from-gold-400 to-cyan-400 mx-auto mt-4 rounded-full"></div>
-                <p class="text-slate-400 mt-3 lg:mt-4 text-xs lg:text-base">Gunakan tools interaktif langsung dari perangkat Anda untuk latihan praktikum.</p>
+                <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-white font-display">
+                    Tools <span class="gradient-text">Interaktif</span>
+                </h2>
+                <p class="text-slate-400 mt-4 text-sm">Gunakan tools interaktif langsung dari perangkat Anda untuk latihan praktikum.</p>
             </div>
 
-            <div class="flex gap-2 lg:gap-4 mb-6 lg:mb-8 fade-in overflow-x-auto pb-2 lg:justify-center scrollbar-hide">
-                <button onclick="switchTab('subnet')" id="tab-subnet" class="tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-gradient-to-r from-gold-400 to-gold-600 text-navy-900 shadow-lg flex items-center gap-2" aria-selected="true">
+            <div class="flex gap-2 mb-6 fade-in overflow-x-auto pb-2 lg:justify-center scrollbar-hide">
+                <button onclick="switchTab('subnet')" id="tab-subnet" class="tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-emerald-500 text-ocean-900 flex items-center gap-2" aria-selected="true">
                     <i class="fa-solid fa-calculator"></i> Subnetting
                 </button>
-                <button onclick="switchTab('cable')" id="tab-cable" class="tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-navy-700/60 text-slate-300 border border-gold-400/30 hover:border-gold-400 hover:bg-gold-400/10 flex items-center gap-2" aria-selected="false">
+                <button onclick="switchTab('cable')" id="tab-cable" class="tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-ocean-800 text-slate-300 border border-emerald-400/30 flex items-center gap-2" aria-selected="false">
                     <i class="fa-solid fa-ethernet"></i> Kabel UTP
                 </button>
-                <button onclick="switchTab('latency')" id="tab-latency" class="tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-navy-700/60 text-slate-300 border border-gold-400/30 hover:border-gold-400 hover:bg-gold-400/10 flex items-center gap-2" aria-selected="false">
+                <button onclick="switchTab('latency')" id="tab-latency" class="tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-ocean-800 text-slate-300 border border-emerald-400/30 flex items-center gap-2" aria-selected="false">
                     <i class="fa-solid fa-satellite-dish"></i> Ping Test
                 </button>
             </div>
 
-            <div id="tool-subnet" class="tool-panel card p-5 lg:p-10 max-w-4xl mx-auto">
-                <div class="flex items-center gap-3 mb-5 lg:mb-6 pb-4 border-b border-gold-400/15">
-                    <div class="w-10 lg:w-12 h-10 lg:h-12 rounded-xl bg-gold-400/10 text-gold-400 flex items-center justify-center text-lg lg:text-xl border border-gold-400/30">
+            <div id="tool-subnet" class="tool-panel card p-5 lg:p-8 max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 mb-5 pb-4 border-b border-emerald-400/15">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-400/30">
                         <i class="fa-solid fa-calculator"></i>
                     </div>
                     <div>
-                        <h3 class="text-base lg:text-xl font-bold text-white">Kalkulator IPv4 Subnetting</h3>
-                        <p class="text-[10px] lg:text-xs text-slate-400">Hitung Netmask, Network ID, Broadcast, dan Jumlah Host.</p>
+                        <h3 class="text-lg font-bold text-white font-display">Kalkulator IPv4 Subnetting</h3>
+                        <p class="text-xs text-slate-500">Hitung Netmask, Network ID, Broadcast, dan Jumlah Host.</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mb-5 lg:mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                     <div>
-                        <label for="subnet-ip" class="block text-[10px] lg:text-xs font-semibold text-slate-300 mb-2">Alamat IP</label>
-                        <input type="text" id="subnet-ip" value="192.168.1.1" inputmode="numeric" class="w-full px-3 lg:px-4 py-2.5 lg:py-3 rounded-xl bg-navy-900/60 border border-gold-400/30 text-white font-mono text-sm focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-all" placeholder="192.168.1.1">
+                        <label for="subnet-ip" class="block text-xs font-semibold text-emerald-400/80 mb-2 uppercase tracking-wider">Alamat IP</label>
+                        <input type="text" id="subnet-ip" value="192.168.1.1" inputmode="numeric" class="w-full px-4 py-3 rounded-2xl bg-ocean-900 border border-emerald-400/30 text-white font-mono text-sm focus:outline-none focus:border-emerald-400 transition-all" placeholder="192.168.1.1">
                     </div>
                     <div>
-                        <label for="subnet-cidr" class="block text-[10px] lg:text-xs font-semibold text-slate-300 mb-2">Prefix CIDR</label>
-                        <select id="subnet-cidr" class="w-full px-3 lg:px-4 py-2.5 lg:py-3 rounded-xl bg-navy-900/60 border border-gold-400/30 text-white font-mono text-sm focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-all">
+                        <label for="subnet-cidr" class="block text-xs font-semibold text-emerald-400/80 mb-2 uppercase tracking-wider">Prefix CIDR</label>
+                        <select id="subnet-cidr" class="w-full px-4 py-3 rounded-2xl bg-ocean-900 border border-emerald-400/30 text-white font-mono text-sm focus:outline-none focus:border-emerald-400 transition-all">
                             <option value="24">/24 (255.255.255.0 - 254 Host)</option>
                             <option value="25">/25 (255.255.255.128 - 126 Host)</option>
                             <option value="26">/26 (255.255.255.192 - 62 Host)</option>
@@ -844,74 +722,74 @@
                     </div>
                 </div>
 
-                <button onclick="calculateSubnet()" class="w-full py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-gold-400 to-gold-600 hover:from-gold-300 hover:to-gold-500 text-navy-900 font-bold shadow-lg transition-transform duration-300 mb-5 lg:mb-6 hover:-translate-y-0.5 ripple flex items-center justify-center gap-2">
+                <button onclick="calculateSubnet()" class="w-full py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-ocean-900 font-bold transition-transform hover:-translate-y-0.5 mb-5 flex items-center justify-center gap-2">
                     Hitung Subnet <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
-                <div id="subnet-result" class="hidden bg-navy-900/80 p-4 lg:p-6 rounded-2xl border-2 border-gold-400/40 font-mono text-xs lg:text-sm space-y-2 text-slate-300"></div>
+                <div id="subnet-result" class="hidden bg-ocean-900 p-5 rounded-2xl border-2 border-emerald-400/40 font-mono text-sm space-y-2 text-slate-300"></div>
             </div>
 
-            <div id="tool-cable" class="tool-panel hidden card p-5 lg:p-10 max-w-4xl mx-auto">
-                <div class="flex items-center gap-3 mb-5 lg:mb-6 pb-4 border-b border-gold-400/15">
-                    <div class="w-10 lg:w-12 h-10 lg:h-12 rounded-xl bg-gold-400/10 text-gold-400 flex items-center justify-center text-lg lg:text-xl border border-gold-400/30">
+            <div id="tool-cable" class="tool-panel hidden card p-5 lg:p-8 max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 mb-5 pb-4 border-b border-emerald-400/15">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-400/30">
                         <i class="fa-solid fa-ethernet"></i>
                     </div>
                     <div>
-                        <h3 class="text-base lg:text-xl font-bold text-white">Panduan Kabel UTP (TIA/EIA-568)</h3>
-                        <p class="text-[10px] lg:text-xs text-slate-400">Urutan warna kabel Straight & Crossover untuk crimping RJ-45.</p>
+                        <h3 class="text-lg font-bold text-white font-display">Panduan Kabel UTP</h3>
+                        <p class="text-xs text-slate-500">Urutan warna kabel Straight & Crossover untuk crimping RJ-45.</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-                    <div class="bg-navy-900/60 p-5 lg:p-6 rounded-2xl border border-gold-400/20">
-                        <h4 class="font-bold text-gold-400 mb-3 flex items-center gap-2 text-sm lg:text-base">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-ocean-900 p-5 rounded-2xl border border-emerald-400/20">
+                        <h4 class="font-bold text-emerald-400 mb-3 flex items-center gap-2 text-sm">
                             <i class="fa-solid fa-circle-dot text-xs"></i> Straight-Through
                         </h4>
-                        <p class="text-[10px] lg:text-xs text-slate-400 mb-4">Switch ke PC. Kedua ujung sama (T568B).</p>
-                        <ol class="space-y-1.5 text-[10px] lg:text-xs font-mono text-slate-300">
-                            <li><span class="inline-block w-5 text-gold-400 font-bold">1.</span> Putih-Oranye</li>
-                            <li><span class="inline-block w-5 text-gold-400 font-bold">2.</span> Oranye</li>
-                            <li><span class="inline-block w-5 text-gold-400 font-bold">3.</span> Putih-Hijau</li>
-                            <li><span class="inline-block w-5 text-gold-400 font-bold">4.</span> Biru</li>
-                            <li><span class="inline-block w-5 text-gold-400 font-bold">5.</span> Putih-Biru</li>
-                            <li><span class="inline-block w-5 text-gold-400 font-bold">6.</span> Hijau</li>
-                            <li><span class="inline-block w-5 text-gold-400 font-bold">7.</span> Putih-Cokelat</li>
-                            <li><span class="inline-block w-5 text-gold-400 font-bold">8.</span> Cokelat</li>
+                        <p class="text-xs text-slate-500 mb-4">Switch ke PC. Kedua ujung sama (T568B).</p>
+                        <ol class="space-y-1.5 text-xs font-mono text-slate-300">
+                            <li><span class="inline-block w-5 text-emerald-400 font-bold">1.</span> Putih-Oranye</li>
+                            <li><span class="inline-block w-5 text-emerald-400 font-bold">2.</span> Oranye</li>
+                            <li><span class="inline-block w-5 text-emerald-400 font-bold">3.</span> Putih-Hijau</li>
+                            <li><span class="inline-block w-5 text-emerald-400 font-bold">4.</span> Biru</li>
+                            <li><span class="inline-block w-5 text-emerald-400 font-bold">5.</span> Putih-Biru</li>
+                            <li><span class="inline-block w-5 text-emerald-400 font-bold">6.</span> Hijau</li>
+                            <li><span class="inline-block w-5 text-emerald-400 font-bold">7.</span> Putih-Cokelat</li>
+                            <li><span class="inline-block w-5 text-emerald-400 font-bold">8.</span> Cokelat</li>
                         </ol>
                     </div>
 
-                    <div class="bg-navy-900/60 p-5 lg:p-6 rounded-2xl border border-cyan-400/20">
-                        <h4 class="font-bold text-cyan-400 mb-3 flex items-center gap-2 text-sm lg:text-base">
+                    <div class="bg-ocean-900 p-5 rounded-2xl border border-emerald-400/20">
+                        <h4 class="font-bold text-emerald-300 mb-3 flex items-center gap-2 text-sm">
                             <i class="fa-solid fa-circle-dot text-xs"></i> Crossover
                         </h4>
-                        <p class="text-[10px] lg:text-xs text-slate-400 mb-4">PC ke PC / Switch ke Switch.</p>
-                        <ul class="space-y-2 text-[10px] lg:text-xs font-mono text-slate-300">
-                            <li><strong class="text-gold-400">Ujung 1 (T568A):</strong><br>P-Hijau, Hijau, P-Oranye, Biru, P-Biru, Oranye, P-Cokelat, Cokelat</li>
-                            <li><strong class="text-cyan-400">Ujung 2 (T568B):</strong><br>P-Oranye, Oranye, P-Hijau, Biru, P-Biru, Hijau, P-Cokelat, Cokelat</li>
+                        <p class="text-xs text-slate-500 mb-4">PC ke PC / Switch ke Switch.</p>
+                        <ul class="space-y-2 text-xs font-mono text-slate-300">
+                            <li><strong class="text-emerald-400">Ujung 1 (T568A):</strong><br>P-Hijau, Hijau, P-Oranye, Biru, P-Biru, Oranye, P-Cokelat, Cokelat</li>
+                            <li><strong class="text-emerald-300">Ujung 2 (T568B):</strong><br>P-Oranye, Oranye, P-Hijau, Biru, P-Biru, Hijau, P-Cokelat, Cokelat</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div id="tool-latency" class="tool-panel hidden card p-5 lg:p-10 max-w-4xl mx-auto">
-                <div class="flex items-center gap-3 mb-5 lg:mb-6 pb-4 border-b border-gold-400/15">
-                    <div class="w-10 lg:w-12 h-10 lg:h-12 rounded-xl bg-gold-400/10 text-gold-400 flex items-center justify-center text-lg lg:text-xl border border-gold-400/30">
+            <div id="tool-latency" class="tool-panel hidden card p-5 lg:p-8 max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 mb-5 pb-4 border-b border-emerald-400/15">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-400/30">
                         <i class="fa-solid fa-satellite-dish"></i>
                     </div>
                     <div>
-                        <h3 class="text-base lg:text-xl font-bold text-white">Simulator Test Ping Jaringan</h3>
-                        <p class="text-[10px] lg:text-xs text-slate-400">Simulasi pengujian konektifitas ICMP echo request.</p>
+                        <h3 class="text-lg font-bold text-white font-display">Simulator Test Ping Jaringan</h3>
+                        <p class="text-xs text-slate-500">Simulasi pengujian konektifitas ICMP echo request.</p>
                     </div>
                 </div>
 
                 <div class="space-y-4">
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <input type="text" id="ping-target" value="192.168.2.1" placeholder="Masukkan IP / Domain Target" class="flex-1 px-3 lg:px-4 py-2.5 lg:py-3 rounded-xl bg-navy-900/60 border border-gold-400/30 text-white font-mono text-sm focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-all">
-                        <button onclick="runPing()" class="px-5 lg:px-6 py-2.5 lg:py-3 rounded-xl bg-gradient-to-r from-gold-400 to-gold-600 text-navy-900 font-bold shadow-lg hover:from-gold-300 hover:to-gold-500 transition-transform duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 ripple">
+                        <input type="text" id="ping-target" value="192.168.2.1" placeholder="Masukkan IP / Domain Target" class="flex-1 px-4 py-3 rounded-2xl bg-ocean-900 border border-emerald-400/30 text-white font-mono text-sm focus:outline-none focus:border-emerald-400 transition-all">
+                        <button onclick="runPing()" class="px-6 py-3 rounded-2xl bg-emerald-500 text-ocean-900 font-bold transition-transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-play"></i> Run Ping
                         </button>
                     </div>
-                    <div id="ping-console" class="bg-black p-4 lg:p-5 rounded-2xl border-2 border-gold-400/40 font-mono text-[10px] lg:text-xs text-green-400 h-40 lg:h-44 overflow-y-auto space-y-1">
+                    <div id="ping-console" class="bg-black p-5 rounded-2xl border-2 border-emerald-400/40 font-mono text-xs text-emerald-400 h-44 overflow-y-auto space-y-1">
                         <p class="text-slate-500">Ready to transmit packets. Click 'Run Ping' to start...</p>
                     </div>
                 </div>
@@ -920,68 +798,75 @@
     </section>
 
     <!-- TENTANG -->
-    <section id="tentang" class="section-pad">
+    <section id="tentang" class="section-pad border-t border-emerald-400/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/40 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/40 text-[10px] font-bold uppercase tracking-widest mb-4">
                     <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
                     Kompetensi Keahlian
                 </span>
-                <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-white">Teknik Jaringan Komputer</p>
-                <div class="w-20 h-1 bg-gradient-to-r from-gold-400 to-cyan-400 mx-auto mt-4 rounded-full"></div>
+                <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-white font-display">
+                    Tentang <span class="gradient-text">Jurusan TKJ</span>
+                </h2>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                <div class="space-y-5 lg:space-y-6 text-slate-300 fade-in">
-                    <p class="text-sm lg:text-lg leading-relaxed">
-                        <strong class="text-gold-400 font-semibold">Teknik Jaringan Komputer (TKJ)</strong> di SMKN 2 Tembilahan adalah program keahlian unggulan yang membekali peserta didik dengan keterampilan mendalam di bidang instalasi jaringan, konfigurasi router & switch, administrasi server, fiber optic, serta keamanan siber.
+                <div class="space-y-5 text-slate-300 fade-in">
+                    <p class="text-base lg:text-lg leading-relaxed">
+                        <strong class="text-emerald-400 font-semibold">Teknik Jaringan Komputer (TKJ)</strong> di SMKN 2 Tembilahan adalah program keahlian unggulan yang membekali peserta didik dengan keterampilan mendalam di bidang instalasi jaringan, konfigurasi router & switch, administrasi server, fiber optic, serta keamanan siber.
                     </p>
-                    <p class="text-xs lg:text-base leading-relaxed text-slate-400">
+                    <p class="text-sm lg:text-base leading-relaxed text-slate-400">
                         Didukung oleh pengajar profesional bersertifikasi industri serta laboratorium modern berstandar tinggi, kami berkomitmen mencetak lulusan yang siap bersaing di dunia kerja maupun berwirausaha digital.
                     </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 pt-2">
-                        <div class="flex items-start gap-3">
-                            <div class="p-2 rounded-lg bg-gold-400/10 text-gold-400 border border-gold-400/30 flex-shrink-0"><i class="fa-solid fa-check text-xs"></i></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <div class="flex items-start gap-3 p-4 rounded-2xl bg-ocean-800 border border-emerald-400/15">
+                            <div class="p-2 rounded-xl bg-emerald-400/15 text-emerald-400 flex-shrink-0"><i class="fa-solid fa-check text-sm"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-xs lg:text-sm">Kurikulum Selaras Industri</h4>
-                                <p class="text-[10px] lg:text-xs text-slate-400">Materi adaptif mengikuti teknologi terbaru.</p>
+                                <h4 class="font-bold text-white text-sm">Kurikulum Industri</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Materi adaptif teknologi terbaru.</p>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3">
-                            <div class="p-2 rounded-lg bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 flex-shrink-0"><i class="fa-solid fa-check text-xs"></i></div>
+                        <div class="flex items-start gap-3 p-4 rounded-2xl bg-ocean-800 border border-emerald-400/15">
+                            <div class="p-2 rounded-xl bg-emerald-400/15 text-emerald-400 flex-shrink-0"><i class="fa-solid fa-check text-sm"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-xs lg:text-sm">Sertifikasi Internasional</h4>
-                                <p class="text-[10px] lg:text-xs text-slate-400">Peluang sertifikasi Cisco & MikroTik.</p>
+                                <h4 class="font-bold text-white text-sm">Sertifikasi Resmi</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Cisco & MikroTik Academy.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-4 lg:space-y-6 fade-in">
-                    <div class="card p-5 lg:p-8 bg-gradient-to-br from-gold-400/5 to-navy-800/60">
-                        <h3 class="text-base lg:text-xl font-bold text-gold-400 mb-3 flex items-center gap-3">
-                            <i class="fa-solid fa-eye"></i> Visi Jurusan
-                        </h3>
-                        <p class="text-slate-300 italic text-xs lg:text-base leading-relaxed">
+                <div class="space-y-4 fade-in">
+                    <div class="card p-5 lg:p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-11 h-11 rounded-2xl bg-emerald-400/15 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white font-display">Visi Jurusan</h3>
+                        </div>
+                        <p class="text-slate-300 italic text-sm lg:text-base leading-relaxed">
                             "Menjadi pusat pendidikan kejuruan Teknik Jaringan Komputer yang unggul, berkarakter, kompeten, serta mampu bersaing di era digital global."
                         </p>
                     </div>
 
-                    <div class="card p-5 lg:p-8 bg-gradient-to-br from-cyan-400/5 to-navy-800/60">
-                        <h3 class="text-base lg:text-xl font-bold text-cyan-400 mb-3 flex items-center gap-3">
-                            <i class="fa-solid fa-rocket"></i> Misi Jurusan
-                        </h3>
-                        <ul class="space-y-2.5 text-slate-300 text-xs lg:text-sm">
-                            <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-angle-right text-gold-400 mt-1 flex-shrink-0"></i>
-                                <span>Menyelenggarakan pembelajaran berbasis teknologi jaringan terkini dan praktik intensif.</span>
+                    <div class="card p-5 lg:p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-11 h-11 rounded-2xl bg-emerald-400/15 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
+                                <i class="fa-solid fa-rocket"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white font-display">Misi Jurusan</h3>
+                        </div>
+                        <ul class="space-y-3 text-slate-300 text-sm">
+                            <li class="flex items-start gap-3">
+                                <span class="w-6 h-6 rounded-full bg-emerald-400/15 text-emerald-400 flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
+                                <span>Menyelenggarakan pembelajaran berbasis teknologi jaringan terkini.</span>
                             </li>
-                            <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-angle-right text-cyan-400 mt-1 flex-shrink-0"></i>
+                            <li class="flex items-start gap-3">
+                                <span class="w-6 h-6 rounded-full bg-emerald-400/15 text-emerald-400 flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
                                 <span>Membangun kerja sama strategis dengan industri telekomunikasi dan IT.</span>
                             </li>
-                            <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-angle-right text-gold-400 mt-1 flex-shrink-0"></i>
+                            <li class="flex items-start gap-3">
+                                <span class="w-6 h-6 rounded-full bg-emerald-400/15 text-emerald-400 flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
                                 <span>Menanamkan etika profesi, kedisiplinan, dan jiwa wirausaha.</span>
                             </li>
                         </ul>
@@ -992,172 +877,193 @@
     </section>
 
     <!-- KURIKULUM -->
-    <section id="kurikulum" class="section-pad section-glass border-t border-b border-gold-400/10">
+    <section id="kurikulum" class="section-pad border-t border-emerald-400/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/40 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/40 text-[10px] font-bold uppercase tracking-widest mb-4">
                     <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
                     Materi Kejuruan
                 </span>
-                <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-white">Kurikulum & Mapel Produktif</p>
-                <div class="w-20 h-1 bg-gradient-to-r from-gold-400 to-cyan-400 mx-auto mt-4 rounded-full"></div>
+                <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-white font-display">
+                    Kurikulum & <span class="gradient-text">Mapel Produktif</span>
+                </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                <div class="card p-5 lg:p-6 group fade-in">
-                    <div class="w-12 h-12 rounded-xl bg-gold-400/10 text-gold-400 flex items-center justify-center text-xl mb-4 group-hover:bg-gold-400 group-hover:text-navy-900 transition-all duration-300 border border-gold-400/30">
-                        <i class="fa-solid fa-network-wired"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="card p-6 fade-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-400/30">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-emerald-400/20 font-display">01</span>
                     </div>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Komputer & Jaringan Dasar</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed mb-3">Perakitan PC, troubleshooting hardware, topologi jaringan, dan pengalamatan IP Address.</p>
-                    <span class="inline-block text-[10px] lg:text-xs font-semibold px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/30">Kelas X</span>
+                    <h3 class="text-lg font-bold text-white mb-2 font-display">Komputer & Jaringan Dasar</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Perakitan PC, troubleshooting hardware, topologi jaringan, dan pengalamatan IP Address.</p>
+                    <span class="inline-block text-[10px] font-semibold px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 uppercase tracking-wider">Kelas X</span>
                 </div>
 
-                <div class="card p-5 lg:p-6 group fade-in">
-                    <div class="w-12 h-12 rounded-xl bg-cyan-400/10 text-cyan-400 flex items-center justify-center text-xl mb-4 group-hover:bg-cyan-400 group-hover:text-navy-900 transition-all duration-300 border border-cyan-400/30">
-                        <i class="fa-solid fa-route"></i>
+                <div class="card p-6 fade-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-400/30">
+                            <i class="fa-solid fa-route"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-emerald-400/20 font-display">02</span>
                     </div>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Routing & Switching</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed mb-3">Konfigurasi router Cisco & MikroTik, VLAN, Static & Dynamic Routing, serta manajemen bandwidth.</p>
-                    <span class="inline-block text-[10px] lg:text-xs font-semibold px-3 py-1 rounded-full bg-cyan-400/10 text-cyan-400 border border-cyan-400/30">Kelas XI & XII</span>
+                    <h3 class="text-lg font-bold text-white mb-2 font-display">Routing & Switching</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Konfigurasi router Cisco & MikroTik, VLAN, Static & Dynamic Routing, serta manajemen bandwidth.</p>
+                    <span class="inline-block text-[10px] font-semibold px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 uppercase tracking-wider">Kelas XI & XII</span>
                 </div>
 
-                <div class="card p-5 lg:p-6 group fade-in">
-                    <div class="w-12 h-12 rounded-xl bg-gold-400/10 text-gold-400 flex items-center justify-center text-xl mb-4 group-hover:bg-gold-400 group-hover:text-navy-900 transition-all duration-300 border border-gold-400/30">
-                        <i class="fa-solid fa-server"></i>
+                <div class="card p-6 fade-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-400/30">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-emerald-400/20 font-display">03</span>
                     </div>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Administrasi Sistem Jaringan</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed mb-3">Membangun server berbasis Linux & Windows (DNS, DHCP, Web Server, Mail Server).</p>
-                    <span class="inline-block text-[10px] lg:text-xs font-semibold px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/30">Kelas XI & XII</span>
+                    <h3 class="text-lg font-bold text-white mb-2 font-display">Administrasi Sistem Jaringan</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Membangun server berbasis Linux & Windows (DNS, DHCP, Web Server, Mail Server).</p>
+                    <span class="inline-block text-[10px] font-semibold px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 uppercase tracking-wider">Kelas XI & XII</span>
                 </div>
 
-                <div class="card p-5 lg:p-6 group fade-in">
-                    <div class="w-12 h-12 rounded-xl bg-red-400/10 text-red-400 flex items-center justify-center text-xl mb-4 group-hover:bg-red-400 group-hover:text-white transition-all duration-300 border border-red-400/30">
-                        <i class="fa-solid fa-shield-halved"></i>
+                <div class="card p-6 fade-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-coral-500/10 text-coral-400 flex items-center justify-center text-xl border border-coral-500/30">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-coral-500/20 font-display">04</span>
                     </div>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Keamanan Jaringan</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed mb-3">Implementasi Firewall, VPN, Intrusion Detection System, dan pengamanan data digital.</p>
-                    <span class="inline-block text-[10px] lg:text-xs font-semibold px-3 py-1 rounded-full bg-red-400/10 text-red-400 border border-red-400/30">Kelas XII</span>
+                    <h3 class="text-lg font-bold text-white mb-2 font-display">Keamanan Jaringan</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Implementasi Firewall, VPN, Intrusion Detection System, dan pengamanan data digital.</p>
+                    <span class="inline-block text-[10px] font-semibold px-3 py-1 rounded-full bg-coral-500/10 text-coral-400 border border-coral-500/30 uppercase tracking-wider">Kelas XII</span>
                 </div>
 
-                <div class="card p-5 lg:p-6 group fade-in">
-                    <div class="w-12 h-12 rounded-xl bg-cyan-400/10 text-cyan-400 flex items-center justify-center text-xl mb-4 group-hover:bg-cyan-400 group-hover:text-navy-900 transition-all duration-300 border border-cyan-400/30">
-                        <i class="fa-solid fa-wifi"></i>
+                <div class="card p-6 fade-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-400/30">
+                            <i class="fa-solid fa-wifi"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-emerald-400/20 font-display">05</span>
                     </div>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Teknologi Fiber Optic</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed mb-3">Praktik penyambungan fiber optic (splicing), pengujian OTDR, dan instalasi FTTH.</p>
-                    <span class="inline-block text-[10px] lg:text-xs font-semibold px-3 py-1 rounded-full bg-cyan-400/10 text-cyan-400 border border-cyan-400/30">Kelas XI & XII</span>
+                    <h3 class="text-lg font-bold text-white mb-2 font-display">Teknologi Fiber Optic</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Praktik penyambungan fiber optic (splicing), pengujian OTDR, dan instalasi FTTH.</p>
+                    <span class="inline-block text-[10px] font-semibold px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 uppercase tracking-wider">Kelas XI & XII</span>
                 </div>
 
-                <div class="card p-5 lg:p-6 group fade-in">
-                    <div class="w-12 h-12 rounded-xl bg-gold-400/10 text-gold-400 flex items-center justify-center text-xl mb-4 group-hover:bg-gold-400 group-hover:text-navy-900 transition-all duration-300 border border-gold-400/30">
-                        <i class="fa-solid fa-cloud"></i>
+                <div class="card p-6 fade-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-400/30">
+                            <i class="fa-solid fa-cloud"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-emerald-400/20 font-display">06</span>
                     </div>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Teknologi Layanan Jaringan</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed mb-3">Konfigurasi VoIP, komunikasi data internet, cloud computing dasar, dan integrasi layanan web.</p>
-                    <span class="inline-block text-[10px] lg:text-xs font-semibold px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/30">Kelas XII</span>
+                    <h3 class="text-lg font-bold text-white mb-2 font-display">Teknologi Layanan Jaringan</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Konfigurasi VoIP, komunikasi data internet, cloud computing dasar, dan integrasi layanan web.</p>
+                    <span class="inline-block text-[10px] font-semibold px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 uppercase tracking-wider">Kelas XII</span>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FASILITAS -->
-    <section id="fasilitas" class="section-pad">
+    <section id="fasilitas" class="section-pad border-t border-emerald-400/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/40 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/40 text-[10px] font-bold uppercase tracking-widest mb-4">
                     <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
                     Infrastruktur
                 </span>
-                <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-white">Fasilitas Laboratorium</p>
-                <div class="w-20 h-1 bg-gradient-to-r from-gold-400 to-cyan-400 mx-auto mt-4 rounded-full"></div>
+                <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-white font-display">
+                    Fasilitas <span class="gradient-text">Laboratorium</span>
+                </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-                <div class="card p-5 lg:p-8 group fade-in">
-                    <div class="w-14 h-14 rounded-2xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 text-2xl mb-4 group-hover:scale-110 transition-transform shadow-md">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="card p-6 lg:p-8 fade-in">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-3xl mb-5">
                         <i class="fa-solid fa-desktop"></i>
                     </div>
-                    <span class="inline-block px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 text-[10px] lg:text-xs font-bold mb-3 border border-gold-400/30">Lab Utama</span>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Lab Komputer Jaringan & PC</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed">PC berspesifikasi tinggi, koneksi stabil, dan perangkat perakitan lengkap untuk praktikum hardware serta jaringan dasar.</p>
+                    <span class="inline-block px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 text-[10px] font-bold mb-3 border border-emerald-400/30 uppercase tracking-wider">Lab Utama</span>
+                    <h3 class="text-lg font-bold text-white mb-3 font-display">Lab Komputer Jaringan & PC</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">PC berspesifikasi tinggi, koneksi stabil, dan perangkat perakitan lengkap untuk praktikum hardware serta jaringan dasar.</p>
                 </div>
 
-                <div class="card p-5 lg:p-8 group fade-in">
-                    <div class="w-14 h-14 rounded-2xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 text-2xl mb-4 group-hover:scale-110 transition-transform shadow-md">
+                <div class="card p-6 lg:p-8 fade-in">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-3xl mb-5">
                         <i class="fa-solid fa-server"></i>
                     </div>
-                    <span class="inline-block px-3 py-1 rounded-full bg-cyan-400/10 text-cyan-400 text-[10px] lg:text-xs font-bold mb-3 border border-cyan-400/30">Networking</span>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Perangkat Cisco & MikroTik</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed">Router MikroTik, Switch Managed Cisco, dan rack server mandiri untuk simulasi routing, switching, dan manajemen bandwidth.</p>
+                    <span class="inline-block px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 text-[10px] font-bold mb-3 border border-emerald-400/30 uppercase tracking-wider">Networking</span>
+                    <h3 class="text-lg font-bold text-white mb-3 font-display">Perangkat Cisco & MikroTik</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Router MikroTik, Switch Managed Cisco, dan rack server mandiri untuk simulasi routing, switching, dan manajemen bandwidth.</p>
                 </div>
 
-                <div class="card p-5 lg:p-8 group fade-in">
-                    <div class="w-14 h-14 rounded-2xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 text-2xl mb-4 group-hover:scale-110 transition-transform shadow-md">
+                <div class="card p-6 lg:p-8 fade-in">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-3xl mb-5">
                         <i class="fa-solid fa-wave-square"></i>
                     </div>
-                    <span class="inline-block px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 text-[10px] lg:text-xs font-bold mb-3 border border-gold-400/30">Fiber Optic</span>
-                    <h3 class="text-base lg:text-lg font-bold text-white mb-2">Lab Fiber Optic & Splicer</h3>
-                    <p class="text-slate-400 text-xs lg:text-sm leading-relaxed">Fusion Splicer profesional, OTDR, dan media converter untuk praktik penyambungan core fiber optic serta instalasi FTTH.</p>
+                    <span class="inline-block px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 text-[10px] font-bold mb-3 border border-emerald-400/30 uppercase tracking-wider">Fiber Optic</span>
+                    <h3 class="text-lg font-bold text-white mb-3 font-display">Lab Fiber Optic & Splicer</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Fusion Splicer profesional, OTDR, dan media converter untuk praktik penyambungan core fiber optic serta instalasi FTTH.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- GALERI -->
-    <section id="galeri" class="section-pad section-glass border-t border-b border-gold-400/10">
+    <section id="galeri" class="section-pad border-t border-emerald-400/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/40 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/40 text-[10px] font-bold uppercase tracking-widest mb-4">
                     <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
                     Dokumentasi
                 </span>
-                <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-white">Galeri Kegiatan Siswa</p>
-                <div class="w-20 h-1 bg-gradient-to-r from-gold-400 to-cyan-400 mx-auto mt-4 rounded-full"></div>
+                <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-white font-display">
+                    Galeri <span class="gradient-text">Kegiatan Siswa</span>
+                </h2>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                <div class="card p-5 lg:p-6 group flex flex-col fade-in">
-                    <div class="w-11 h-11 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 text-lg mb-4 group-hover:scale-110 transition-transform shadow-md">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card p-6 flex flex-col fade-in">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-4">
                         <i class="fa-solid fa-network-wired"></i>
                     </div>
-                    <h4 class="text-white font-bold text-sm lg:text-base mb-2">Praktik Splicing FO</h4>
-                    <p class="text-slate-400 text-[10px] lg:text-xs leading-relaxed flex-grow">Penyambungan core kabel optik menggunakan fusion splicer di bawah bimbingan guru produktif.</p>
-                    <div class="mt-4 pt-3 border-t border-gold-400/15">
-                        <span class="text-gold-400 text-[10px] lg:text-xs font-mono font-semibold">Kelas XI & XII</span>
+                    <h4 class="text-white font-bold text-base mb-2 font-display">Praktik Splicing FO</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed flex-grow">Penyambungan core kabel optik menggunakan fusion splicer di bawah bimbingan guru produktif.</p>
+                    <div class="mt-4 pt-3 border-t border-emerald-400/15">
+                        <span class="text-emerald-400 text-xs font-mono font-semibold">Kelas XI & XII</span>
                     </div>
                 </div>
 
-                <div class="card p-5 lg:p-6 group flex flex-col fade-in">
-                    <div class="w-11 h-11 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 text-lg mb-4 group-hover:scale-110 transition-transform shadow-md">
+                <div class="card p-6 flex flex-col fade-in">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-4">
                         <i class="fa-solid fa-route"></i>
                     </div>
-                    <h4 class="text-white font-bold text-sm lg:text-base mb-2">Setting Router</h4>
-                    <p class="text-slate-400 text-[10px] lg:text-xs leading-relaxed flex-grow">Konfigurasi MikroTik RouterOS, pengaturan DHCP server, dan aturan firewall keamanan jaringan.</p>
-                    <div class="mt-4 pt-3 border-t border-cyan-400/15">
-                        <span class="text-cyan-400 text-[10px] lg:text-xs font-mono font-semibold">Praktikum</span>
+                    <h4 class="text-white font-bold text-base mb-2 font-display">Setting Router</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed flex-grow">Konfigurasi MikroTik RouterOS, pengaturan DHCP server, dan aturan firewall keamanan jaringan.</p>
+                    <div class="mt-4 pt-3 border-t border-emerald-400/15">
+                        <span class="text-emerald-400 text-xs font-mono font-semibold">Praktikum</span>
                     </div>
                 </div>
 
-                <div class="card p-5 lg:p-6 group flex flex-col fade-in">
-                    <div class="w-11 h-11 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 text-lg mb-4 group-hover:scale-110 transition-transform shadow-md">
+                <div class="card p-6 flex flex-col fade-in">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-4">
                         <i class="fa-solid fa-microchip"></i>
                     </div>
-                    <h4 class="text-white font-bold text-sm lg:text-base mb-2">Perakitan PC</h4>
-                    <p class="text-slate-400 text-[10px] lg:text-xs leading-relaxed flex-grow">Pengenalan komponen hardware, perakitan unit komputer, dan troubleshooting motherboard.</p>
-                    <div class="mt-4 pt-3 border-t border-gold-400/15">
-                        <span class="text-gold-400 text-[10px] lg:text-xs font-mono font-semibold">Kelas X</span>
+                    <h4 class="text-white font-bold text-base mb-2 font-display">Perakitan PC</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed flex-grow">Pengenalan komponen hardware, perakitan unit komputer, dan troubleshooting motherboard.</p>
+                    <div class="mt-4 pt-3 border-t border-emerald-400/15">
+                        <span class="text-emerald-400 text-xs font-mono font-semibold">Kelas X</span>
                     </div>
                 </div>
 
-                <div class="card p-5 lg:p-6 group flex flex-col fade-in">
-                    <div class="w-11 h-11 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 text-lg mb-4 group-hover:scale-110 transition-transform shadow-md">
+                <div class="card p-6 flex flex-col fade-in">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg mb-4">
                         <i class="fa-solid fa-building-user"></i>
                     </div>
-                    <h4 class="text-white font-bold text-sm lg:text-base mb-2">PKL Industri</h4>
-                    <p class="text-slate-400 text-[10px] lg:text-xs leading-relaxed flex-grow">Penerapan keahlian langsung ke perusahaan telekomunikasi mitra dan penyedia layanan internet (ISP).</p>
-                    <div class="mt-4 pt-3 border-t border-cyan-400/15">
-                        <span class="text-cyan-400 text-[10px] lg:text-xs font-mono font-semibold">Dunia Kerja</span>
+                    <h4 class="text-white font-bold text-base mb-2 font-display">PKL Industri</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed flex-grow">Penerapan keahlian langsung ke perusahaan telekomunikasi mitra dan penyedia layanan internet (ISP).</p>
+                    <div class="mt-4 pt-3 border-t border-emerald-400/15">
+                        <span class="text-emerald-400 text-xs font-mono font-semibold">Dunia Kerja</span>
                     </div>
                 </div>
             </div>
@@ -1165,85 +1071,89 @@
     </section>
 
     <!-- KONTAK -->
-    <section id="kontak" class="section-pad">
+    <section id="kontak" class="section-pad border-t border-emerald-400/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-400/10 text-gold-400 border border-gold-400/40 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/40 text-[10px] font-bold uppercase tracking-widest mb-4">
                     <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
                     Hubungi Kami
                 </span>
-                <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-white">Lokasi & Informasi Pendaftaran</p>
-                <div class="w-20 h-1 bg-gradient-to-r from-gold-400 to-cyan-400 mx-auto mt-4 rounded-full"></div>
+                <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-white font-display">
+                    Lokasi & <span class="gradient-text">Informasi</span>
+                </h2>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
                 <div class="lg:col-span-5 fade-in">
-                    <div class="card p-5 lg:p-8 space-y-5 h-full">
-                        <div class="flex items-center gap-3 border-b border-gold-400/15 pb-4">
-                            <div class="logo-wrap w-12 h-12 rounded-xl border border-gold-400/40 shadow-sm">
+                    <div class="card p-6 lg:p-8 space-y-5 h-full">
+                        <div class="flex items-center gap-3 border-b border-emerald-400/15 pb-5">
+                            <div class="logo-wrap w-14 h-14 rounded-2xl border border-emerald-400/40">
                                 <img src="tkj.jpeg" alt="TKJ">
                             </div>
-                            <h3 class="text-base lg:text-xl font-bold text-white">SMKN 2 Tembilahan</h3>
-                        </div>
-                        
-                        <div class="flex items-start gap-3">
-                            <div class="p-2.5 rounded-xl bg-gold-400/10 text-gold-400 border border-gold-400/30 flex-shrink-0"><i class="fa-solid fa-location-dot text-sm"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-xs lg:text-sm">Alamat Sekolah</h4>
-                                <p class="text-slate-400 text-[10px] lg:text-sm mt-1">Jl. Pendidikan / Parit 10, Tembilahan Hulu, Kab. Indragiri Hilir, Riau 29213</p>
+                                <h3 class="text-lg font-bold text-white font-display">SMKN 2 Tembilahan</h3>
+                                <p class="text-xs text-emerald-400/70 tracking-wider uppercase">Indragiri Hilir • Riau</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-3">
-                            <div class="p-2.5 rounded-xl bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 flex-shrink-0"><i class="fa-solid fa-envelope text-sm"></i></div>
+                            <div class="p-2.5 rounded-xl bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 flex-shrink-0"><i class="fa-solid fa-location-dot text-sm"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-xs lg:text-sm">Email Resmi</h4>
-                                <p class="text-slate-400 text-[10px] lg:text-sm mt-1 selectable">tkj@smkn2tembilahan.sch.id</p>
+                                <h4 class="font-bold text-white text-sm mb-1">Alamat Sekolah</h4>
+                                <p class="text-slate-400 text-xs">Jl. Pendidikan / Parit 10, Tembilahan Hulu, Kab. Indragiri Hilir, Riau 29213</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-3">
-                            <div class="p-2.5 rounded-xl bg-gold-400/10 text-gold-400 border border-gold-400/30 flex-shrink-0"><i class="fa-solid fa-phone text-sm"></i></div>
+                            <div class="p-2.5 rounded-xl bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 flex-shrink-0"><i class="fa-solid fa-envelope text-sm"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-xs lg:text-sm">Telepon / WhatsApp</h4>
-                                <a href="tel:+6281276543210" class="text-slate-400 text-[10px] lg:text-sm mt-1 block hover:text-gold-400">+62 812-7654-3210</a>
+                                <h4 class="font-bold text-white text-sm mb-1">Email Resmi</h4>
+                                <p class="text-slate-400 text-xs selectable">tkj@smkn2tembilahan.sch.id</p>
                             </div>
                         </div>
                         
-                        <div class="pt-4 border-t border-gold-400/15 flex gap-2">
-                            <a href="#" class="w-9 h-9 rounded-xl bg-navy-700/60 hover:bg-gold-400 hover:text-navy-900 text-gold-400 flex items-center justify-center transition-all border border-gold-400/30" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-                            <a href="#" class="w-9 h-9 rounded-xl bg-navy-700/60 hover:bg-gold-400 hover:text-navy-900 text-gold-400 flex items-center justify-center transition-all border border-gold-400/30" aria-label="Instagram"><i class="fa-brands fa-instagram text-sm"></i></a>
-                            <a href="#" class="w-9 h-9 rounded-xl bg-navy-700/60 hover:bg-gold-400 hover:text-navy-900 text-gold-400 flex items-center justify-center transition-all border border-gold-400/30" aria-label="YouTube"><i class="fa-brands fa-youtube text-sm"></i></a>
-                            <a href="#" class="w-9 h-9 rounded-xl bg-navy-700/60 hover:bg-gold-400 hover:text-navy-900 text-gold-400 flex items-center justify-center transition-all border border-gold-400/30" aria-label="TikTok"><i class="fa-brands fa-tiktok text-sm"></i></a>
+                        <div class="flex items-start gap-3">
+                            <div class="p-2.5 rounded-xl bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 flex-shrink-0"><i class="fa-solid fa-phone text-sm"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm mb-1">Telepon / WhatsApp</h4>
+                                <a href="tel:+6281276543210" class="text-slate-400 text-xs block hover:text-emerald-400">+62 812-7654-3210</a>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-5 border-t border-emerald-400/15 flex gap-2">
+                            <a href="#" class="w-10 h-10 rounded-xl bg-ocean-800 hover:bg-emerald-400 hover:text-ocean-900 text-emerald-400 flex items-center justify-center transition-all border border-emerald-400/30" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-ocean-800 hover:bg-emerald-400 hover:text-ocean-900 text-emerald-400 flex items-center justify-center transition-all border border-emerald-400/30" aria-label="Instagram"><i class="fa-brands fa-instagram text-sm"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-ocean-800 hover:bg-emerald-400 hover:text-ocean-900 text-emerald-400 flex items-center justify-center transition-all border border-emerald-400/30" aria-label="YouTube"><i class="fa-brands fa-youtube text-sm"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-ocean-800 hover:bg-emerald-400 hover:text-ocean-900 text-emerald-400 flex items-center justify-center transition-all border border-emerald-400/30" aria-label="TikTok"><i class="fa-brands fa-tiktok text-sm"></i></a>
                         </div>
                     </div>
                 </div>
 
                 <div class="lg:col-span-7 fade-in">
-                    <div class="card p-5 lg:p-8">
-                        <h3 class="text-base lg:text-xl font-bold text-white mb-2">Kirim Pesan / Pertanyaan</h3>
-                        <p class="text-slate-400 text-[10px] lg:text-sm mb-5">Punya pertanyaan seputar jurusan TKJ atau PPDB? Kirimkan pesan melalui form di bawah ini.</p>
+                    <div class="card p-6 lg:p-8">
+                        <h3 class="text-lg font-bold text-white mb-2 font-display">Kirim Pesan</h3>
+                        <p class="text-slate-400 text-xs mb-6">Punya pertanyaan seputar jurusan TKJ atau PPDB? Kirimkan pesan melalui form di bawah ini.</p>
                         
-                        <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-3 lg:space-y-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4">
+                        <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="nama" class="block text-[10px] lg:text-xs font-semibold text-slate-300 mb-1">Nama Lengkap</label>
-                                    <input type="text" id="nama" required class="w-full px-3 lg:px-4 py-2.5 lg:py-3 rounded-xl bg-navy-900/60 border border-gold-400/30 text-white text-sm focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-all" placeholder="Nama Anda">
+                                    <label for="nama" class="block text-xs font-semibold text-emerald-400/80 mb-2 uppercase tracking-wider">Nama Lengkap</label>
+                                    <input type="text" id="nama" required class="w-full px-4 py-3 rounded-2xl bg-ocean-900 border border-emerald-400/30 text-white text-sm focus:outline-none focus:border-emerald-400 transition-all" placeholder="Nama Anda">
                                 </div>
                                 <div>
-                                    <label for="kontak" class="block text-[10px] lg:text-xs font-semibold text-slate-300 mb-1">Email / WhatsApp</label>
-                                    <input type="text" id="kontak" required class="w-full px-3 lg:px-4 py-2.5 lg:py-3 rounded-xl bg-navy-900/60 border border-gold-400/30 text-white text-sm focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-all" placeholder="email / No HP">
+                                    <label for="kontak" class="block text-xs font-semibold text-emerald-400/80 mb-2 uppercase tracking-wider">Email / WhatsApp</label>
+                                    <input type="text" id="kontak" required class="w-full px-4 py-3 rounded-2xl bg-ocean-900 border border-emerald-400/30 text-white text-sm focus:outline-none focus:border-emerald-400 transition-all" placeholder="email / No HP">
                                 </div>
                             </div>
                             <div>
-                                <label for="subjek" class="block text-[10px] lg:text-xs font-semibold text-slate-300 mb-1">Subjek Pesan</label>
-                                <input type="text" id="subjek" required class="w-full px-3 lg:px-4 py-2.5 lg:py-3 rounded-xl bg-navy-900/60 border border-gold-400/30 text-white text-sm focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-all" placeholder="Contoh: Informasi PPDB TKJ">
+                                <label for="subjek" class="block text-xs font-semibold text-emerald-400/80 mb-2 uppercase tracking-wider">Subjek Pesan</label>
+                                <input type="text" id="subjek" required class="w-full px-4 py-3 rounded-2xl bg-ocean-900 border border-emerald-400/30 text-white text-sm focus:outline-none focus:border-emerald-400 transition-all" placeholder="Contoh: Informasi PPDB TKJ">
                             </div>
                             <div>
-                                <label for="pesan" class="block text-[10px] lg:text-xs font-semibold text-slate-300 mb-1">Pesan Anda</label>
-                                <textarea id="pesan" rows="4" required class="w-full px-3 lg:px-4 py-2.5 lg:py-3 rounded-xl bg-navy-900/60 border border-gold-400/30 text-white text-sm focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-all" placeholder="Tuliskan isi pesan Anda..."></textarea>
+                                <label for="pesan" class="block text-xs font-semibold text-emerald-400/80 mb-2 uppercase tracking-wider">Pesan Anda</label>
+                                <textarea id="pesan" rows="4" required class="w-full px-4 py-3 rounded-2xl bg-ocean-900 border border-emerald-400/30 text-white text-sm focus:outline-none focus:border-emerald-400 transition-all" placeholder="Tuliskan isi pesan Anda..."></textarea>
                             </div>
-                            <button type="submit" class="w-full py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-gold-400 to-gold-600 hover:from-gold-300 hover:to-gold-500 text-navy-900 font-bold shadow-lg transition-transform duration-300 hover:-translate-y-0.5 ripple flex items-center justify-center gap-2">
+                            <button type="submit" class="w-full py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-ocean-900 font-bold transition-transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
                                 Kirim Pesan <i class="fa-solid fa-paper-plane"></i>
                             </button>
                         </form>
@@ -1254,28 +1164,28 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="glass border-t border-gold-400/15 py-8 lg:py-10">
+    <footer class="border-t border-emerald-400/15 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 lg:gap-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center space-x-3">
-                    <div class="logo-wrap w-10 h-10 rounded-xl shadow-md border border-gold-400/40">
-                        <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-gradient-to-tr from-gold-400 to-gold-600 flex items-center justify-center rounded-lg\'><i class=\'fa-solid fa-network-wired text-navy-900\'></i></div>';">
+                    <div class="logo-wrap w-12 h-12 rounded-2xl border border-emerald-400/40">
+                        <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-emerald-500 flex items-center justify-center rounded-lg\'><i class=\'fa-solid fa-network-wired text-ocean-900\'></i></div>';">
                     </div>
                     <div>
-                        <span class="block font-bold text-sm lg:text-base text-white">Teknik Jaringan Komputer</span>
-                        <span class="block text-[10px] lg:text-xs text-gold-400/70">SMKN 2 Tembilahan © 2026</span>
+                        <span class="block font-bold text-sm text-white font-display">Teknik Jaringan Komputer</span>
+                        <span class="block text-xs text-emerald-400/70">SMKN 2 Tembilahan © 2026</span>
                     </div>
                 </div>
-                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-xs lg:text-sm text-slate-400">
-                    <a href="#beranda" class="hover:text-gold-400 transition-colors">Beranda</a>
-                    <a href="#tools" class="hover:text-gold-400 transition-colors">Tools</a>
-                    <a href="#tentang" class="hover:text-gold-400 transition-colors">Tentang</a>
-                    <a href="#kurikulum" class="hover:text-gold-400 transition-colors">Kurikulum</a>
-                    <a href="#kontak" class="hover:text-gold-400 transition-colors">Kontak</a>
+                <div class="flex flex-wrap items-center justify-center gap-5 text-sm text-slate-400">
+                    <a href="#beranda" class="hover:text-emerald-400 transition-colors">Beranda</a>
+                    <a href="#tools" class="hover:text-emerald-400 transition-colors">Tools</a>
+                    <a href="#tentang" class="hover:text-emerald-400 transition-colors">Tentang</a>
+                    <a href="#kurikulum" class="hover:text-emerald-400 transition-colors">Kurikulum</a>
+                    <a href="#kontak" class="hover:text-emerald-400 transition-colors">Kontak</a>
                 </div>
             </div>
-            <div class="mt-6 pt-4 border-t border-gold-400/15 text-center">
-                <p class="text-[10px] lg:text-xs text-slate-500 font-mono">v1.0.0 • PWA Ready • Install ke Home Screen</p>
+            <div class="mt-6 pt-6 border-t border-emerald-400/15 text-center">
+                <p class="text-xs text-slate-500 font-mono">v1.0.0 • PWA Ready</p>
             </div>
         </div>
     </footer>
@@ -1308,17 +1218,17 @@
 
     <!-- INSTALL BANNER -->
     <div id="install-banner">
-        <div class="logo-wrap w-12 h-12 rounded-xl shadow-md flex-shrink-0 border border-gold-400/40">
+        <div class="logo-wrap w-12 h-12 rounded-2xl flex-shrink-0 border border-emerald-400/40">
             <img src="tkj.jpeg" alt="Install">
         </div>
         <div class="flex-1 min-w-0">
             <h4 class="font-bold text-white text-sm">Install Aplikasi TKJ</h4>
-            <p class="text-slate-400 text-[10px] truncate">Akses lebih cepat dari home screen</p>
+            <p class="text-slate-400 text-xs truncate">Akses lebih cepat dari home screen</p>
         </div>
-        <button onclick="installApp()" class="px-3 py-2 rounded-lg bg-gradient-to-r from-gold-400 to-gold-600 text-navy-900 font-bold text-xs shadow-md flex-shrink-0">
+        <button onclick="installApp()" class="px-3 py-2 rounded-lg bg-emerald-500 text-ocean-900 font-bold text-xs flex-shrink-0">
             Install
         </button>
-        <button onclick="dismissInstallBanner()" class="text-slate-400 hover:text-slate-200 p-1 flex-shrink-0" aria-label="Tutup">
+        <button onclick="dismissInstallBanner()" class="text-slate-400 p-1 flex-shrink-0" aria-label="Tutup">
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
@@ -1338,9 +1248,7 @@
         setInterval(updateClockWIB, 1000);
         updateClockWIB();
 
-        // === BITCOIN MARKET TICKER (CoinGecko - free, no API key) ===
-        let btcHistory = [64200, 64500, 64100, 64800, 65200, 65000, 65400]; // dummy awal
-        
+        // BITCOIN
         async function fetchBTC() {
             try {
                 const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
@@ -1348,66 +1256,34 @@
                 const price = data.bitcoin.usd;
                 const change = data.bitcoin.usd_24h_change;
                 
-                // Update history untuk sparkline
-                btcHistory.push(price);
-                if (btcHistory.length > 10) btcHistory.shift();
-                
-                // Format harga
                 const priceStr = '$' + price.toLocaleString('en-US', { maximumFractionDigits: 0 });
                 const changeStr = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
                 const changeClass = change >= 0 ? 'up' : 'down';
-                const changeIcon = change >= 0 ? '▲' : '▼';
-                const sparkColor = change >= 0 ? '#10b981' : '#ef4444';
                 
                 const priceEl = document.getElementById('btc-price');
                 const changeEl = document.getElementById('btc-change');
                 const mobileEl = document.getElementById('btc-price-mobile');
-                const sparkEl = document.getElementById('btc-spark');
                 
                 if (priceEl) priceEl.textContent = priceStr;
                 if (changeEl) {
-                    changeEl.textContent = changeIcon + ' ' + changeStr;
+                    changeEl.textContent = changeStr;
                     changeEl.className = 'ticker-change ' + changeClass;
                 }
-                if (mobileEl) {
-                    const shortPrice = '$' + (price / 1000).toFixed(1) + 'k';
-                    mobileEl.textContent = shortPrice;
-                }
-                
-                // Update sparkline
-                if (sparkEl && btcHistory.length >= 2) {
-                    const min = Math.min(...btcHistory);
-                    const max = Math.max(...btcHistory);
-                    const range = max - min || 1;
-                    const points = btcHistory.map((val, i) => {
-                        const x = (i / (btcHistory.length - 1)) * 44;
-                        const y = 22 - ((val - min) / range) * 20;
-                        return `${x.toFixed(1)} ${y.toFixed(1)}`;
-                    }).join(' L ');
-                    
-                    const path = sparkEl.querySelector('path');
-                    if (path) {
-                        path.setAttribute('d', `M ${points}`);
-                        path.setAttribute('stroke', sparkColor);
-                    }
-                }
-            } catch (e) {
-                console.log('BTC fetch error:', e);
-            }
+                if (mobileEl) mobileEl.textContent = '$' + (price / 1000).toFixed(1) + 'k';
+            } catch (e) {}
         }
         fetchBTC();
         setInterval(fetchBTC, 60000);
 
-        // Open BTC Detail (toast simulasi)
         function openBtcDetail() {
             const price = document.getElementById('btc-price')?.textContent || '--';
             const change = document.getElementById('btc-change')?.textContent || '--';
-            showToast(`BTC ${price} • ${change} (24h)`, 'info', 3500);
+            showToast(`₿ BTC ${price} • ${change} (24h)`, 'info', 3500);
         }
 
         // SPLASH
         window.addEventListener('load', () => {
-            setTimeout(() => document.getElementById('splash-screen').classList.add('hidden-splash'), 1500);
+            setTimeout(() => document.getElementById('splash-screen').classList.add('hidden-splash'), 1200);
         });
 
         // APP MODE
@@ -1421,7 +1297,7 @@
             }
         }
 
-        // PWA INSTALL
+        // PWA
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -1461,13 +1337,12 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            const icons = { success: 'fa-circle-check text-green-500', error: 'fa-circle-exclamation text-red-500', info: 'fa-circle-info text-cyan-400' };
+            const icons = { success: 'fa-circle-check text-emerald-400', error: 'fa-circle-exclamation text-coral-400', info: 'fa-circle-info text-emerald-400' };
             toast.innerHTML = `<i class="fa-solid ${icons[type]} text-lg"></i><span class="text-sm text-slate-200 font-medium">${message}</span>`;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-10px)';
-                setTimeout(() => toast.remove(), 300);
+                setTimeout(() => toast.remove(), 200);
             }, duration);
         }
 
@@ -1492,19 +1367,17 @@
         // TOOL TABS
         function switchTab(tabName) {
             const tabs = ['subnet', 'cable', 'latency'];
-            const activeClasses = 'tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-gradient-to-r from-gold-400 to-gold-600 text-navy-900 shadow-lg flex items-center gap-2';
-            const inactiveClasses = 'tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-navy-700/60 text-slate-300 border border-gold-400/30 hover:border-gold-400 hover:bg-gold-400/10 flex items-center gap-2';
+            const activeClasses = 'tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-emerald-500 text-ocean-900 flex items-center gap-2';
+            const inactiveClasses = 'tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-ocean-800 text-slate-300 border border-emerald-400/30 flex items-center gap-2';
             tabs.forEach(t => {
                 const panel = document.getElementById('tool-' + t);
                 const btn = document.getElementById('tab-' + t);
                 if (t === tabName) {
                     panel.classList.remove('hidden');
                     btn.className = activeClasses;
-                    btn.setAttribute('aria-selected', 'true');
                 } else {
                     panel.classList.add('hidden');
                     btn.className = inactiveClasses;
-                    btn.setAttribute('aria-selected', 'false');
                 }
             });
             if (navigator.vibrate) navigator.vibrate(10);
@@ -1519,14 +1392,14 @@
             
             if (!ipRegex.test(ip)) {
                 resBox.classList.remove('hidden');
-                resBox.innerHTML = '<span class="text-red-500 font-semibold">⚠️ Format IP tidak valid! Contoh: 192.168.1.1</span>';
+                resBox.innerHTML = '<span class="text-coral-400 font-semibold">⚠️ Format IP tidak valid! Contoh: 192.168.1.1</span>';
                 showToast('Format IP tidak valid', 'error');
                 return;
             }
             const parts = ip.split('.').map(Number);
             if (parts.some(p => p < 0 || p > 255)) {
                 resBox.classList.remove('hidden');
-                resBox.innerHTML = '<span class="text-red-500 font-semibold">⚠️ Oktet IP harus 0-255!</span>';
+                resBox.innerHTML = '<span class="text-coral-400 font-semibold">⚠️ Oktet IP harus 0-255!</span>';
                 showToast('Oktet IP harus 0-255', 'error');
                 return;
             }
@@ -1551,16 +1424,16 @@
             
             resBox.classList.remove('hidden');
             resBox.innerHTML = `
-                <p class="text-gold-400 font-bold mb-3">📊 Hasil Subnetting (/${cidr}):</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] lg:text-xs">
+                <p class="text-emerald-400 font-bold mb-3">📊 Hasil Subnetting (/${cidr}):</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     <div><span class="text-slate-500">IP:</span> <span class="text-white font-semibold">${ip}</span></div>
                     <div><span class="text-slate-500">Netmask:</span> <span class="text-white font-semibold">${subnetMask}</span></div>
                     <div><span class="text-slate-500">Wildcard:</span> <span class="text-white font-semibold">${wildcard}</span></div>
-                    <div><span class="text-slate-500">Network:</span> <span class="text-gold-400 font-semibold">${networkId}</span></div>
-                    <div><span class="text-slate-500">Broadcast:</span> <span class="text-gold-400 font-semibold">${broadcastId}</span></div>
+                    <div><span class="text-slate-500">Network:</span> <span class="text-emerald-400 font-semibold">${networkId}</span></div>
+                    <div><span class="text-slate-500">Broadcast:</span> <span class="text-emerald-400 font-semibold">${broadcastId}</span></div>
                     <div><span class="text-slate-500">Total Host:</span> <span class="text-white font-semibold">${totalHosts} IP</span></div>
-                    <div><span class="text-slate-500">Usable:</span> <span class="text-green-400 font-bold">${usableHosts} IP</span></div>
-                    <div><span class="text-slate-500">Status:</span> <span class="text-cyan-400 font-semibold">Ready</span></div>
+                    <div><span class="text-slate-500">Usable:</span> <span class="text-emerald-300 font-bold">${usableHosts} IP</span></div>
+                    <div><span class="text-slate-500">Status:</span> <span class="text-emerald-400 font-semibold">Ready</span></div>
                 </div>
             `;
             if (navigator.vibrate) navigator.vibrate(20);
@@ -1574,17 +1447,17 @@
             const target = document.getElementById('ping-target').value.trim() || '192.168.2.1';
             const consoleBox = document.getElementById('ping-console');
             if (pingInterval) clearInterval(pingInterval);
-            consoleBox.innerHTML = `<p class="text-gold-400">Pinging ${target} with 32 bytes of data:</p>`;
+            consoleBox.innerHTML = `<p class="text-emerald-400">Pinging ${target} with 32 bytes of data:</p>`;
             let count = 0;
             pingInterval = setInterval(() => {
                 count++;
                 const time = (Math.random() * 2 + 0.3).toFixed(1);
-                consoleBox.innerHTML += `<p class="text-green-400">Reply from ${target}: bytes=32 time=${time}ms TTL=64</p>`;
+                consoleBox.innerHTML += `<p class="text-emerald-400">Reply from ${target}: bytes=32 time=${time}ms TTL=64</p>`;
                 consoleBox.scrollTop = consoleBox.scrollHeight;
                 if (count >= 4) {
                     clearInterval(pingInterval);
                     pingInterval = null;
-                    consoleBox.innerHTML += `<p class="text-gold-400 font-bold mt-2">Ping statistics for ${target}: Sent = 4, Received = 4, Lost = 0 (0% loss)</p>`;
+                    consoleBox.innerHTML += `<p class="text-emerald-300 font-bold mt-2">Ping statistics for ${target}: Sent = 4, Received = 4, Lost = 0 (0% loss)</p>`;
                     consoleBox.scrollTop = consoleBox.scrollHeight;
                     if (navigator.vibrate) navigator.vibrate([10, 50, 10]);
                 }
@@ -1600,7 +1473,7 @@
             if (navigator.vibrate) navigator.vibrate(30);
         }
 
-        // SCROLL (rAF optimized)
+        // SCROLL — SUPER LIGHTWEIGHT
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1608,45 +1481,25 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+        }, { threshold: 0.05 });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-        const navbar = document.getElementById('navbar');
-        let scrollTicking = false;
-        let cachedSections = null;
-        let cachedNavItems = null;
-
-        function cacheElements() {
-            cachedSections = ['beranda', 'tools', 'kurikulum', 'galeri', 'kontak'].map(id => document.getElementById(id)).filter(Boolean);
-            cachedNavItems = document.querySelectorAll('.bottom-nav-item');
-        }
-
-        function updateOnScroll() {
-            const currentScrollY = window.scrollY;
-            if (currentScrollY > 50) navbar.classList.add('shadow-lg');
-            else navbar.classList.remove('shadow-lg');
-            
-            if (cachedSections && cachedNavItems) {
-                const scrollPos = currentScrollY + 150;
-                for (let i = cachedSections.length - 1; i >= 0; i--) {
-                    if (cachedSections[i].offsetTop <= scrollPos) {
-                        const targetNav = cachedSections[i].id;
-                        cachedNavItems.forEach(item => {
-                            item.classList.toggle('active', item.dataset.nav === targetNav);
-                        });
-                        break;
-                    }
+        // Bottom nav active state — pakai IntersectionObserver (bukan scroll listener!)
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                        item.classList.toggle('active', item.dataset.nav === id);
+                    });
                 }
-            }
-            scrollTicking = false;
-        }
+            });
+        }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
 
-        window.addEventListener('scroll', () => {
-            if (!scrollTicking) {
-                requestAnimationFrame(updateOnScroll);
-                scrollTicking = true;
-            }
-        }, { passive: true });
+        ['beranda', 'tools', 'kurikulum', 'galeri', 'kontak'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) navObserver.observe(el);
+        });
 
         document.querySelectorAll('.bottom-nav-item').forEach(item => {
             item.addEventListener('click', () => {
@@ -1654,10 +1507,7 @@
             });
         });
 
-        window.addEventListener('DOMContentLoaded', () => {
-            detectAppMode();
-            cacheElements();
-        });
+        window.addEventListener('DOMContentLoaded', () => detectAppMode());
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
