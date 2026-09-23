@@ -12,8 +12,8 @@
     <title>TKJ SMKN 2 Tembilahan</title>
     
     <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22TKJ%20SMKN%202%20Tembilahan%22%2C%22short_name%22%3A%22TKJ%20SMKN2%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23fffdf7%22%2C%22theme_color%22%3A%22%23f59e0b%22%2C%22orientation%22%3A%22portrait%22%7D">
-    <link rel="icon" href="smkn.jpeg">
-    <link rel="apple-touch-icon" href="smkn.jpeg">
+    <link rel="icon" href="tkj.jpeg">
+    <link rel="apple-touch-icon" href="tkj.jpeg">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -28,6 +28,31 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         mono: ['Fira Code', 'monospace']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                        'bounce-soft': 'bounceSoft 3s ease-in-out infinite',
+                        'shimmer': 'shimmer 3s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-12px)' }
+                        },
+                        bounceSoft: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-4px)' }
+                        },
+                        shimmer: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 0 0 rgba(245, 158, 11, 0.5)' },
+                            '50%': { boxShadow: '0 0 0 12px rgba(245, 158, 11, 0)' }
+                        }
                     }
                 }
             }
@@ -36,7 +61,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -62,33 +87,87 @@
         .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         
+        /* === PREMIUM CARD === */
         .card {
             background: #ffffff;
-            border: 1px solid rgba(245, 158, 11, 0.15);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.12);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 1px 3px rgba(245, 158, 11, 0.04),
+                0 4px 12px rgba(245, 158, 11, 0.06);
+            position: relative;
+            overflow: hidden;
         }
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.03) 0%, transparent 50%, rgba(249, 115, 22, 0.03) 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .card:hover::before { opacity: 1; }
         .card:hover {
-            border-color: rgba(249, 115, 22, 0.5);
-            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
-            transform: translateY(-2px);
+            border-color: rgba(249, 115, 22, 0.4);
+            box-shadow: 
+                0 4px 12px rgba(245, 158, 11, 0.1),
+                0 20px 40px rgba(245, 158, 11, 0.15);
+            transform: translateY(-4px);
         }
         
+        /* === GLASS CARD === */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+        }
+        
+        /* === GRADIENT TEXT === */
         .gradient-text {
-            background: linear-gradient(135deg, #f59e0b, #f97316, #ea580c);
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ea580c 100%);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: shimmer 4s ease-in-out infinite;
         }
         
+        /* === LOGO WRAPPER === */
+        .logo-wrap {
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 6px;
+        }
+        .logo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* === FADE IN === */
         .fade-in {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
         
+        /* === CURSOR BLINK === */
+        .cursor-blink::after {
+            content: '▊';
+            animation: blink 1s step-end infinite;
+            color: #f97316;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        /* === WARM GRID === */
         .warm-grid {
             background-image: 
                 linear-gradient(to right, rgba(245, 158, 11, 0.08) 1px, transparent 1px),
@@ -96,35 +175,47 @@
             background-size: 4rem 4rem;
         }
         
-        /* Splash Screen */
+        /* === SPLASH SCREEN === */
         #splash-screen {
             position: fixed; inset: 0; z-index: 9999;
             background: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ea580c 100%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+            overflow: hidden;
+        }
+        #splash-screen::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(255,255,255,0.1), transparent 40%);
+            animation: spin 25s linear infinite;
         }
         #splash-screen.hidden-splash { opacity: 0; visibility: hidden; }
         .splash-logo {
-            width: 120px; height: 120px; background: white; border-radius: 30px;
+            width: 130px; height: 130px; background: white; border-radius: 34px;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-            animation: splashPulse 1.5s ease-in-out infinite;
-            overflow: hidden; padding: 8px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3), 0 0 0 10px rgba(255, 255, 255, 0.15);
+            animation: splashPulse 1.8s ease-in-out infinite;
+            overflow: hidden; padding: 12px;
+            position: relative; z-index: 1;
         }
-        .splash-logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; }
+        .splash-logo img { width: 100%; height: 100%; object-fit: contain; }
         @keyframes splashPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .splash-loader {
-            width: 40px; height: 4px; background: rgba(255, 255, 255, 0.3);
-            border-radius: 4px; overflow: hidden; margin-top: 40px;
+            width: 48px; height: 4px; background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px; overflow: hidden; margin-top: 44px;
+            position: relative; z-index: 1;
         }
         .splash-loader::after {
             content: ''; display: block; width: 50%; height: 100%;
             background: white; border-radius: 4px;
-            animation: splashLoad 1.2s ease-in-out infinite;
+            animation: splashLoad 1.4s ease-in-out infinite;
         }
         @keyframes splashLoad { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
         
-        /* App Status Bar */
+        /* === APP STATUS BAR === */
         #app-status-bar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 60;
             background: #f59e0b; color: white; font-size: 11px; font-weight: 600;
@@ -134,10 +225,11 @@
         #app-status-bar.show { display: flex; }
         #app-status-bar.hide { transform: translateY(-100%); }
         
-        /* Bottom Nav */
+        /* === BOTTOM NAV === */
         #bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 55;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(245, 158, 11, 0.2);
             padding-bottom: env(safe-area-inset-bottom);
             display: none; box-shadow: 0 -4px 20px rgba(245, 158, 11, 0.08);
@@ -146,41 +238,42 @@
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 8px 4px; color: #78716c; font-size: 10px; font-weight: 600;
-            transition: color 0.2s ease; position: relative; flex: 1; text-decoration: none;
+            transition: color 0.25s ease; position: relative; flex: 1; text-decoration: none;
         }
-        .bottom-nav-item i { font-size: 18px; margin-bottom: 3px; transition: transform 0.2s ease; }
+        .bottom-nav-item i { font-size: 18px; margin-bottom: 3px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .bottom-nav-item.active { color: #ea580c; }
-        .bottom-nav-item.active i { transform: scale(1.15); }
+        .bottom-nav-item.active i { transform: scale(1.2) translateY(-2px); }
         .bottom-nav-item.active::before {
             content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 30px; height: 3px;
+            width: 32px; height: 3px;
             background: linear-gradient(to right, #f59e0b, #ea580c);
             border-radius: 0 0 4px 4px;
         }
         
-        /* Install Banner */
+        /* === INSTALL BANNER === */
         #install-banner {
             position: fixed; bottom: 80px; left: 12px; right: 12px; z-index: 58;
-            background: white; border: 2px solid #f59e0b; border-radius: 16px;
-            padding: 14px 16px; box-shadow: 0 12px 40px rgba(245, 158, 11, 0.25);
+            background: white; border: 2px solid #f59e0b; border-radius: 18px;
+            padding: 14px 16px; box-shadow: 0 16px 48px rgba(245, 158, 11, 0.3);
             display: none; align-items: center; gap: 12px;
-            animation: slideUp 0.4s ease-out;
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         #install-banner.show { display: flex; }
-        @keyframes slideUp { 0% { transform: translateY(100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { 0% { transform: translateY(120%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         @keyframes slideDown { 0% { transform: translateY(-20px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         
-        /* Offline Indicator */
+        /* === OFFLINE INDICATOR === */
         #offline-indicator {
             position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-100px);
-            z-index: 70; background: #dc2626; color: white; padding: 8px 16px;
-            border-radius: 20px; font-size: 12px; font-weight: 600;
+            z-index: 70; background: #dc2626; color: white; padding: 10px 18px;
+            border-radius: 24px; font-size: 12px; font-weight: 600;
             display: flex; align-items: center; gap: 8px;
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); transition: transform 0.3s ease;
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.35);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         #offline-indicator.show { transform: translateX(-50%) translateY(0); }
         
-        /* Toast */
+        /* === TOAST === */
         #toast-container {
             position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
             z-index: 80; display: flex; flex-direction: column; gap: 8px;
@@ -188,27 +281,28 @@
         }
         .toast {
             background: white; border-left: 4px solid #f59e0b;
-            padding: 12px 16px; border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            padding: 12px 16px; border-radius: 14px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
             display: flex; align-items: center; gap: 12px;
-            animation: slideDown 0.3s ease-out; pointer-events: auto;
+            animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto;
         }
         .toast.success { border-left-color: #16a34a; }
         .toast.error { border-left-color: #dc2626; }
         .toast.info { border-left-color: #f59e0b; }
         
-        /* Ripple */
+        /* === RIPPLE === */
         .ripple { position: relative; overflow: hidden; }
         .ripple::after {
             content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle, rgba(255,255,255,0.4) 10%, transparent 10.01%);
+            background: radial-gradient(circle, rgba(255,255,255,0.5) 10%, transparent 10.01%);
             background-position: center; background-repeat: no-repeat;
             background-size: 1000% 1000%; opacity: 0;
-            transition: background-size 0.4s, opacity 0.8s; pointer-events: none;
+            transition: background-size 0.5s, opacity 0.9s; pointer-events: none;
         }
         .ripple:active::after { background-size: 0% 0%; opacity: 1; transition: 0s; }
         
-        /* App Mode */
+        /* === APP MODE === */
         body.app-mode { padding-bottom: 70px; }
         body.app-mode header { padding-top: env(safe-area-inset-top); }
         body.app-mode #banner-visual { padding-top: calc(4rem + env(safe-area-inset-top)); }
@@ -226,19 +320,36 @@
         }
 
         .jam-wib { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+        
+        /* === DECORATIVE BLOBS === */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+        }
+        
+        /* === HERO TERMINAL === */
+        .terminal-window {
+            background: #ffffff;
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(245, 158, 11, 0.25);
+        }
     </style>
 </head>
 <body class="bg-cream-50 text-slate-800 antialiased selection:bg-orange-400 selection:text-white overflow-x-hidden">
 
-    <!-- ==================== SPLASH SCREEN (PAKAI FOTO) ==================== -->
+    <!-- ==================== SPLASH SCREEN ==================== -->
     <div id="splash-screen">
         <div class="splash-logo">
-            <img src="smkn.jpeg" alt="SMKN 2 Tembilahan" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-5xl text-orange-500\'></i>';">
+            <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-6xl text-orange-500\'></i>';">
         </div>
-        <h1 class="text-white font-extrabold text-2xl mt-6 tracking-wide">TKJ SMKN 2</h1>
-        <p class="text-white/80 text-xs mt-1 font-medium">Tembilahan, Indragiri Hilir</p>
+        <h1 class="text-white font-extrabold text-2xl mt-6 tracking-wide relative z-10">TKJ SMKN 2</h1>
+        <p class="text-white/85 text-xs mt-1 font-medium relative z-10">Tembilahan, Indragiri Hilir</p>
         <div class="splash-loader"></div>
-        <p class="text-white/70 text-[10px] mt-6 font-mono tracking-widest">MEMUAT APLIKASI...</p>
+        <p class="text-white/70 text-[10px] mt-6 font-mono tracking-widest relative z-10">MEMUAT APLIKASI...</p>
     </div>
 
     <!-- ==================== APP STATUS BAR ==================== -->
@@ -261,16 +372,12 @@
     <div id="toast-container"></div>
 
     <!-- ==================== HEADER / NAVBAR ==================== -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-amber-200/60 transition-all duration-300" id="navbar">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-2xl border-b border-amber-200/60 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-20">
                 <a href="#beranda" class="flex items-center space-x-3 group">
-                    <!-- >>> FOTO PROFIL DI NAVBAR <<< -->
-                    <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg border-2 border-amber-300 group-hover:scale-105 transition-transform bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center">
-                        <img src="smkn.jpeg" 
-                             alt="TKJ SMKN 2" 
-                             class="w-full h-full object-cover"
-                             onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-white text-lg lg:text-xl\'></i>';">
+                    <div class="logo-wrap w-10 h-10 lg:w-12 lg:h-12 rounded-xl shadow-lg border-2 border-amber-300 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
+                        <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-orange-500 text-lg lg:text-xl\'></i>';">
                     </div>
                     <div>
                         <span class="block font-bold text-base lg:text-xl tracking-wide gradient-text">TKJ SMKN 2</span>
@@ -291,17 +398,19 @@
                 </nav>
 
                 <div class="hidden lg:flex items-center gap-3">
-                    <div class="px-4 py-2 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 flex items-center gap-2.5">
-                        <i class="fa-solid fa-clock text-orange-500 text-sm"></i>
+                    <div class="px-4 py-2 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 flex items-center gap-2.5 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-clock text-white text-xs"></i>
+                        </div>
                         <div class="flex flex-col leading-tight">
                             <span class="jam-wib text-sm font-bold text-slate-900" id="clock-wib-desktop">--:--:--</span>
                             <span class="text-[9px] text-amber-700 font-semibold uppercase tracking-wider">WIB • Tembilahan</span>
                         </div>
                     </div>
-                    <button id="install-btn-desktop" class="hidden px-4 py-2.5 rounded-xl bg-white border-2 border-amber-400 text-orange-600 font-semibold text-sm hover:bg-amber-50 transition-all items-center gap-2" onclick="installApp()">
+                    <button id="install-btn-desktop" class="hidden px-4 py-2.5 rounded-xl bg-white border-2 border-amber-400 text-orange-600 font-semibold text-sm hover:bg-amber-50 transition-all items-center gap-2 hover:shadow-md" onclick="installApp()">
                         <i class="fa-solid fa-download"></i> Install
                     </button>
-                    <a href="#tools" class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-xl group bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg transition-all duration-300 hover:scale-105">
+                    <a href="#tools" class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-xl group bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
                         <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-[10px] group-hover:bg-opacity-0 text-orange-600 group-hover:text-white">
                             Tools IP <i class="fa-solid fa-bolt ml-2 text-xs"></i>
                         </span>
@@ -309,7 +418,7 @@
                 </div>
 
                 <div class="lg:hidden flex items-center gap-2">
-                    <div class="px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 flex items-center gap-1.5">
+                    <div class="px-3 py-1.5 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 flex items-center gap-1.5 shadow-sm">
                         <i class="fa-solid fa-clock text-orange-500 text-xs"></i>
                         <span class="jam-wib text-xs font-bold text-slate-900" id="clock-wib-mobile">--:--</span>
                     </div>
@@ -339,24 +448,23 @@
         </div>
     </header>
 
-    <!-- ==================== BANNER VISUAL (PAKAI FOTO) ==================== -->
+    <!-- ==================== BANNER VISUAL (FOTO GEDUNG) ==================== -->
     <div id="banner-visual" class="relative pt-20 lg:pt-24 overflow-hidden border-b border-amber-200/60">
-        <!-- >>> FOTO SEBAGAI BACKGROUND BANNER <<< -->
         <div class="absolute inset-0">
             <img src="smkn.jpeg" 
                  alt="SMKN 2 Tembilahan" 
                  class="w-full h-full object-cover"
                  onerror="this.style.display='none';">
-            <div class="absolute inset-0 bg-gradient-to-b from-amber-900/80 via-orange-800/65 to-cream-50"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-amber-900/85 via-orange-800/70 to-cream-50"></div>
         </div>
         
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 text-center">
-            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur border border-amber-300 text-orange-600 text-[10px] lg:text-xs font-semibold tracking-wide shadow-md mb-3">
-                <i class="fa-solid fa-mobile-screen"></i>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur border border-amber-300 text-orange-600 text-[10px] lg:text-xs font-semibold tracking-wide shadow-lg mb-3">
+                <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
                 <span>Aplikasi Resmi • Lab TKJ SMKN 2 Tembilahan</span>
             </div>
             <h2 class="text-white font-bold text-xl lg:text-3xl drop-shadow-lg mb-2">Selamat Datang di Portal TKJ</h2>
-            <p class="text-white/90 text-xs lg:text-sm max-w-xl mx-auto drop-shadow">
+            <p class="text-white/95 text-xs lg:text-sm max-w-xl mx-auto drop-shadow">
                 Pusat Unggulan Praktik Jaringan Komputer, Perangkat Cisco/MikroTik, dan Fiber Optic.
             </p>
         </div>
@@ -365,15 +473,15 @@
     <!-- ==================== HERO SECTION ==================== -->
     <section id="beranda" class="relative pt-8 pb-12 lg:pt-20 lg:pb-24 overflow-hidden bg-gradient-to-br from-cream-50 via-amber-50/50 to-orange-50/30">
         <div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
-            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-200 rounded-full filter blur-[130px]"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-200 rounded-full filter blur-[150px]"></div>
+            <div class="blob w-96 h-96 bg-amber-200 top-1/4 left-1/4"></div>
+            <div class="blob w-96 h-96 bg-orange-200 bottom-1/4 right-1/4"></div>
             <div class="absolute inset-0 warm-grid [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
         </div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                 <div class="lg:col-span-7 space-y-5 lg:space-y-6 text-center lg:text-left fade-in">
-                    <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white border border-amber-300 text-orange-600 text-[10px] lg:text-sm font-semibold shadow-md">
+                    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-amber-300 text-orange-600 text-[10px] lg:text-sm font-semibold shadow-md">
                         <span class="flex h-2 w-2 rounded-full bg-orange-500 animate-ping"></span>
                         <span>SMK Pusat Keunggulan • TKJ</span>
                     </div>
@@ -384,34 +492,35 @@
                         Aplikasi resmi Jurusan Teknik Jaringan Komputer (TKJ) SMKN 2 Tembilahan. Dilengkapi simulator jaringan, kalkulator subnetting, dan tools siap pakai.
                     </p>
                     <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
-                        <a href="#tools" class="w-full sm:w-auto px-6 lg:px-8 py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold shadow-xl transition-all hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 ripple">
+                        <a href="#tools" class="w-full sm:w-auto px-6 lg:px-8 py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold shadow-xl glow-effect transition-all hover:-translate-y-1 hover:shadow-2xl text-center flex items-center justify-center gap-2 ripple">
                             <i class="fa-solid fa-screwdriver-wrench"></i> Akses Tools TKJ
                         </a>
-                        <a href="#tentang" class="w-full sm:w-auto px-6 lg:px-8 py-3.5 lg:py-4 rounded-xl bg-white hover:bg-amber-50 text-slate-800 font-semibold transition-all text-center border border-amber-300 hover:-translate-y-0.5 shadow-sm flex items-center justify-center gap-2">
+                        <a href="#tentang" class="w-full sm:w-auto px-6 lg:px-8 py-3.5 lg:py-4 rounded-xl bg-white hover:bg-amber-50 text-slate-800 font-semibold transition-all text-center border border-amber-300 hover:-translate-y-1 shadow-sm hover:shadow-md flex items-center justify-center gap-2">
                             Tentang Jurusan <i class="fa-solid fa-compass text-orange-500"></i>
                         </a>
                     </div>
                 </div>
 
-                <!-- >>> FOTO PROFIL UTAMA DI HERO <<< -->
+                <!-- FOTO GEDUNG DI HERO -->
                 <div class="lg:col-span-5 fade-in">
                     <div class="relative w-full max-w-md mx-auto">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-amber-400/40 to-orange-400/40 rounded-3xl filter blur-2xl"></div>
+                        <div class="absolute inset-0 bg-gradient-to-tr from-amber-400/40 to-orange-400/40 rounded-3xl filter blur-3xl"></div>
                         
                         <div class="relative bg-white rounded-3xl p-3 lg:p-4 border-2 border-amber-200 shadow-2xl overflow-hidden">
-                            <!-- Badge aktif -->
+                            <div class="absolute top-6 left-6 z-20 w-11 h-11 rounded-xl logo-wrap border border-amber-200 shadow-lg">
+                                <img src="tkj.jpeg" alt="TKJ">
+                            </div>
                             <div class="absolute top-6 right-6 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500 text-white text-[10px] font-bold shadow-lg">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                                 AKTIF
                             </div>
                             
-                            <!-- Foto Utama -->
                             <div class="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
                                 <img src="smkn.jpeg" 
                                      alt="SMKN 2 Tembilahan" 
                                      class="w-full h-full object-cover"
                                      onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center text-amber-600\'><i class=\'fa-solid fa-school text-6xl mb-3\'></i><span class=\'text-xs font-semibold\'>Foto tidak tersedia</span></div>';">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
                                 
                                 <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
                                     <div class="flex items-center gap-2 mb-1">
@@ -419,20 +528,20 @@
                                         <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300">SMKN 2 Tembilahan</span>
                                     </div>
                                     <h3 class="font-bold text-base lg:text-lg">Teknik Jaringan Komputer</h3>
-                                    <p class="text-[10px] text-white/80">Tembilahan • Indragiri Hilir • Riau</p>
+                                    <p class="text-[10px] text-white/85">Tembilahan • Indragiri Hilir • Riau</p>
                                 </div>
                             </div>
                             
                             <div class="grid grid-cols-3 gap-2 mt-3 lg:mt-4">
-                                <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-2 rounded-xl border border-amber-200 text-center">
+                                <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-2 rounded-xl border border-amber-200 text-center hover:shadow-md transition-shadow">
                                     <i class="fa-solid fa-network-wired text-orange-600 text-xs mb-1"></i>
                                     <div class="text-[9px] text-amber-700 font-semibold">NETWORK</div>
                                 </div>
-                                <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-2 rounded-xl border border-amber-200 text-center">
+                                <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-2 rounded-xl border border-amber-200 text-center hover:shadow-md transition-shadow">
                                     <i class="fa-solid fa-server text-orange-600 text-xs mb-1"></i>
                                     <div class="text-[9px] text-amber-700 font-semibold">SERVER</div>
                                 </div>
-                                <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-2 rounded-xl border border-amber-200 text-center">
+                                <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-2 rounded-xl border border-amber-200 text-center hover:shadow-md transition-shadow">
                                     <i class="fa-solid fa-shield-halved text-orange-600 text-xs mb-1"></i>
                                     <div class="text-[9px] text-amber-700 font-semibold">SECURITY</div>
                                 </div>
@@ -442,20 +551,33 @@
                 </div>
             </div>
 
+            <!-- STATISTIK -->
             <div class="mt-12 lg:mt-20 grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-6 fade-in">
                 <div class="card p-4 lg:p-6 text-center">
+                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                        <i class="fa-solid fa-users text-orange-500 text-sm"></i>
+                    </div>
                     <div class="text-2xl lg:text-3xl font-extrabold gradient-text mb-1">350+</div>
                     <div class="text-[10px] lg:text-sm text-amber-800 font-medium">Siswa Aktif</div>
                 </div>
                 <div class="card p-4 lg:p-6 text-center">
+                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                        <i class="fa-solid fa-desktop text-orange-500 text-sm"></i>
+                    </div>
                     <div class="text-2xl lg:text-3xl font-extrabold gradient-text mb-1">3 Unit</div>
                     <div class="text-[10px] lg:text-sm text-amber-800 font-medium">Lab Komputer</div>
                 </div>
                 <div class="card p-4 lg:p-6 text-center">
+                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                        <i class="fa-solid fa-award text-orange-500 text-sm"></i>
+                    </div>
                     <div class="text-2xl lg:text-3xl font-extrabold gradient-text mb-1">A</div>
                     <div class="text-[10px] lg:text-sm text-amber-800 font-medium">Akreditasi</div>
                 </div>
                 <div class="card p-4 lg:p-6 text-center">
+                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                        <i class="fa-solid fa-briefcase text-orange-500 text-sm"></i>
+                    </div>
                     <div class="text-2xl lg:text-3xl font-extrabold gradient-text mb-1">98%</div>
                     <div class="text-[10px] lg:text-sm text-amber-800 font-medium">Terserap Kerja</div>
                 </div>
@@ -467,14 +589,17 @@
     <section id="tools" class="section-pad bg-white border-t border-b border-amber-200/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <span class="px-3 py-1 rounded-full bg-amber-100 text-orange-700 border border-amber-300 text-[10px] lg:text-xs font-bold uppercase tracking-widest inline-block mb-3">Laboratorium Digital</span>
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-orange-700 border border-amber-300 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                    <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
+                    Laboratorium Digital
+                </span>
                 <h2 class="text-2xl lg:text-4xl font-extrabold tracking-tight text-slate-900">Tools TKJ Siap Pakai</h2>
                 <div class="w-20 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mt-4 rounded-full"></div>
                 <p class="text-slate-600 mt-3 lg:mt-4 text-xs lg:text-base">Gunakan tools interaktif langsung dari perangkat Anda untuk latihan praktikum.</p>
             </div>
 
             <div class="flex gap-2 lg:gap-4 mb-6 lg:mb-8 fade-in overflow-x-auto pb-2 lg:justify-center scrollbar-hide">
-                <button onclick="switchTab('subnet')" id="tab-subnet" class="tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg flex items-center gap-2" aria-selected="true">
+                <button onclick="switchTab('subnet')" id="tab-subnet" class="tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg glow-effect flex items-center gap-2" aria-selected="true">
                     <i class="fa-solid fa-calculator"></i> Subnetting
                 </button>
                 <button onclick="switchTab('cable')" id="tab-cable" class="tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-white text-slate-700 border border-amber-300 hover:border-orange-400 hover:bg-amber-50 flex items-center gap-2" aria-selected="false">
@@ -536,7 +661,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-                    <div class="bg-gradient-to-br from-amber-50 to-white p-5 lg:p-6 rounded-2xl border border-amber-200">
+                    <div class="bg-gradient-to-br from-amber-50 to-white p-5 lg:p-6 rounded-2xl border border-amber-200 hover:shadow-md transition-shadow">
                         <h4 class="font-bold text-orange-600 mb-3 flex items-center gap-2 text-sm lg:text-base">
                             <i class="fa-solid fa-circle-dot text-xs"></i> Straight-Through
                         </h4>
@@ -553,7 +678,7 @@
                         </ol>
                     </div>
 
-                    <div class="bg-gradient-to-br from-orange-50 to-white p-5 lg:p-6 rounded-2xl border border-orange-200">
+                    <div class="bg-gradient-to-br from-orange-50 to-white p-5 lg:p-6 rounded-2xl border border-orange-200 hover:shadow-md transition-shadow">
                         <h4 class="font-bold text-amber-600 mb-3 flex items-center gap-2 text-sm lg:text-base">
                             <i class="fa-solid fa-circle-dot text-xs"></i> Crossover
                         </h4>
@@ -597,7 +722,10 @@
     <section id="tentang" class="section-pad bg-gradient-to-b from-cream-50 to-amber-50/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <h2 class="text-[10px] lg:text-sm uppercase tracking-widest text-orange-600 font-bold mb-2 lg:mb-3">Tentang Kompetensi Keahlian</h2>
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-orange-700 border border-amber-300 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                    <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
+                    Kompetensi Keahlian
+                </span>
                 <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-slate-900">Teknik Jaringan Komputer (TKJ)</p>
                 <div class="w-20 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mt-4 rounded-full"></div>
             </div>
@@ -666,7 +794,10 @@
     <section id="kurikulum" class="section-pad bg-white border-t border-amber-200/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <h2 class="text-[10px] lg:text-sm uppercase tracking-widest text-orange-600 font-bold mb-2 lg:mb-3">Materi Kejuruan</h2>
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-orange-700 border border-amber-300 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                    <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
+                    Materi Kejuruan
+                </span>
                 <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-slate-900">Kurikulum & Mapel Produktif</p>
                 <div class="w-20 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mt-4 rounded-full"></div>
             </div>
@@ -733,7 +864,10 @@
     <section id="fasilitas" class="section-pad bg-gradient-to-b from-amber-50/50 to-cream-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <h2 class="text-[10px] lg:text-sm uppercase tracking-widest text-orange-600 font-bold mb-2 lg:mb-3">Infrastruktur Penunjang</h2>
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-orange-700 border border-amber-300 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                    <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
+                    Infrastruktur
+                </span>
                 <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-slate-900">Fasilitas Laboratorium</p>
                 <div class="w-20 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mt-4 rounded-full"></div>
             </div>
@@ -773,7 +907,10 @@
     <section id="galeri" class="section-pad bg-white border-t border-amber-200/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <h2 class="text-[10px] lg:text-sm uppercase tracking-widest text-orange-600 font-bold mb-2 lg:mb-3">Dokumentasi Lapangan</h2>
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-orange-700 border border-amber-300 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                    <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
+                    Dokumentasi
+                </span>
                 <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-slate-900">Galeri Kegiatan Siswa</p>
                 <div class="w-20 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mt-4 rounded-full"></div>
             </div>
@@ -830,7 +967,10 @@
     <section id="kontak" class="section-pad bg-gradient-to-b from-cream-50 to-amber-50/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
-                <h2 class="text-[10px] lg:text-sm uppercase tracking-widest text-orange-600 font-bold mb-2 lg:mb-3">Hubungi Kami</h2>
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-orange-700 border border-amber-300 text-[10px] lg:text-xs font-bold uppercase tracking-widest mb-3">
+                    <img src="tkj.jpeg" alt="TKJ" class="w-4 h-4 object-contain bg-white rounded-full p-0.5">
+                    Hubungi Kami
+                </span>
                 <p class="text-2xl lg:text-4xl font-extrabold tracking-tight text-slate-900">Lokasi & Informasi Pendaftaran</p>
                 <div class="w-20 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mt-4 rounded-full"></div>
             </div>
@@ -838,7 +978,12 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
                 <div class="lg:col-span-5 fade-in">
                     <div class="card p-5 lg:p-8 space-y-5 bg-gradient-to-br from-white to-amber-50 h-full">
-                        <h3 class="text-base lg:text-xl font-bold text-slate-900 border-b border-amber-200 pb-4">SMKN 2 Tembilahan</h3>
+                        <div class="flex items-center gap-3 border-b border-amber-200 pb-4">
+                            <div class="logo-wrap w-12 h-12 rounded-xl border border-amber-200 shadow-sm">
+                                <img src="tkj.jpeg" alt="TKJ">
+                            </div>
+                            <h3 class="text-base lg:text-xl font-bold text-slate-900">SMKN 2 Tembilahan</h3>
+                        </div>
                         
                         <div class="flex items-start gap-3">
                             <div class="p-2.5 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 text-orange-600 border border-amber-200 flex-shrink-0"><i class="fa-solid fa-location-dot text-sm"></i></div>
@@ -865,10 +1010,10 @@
                         </div>
                         
                         <div class="pt-4 border-t border-amber-200 flex gap-2">
-                            <a href="#" class="w-9 h-9 rounded-xl bg-white hover:bg-gradient-to-br hover:from-amber-500 hover:to-orange-500 hover:text-white text-orange-600 flex items-center justify-center transition-all border border-amber-300 shadow-sm" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-                            <a href="#" class="w-9 h-9 rounded-xl bg-white hover:bg-gradient-to-br hover:from-amber-500 hover:to-orange-500 hover:text-white text-orange-600 flex items-center justify-center transition-all border border-amber-300 shadow-sm" aria-label="Instagram"><i class="fa-brands fa-instagram text-sm"></i></a>
-                            <a href="#" class="w-9 h-9 rounded-xl bg-white hover:bg-gradient-to-br hover:from-amber-500 hover:to-orange-500 hover:text-white text-orange-600 flex items-center justify-center transition-all border border-amber-300 shadow-sm" aria-label="YouTube"><i class="fa-brands fa-youtube text-sm"></i></a>
-                            <a href="#" class="w-9 h-9 rounded-xl bg-white hover:bg-gradient-to-br hover:from-amber-500 hover:to-orange-500 hover:text-white text-orange-600 flex items-center justify-center transition-all border border-amber-300 shadow-sm" aria-label="TikTok"><i class="fa-brands fa-tiktok text-sm"></i></a>
+                            <a href="#" class="w-9 h-9 rounded-xl bg-white hover:bg-gradient-to-br hover:from-amber-500 hover:to-orange-500 hover:text-white text-orange-600 flex items-center justify-center transition-all border border-amber-300 shadow-sm hover:scale-110" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                            <a href="#" class="w-9 h-9 rounded-xl bg-white hover:bg-gradient-to-br hover:from-amber-500 hover:to-orange-500 hover:text-white text-orange-600 flex items-center justify-center transition-all border border-amber-300 shadow-sm hover:scale-110" aria-label="Instagram"><i class="fa-brands fa-instagram text-sm"></i></a>
+                            <a href="#" class="w-9 h-9 rounded-xl bg-white hover:bg-gradient-to-br hover:from-amber-500 hover:to-orange-500 hover:text-white text-orange-600 flex items-center justify-center transition-all border border-amber-300 shadow-sm hover:scale-110" aria-label="YouTube"><i class="fa-brands fa-youtube text-sm"></i></a>
+                            <a href="#" class="w-9 h-9 rounded-xl bg-white hover:bg-gradient-to-br hover:from-amber-500 hover:to-orange-500 hover:text-white text-orange-600 flex items-center justify-center transition-all border border-amber-300 shadow-sm hover:scale-110" aria-label="TikTok"><i class="fa-brands fa-tiktok text-sm"></i></a>
                         </div>
                     </div>
                 </div>
@@ -897,7 +1042,7 @@
                                 <label for="pesan" class="block text-[10px] lg:text-xs font-semibold text-slate-700 mb-1">Pesan Anda</label>
                                 <textarea id="pesan" rows="4" required class="w-full px-3 lg:px-4 py-2.5 lg:py-3 rounded-xl bg-amber-50/50 border border-amber-200 text-slate-800 text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all" placeholder="Tuliskan isi pesan Anda..."></textarea>
                             </div>
-                            <button type="submit" class="w-full py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold shadow-lg transition-all hover:-translate-y-0.5 ripple flex items-center justify-center gap-2">
+                            <button type="submit" class="w-full py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold shadow-lg glow-effect transition-all hover:-translate-y-0.5 ripple flex items-center justify-center gap-2">
                                 Kirim Pesan <i class="fa-solid fa-paper-plane"></i>
                             </button>
                         </form>
@@ -912,9 +1057,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 lg:gap-6">
                 <div class="flex items-center space-x-3">
-                    <!-- FOTO KECIL DI FOOTER -->
-                    <div class="w-10 h-10 rounded-xl overflow-hidden shadow-md border border-amber-200">
-                        <img src="smkn.jpeg" alt="SMKN 2" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center\'><i class=\'fa-solid fa-network-wired text-white\'></i></div>';">
+                    <div class="logo-wrap w-10 h-10 rounded-xl shadow-md border border-amber-200">
+                        <img src="tkj.jpeg" alt="Logo TKJ" onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center rounded-lg\'><i class=\'fa-solid fa-network-wired text-white\'></i></div>';">
                     </div>
                     <div>
                         <span class="block font-bold text-sm lg:text-base text-slate-900">Teknik Jaringan Komputer</span>
@@ -963,8 +1107,8 @@
 
     <!-- ==================== INSTALL BANNER ==================== -->
     <div id="install-banner">
-        <div class="w-12 h-12 rounded-xl overflow-hidden shadow-md flex-shrink-0">
-            <img src="smkn.jpeg" alt="Install" class="w-full h-full object-cover">
+        <div class="logo-wrap w-12 h-12 rounded-xl shadow-md flex-shrink-0 border border-amber-200">
+            <img src="tkj.jpeg" alt="Install">
         </div>
         <div class="flex-1 min-w-0">
             <h4 class="font-bold text-slate-900 text-sm">Install Aplikasi TKJ</h4>
@@ -984,24 +1128,11 @@
         let isAppMode = false;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-        // ==================== JAM WIB REALTIME ====================
+        // ==================== JAM WIB ====================
         function updateClockWIB() {
             const now = new Date();
-            
-            const timeStr = now.toLocaleTimeString('id-ID', {
-                timeZone: 'Asia/Jakarta',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            });
-            
-            const shortTime = now.toLocaleTimeString('id-ID', {
-                timeZone: 'Asia/Jakarta',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            });
+            const timeStr = now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            const shortTime = now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', hour12: false });
             
             const desktopEl = document.getElementById('clock-wib-desktop');
             const mobileEl = document.getElementById('clock-wib-mobile');
@@ -1011,22 +1142,18 @@
             if (mobileEl) mobileEl.textContent = shortTime;
             if (statusEl) statusEl.textContent = shortTime;
         }
-        
         setInterval(updateClockWIB, 1000);
         updateClockWIB();
 
-        // Splash Screen
+        // Splash
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('splash-screen').classList.add('hidden-splash');
-            }, 1800);
+            setTimeout(() => document.getElementById('splash-screen').classList.add('hidden-splash'), 1800);
         });
 
-        // App Mode Detection
+        // App Mode
         function detectAppMode() {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             const isSmallScreen = window.innerWidth < 1024;
-            
             if (isStandalone || (isMobile && isSmallScreen)) {
                 isAppMode = true;
                 document.body.classList.add('app-mode');
@@ -1039,7 +1166,6 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            
             document.getElementById('install-btn-desktop')?.classList.remove('hidden');
             document.getElementById('install-btn-desktop')?.classList.add('flex');
             document.getElementById('install-btn-mobile')?.classList.remove('hidden');
@@ -1048,7 +1174,6 @@
                 btn.classList.remove('hidden');
                 btn.classList.add('flex');
             });
-            
             setTimeout(() => {
                 if (!localStorage.getItem('install-dismissed')) {
                     document.getElementById('install-banner').classList.add('show');
@@ -1059,8 +1184,8 @@
         function installApp() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
+                deferredPrompt.userChoice.then((result) => {
+                    if (result.outcome === 'accepted') {
                         showToast('Aplikasi berhasil di-install!', 'success');
                         document.getElementById('install-banner').classList.remove('show');
                     }
@@ -1081,20 +1206,9 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
-            const icons = {
-                success: 'fa-circle-check text-green-600',
-                error: 'fa-circle-exclamation text-red-600',
-                info: 'fa-circle-info text-amber-600'
-            };
-            
-            toast.innerHTML = `
-                <i class="fa-solid ${icons[type]} text-lg"></i>
-                <span class="text-sm text-slate-700 font-medium">${message}</span>
-            `;
-            
+            const icons = { success: 'fa-circle-check text-green-600', error: 'fa-circle-exclamation text-red-600', info: 'fa-circle-info text-amber-600' };
+            toast.innerHTML = `<i class="fa-solid ${icons[type]} text-lg"></i><span class="text-sm text-slate-700 font-medium">${message}</span>`;
             container.appendChild(toast);
-            
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateY(-10px)';
@@ -1123,9 +1237,8 @@
         // Tool Tabs
         function switchTab(tabName) {
             const tabs = ['subnet', 'cable', 'latency'];
-            const activeClasses = 'tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg flex items-center gap-2';
+            const activeClasses = 'tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg glow-effect flex items-center gap-2';
             const inactiveClasses = 'tool-tab flex-shrink-0 px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl font-semibold text-xs lg:text-sm transition-all bg-white text-slate-700 border border-amber-300 hover:border-orange-400 hover:bg-amber-50 flex items-center gap-2';
-
             tabs.forEach(t => {
                 const panel = document.getElementById('tool-' + t);
                 const btn = document.getElementById('tab-' + t);
@@ -1139,7 +1252,6 @@
                     btn.setAttribute('aria-selected', 'false');
                 }
             });
-            
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
@@ -1148,15 +1260,14 @@
             const ip = document.getElementById('subnet-ip').value.trim();
             const cidr = parseInt(document.getElementById('subnet-cidr').value);
             const resBox = document.getElementById('subnet-result');
-
             const ipRegex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+            
             if (!ipRegex.test(ip)) {
                 resBox.classList.remove('hidden');
                 resBox.innerHTML = '<span class="text-red-600 font-semibold">⚠️ Format IP tidak valid! Contoh: 192.168.1.1</span>';
                 showToast('Format IP tidak valid', 'error');
                 return;
             }
-
             const parts = ip.split('.').map(Number);
             if (parts.some(p => p < 0 || p > 255)) {
                 resBox.classList.remove('hidden');
@@ -1164,33 +1275,25 @@
                 showToast('Oktet IP harus 0-255', 'error');
                 return;
             }
-
             const maskBinary = '1'.repeat(cidr).padEnd(32, '0');
             const maskOctets = [];
-            for (let i = 0; i < 4; i++) {
-                maskOctets.push(parseInt(maskBinary.substr(i * 8, 8), 2));
-            }
+            for (let i = 0; i < 4; i++) maskOctets.push(parseInt(maskBinary.substr(i * 8, 8), 2));
             const subnetMask = maskOctets.join('.');
             const wildcard = maskOctets.map(o => 255 - o).join('.');
-
             const ipBin = parts.map(p => p.toString(2).padStart(8, '0')).join('');
             const networkBin = ipBin.slice(0, cidr).padEnd(32, '0');
             const broadcastBin = ipBin.slice(0, cidr).padEnd(32, '1');
-
             const binToOctets = bin => {
                 const arr = [];
-                for (let i = 0; i < 4; i++) {
-                    arr.push(parseInt(bin.substr(i * 8, 8), 2));
-                }
+                for (let i = 0; i < 4; i++) arr.push(parseInt(bin.substr(i * 8, 8), 2));
                 return arr.join('.');
             };
-
             const networkId = binToOctets(networkBin);
             const broadcastId = binToOctets(broadcastBin);
             const hostBits = 32 - cidr;
             const totalHosts = Math.pow(2, hostBits);
             const usableHosts = totalHosts > 2 ? totalHosts - 2 : totalHosts;
-
+            
             resBox.classList.remove('hidden');
             resBox.innerHTML = `
                 <p class="text-orange-700 font-bold mb-3">📊 Hasil Subnetting (/${cidr}):</p>
@@ -1205,33 +1308,24 @@
                     <div><span class="text-slate-500">Status:</span> <span class="text-orange-600 font-semibold">Ready</span></div>
                 </div>
             `;
-            
             if (navigator.vibrate) navigator.vibrate(20);
             showToast(`Subnet /${cidr} berhasil dihitung`, 'success');
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            calculateSubnet();
-        });
+        window.addEventListener('DOMContentLoaded', () => calculateSubnet());
 
         // Ping Simulator
         let pingInterval = null;
-
         function runPing() {
             const target = document.getElementById('ping-target').value.trim() || '192.168.2.1';
             const consoleBox = document.getElementById('ping-console');
-            
             if (pingInterval) clearInterval(pingInterval);
-
             consoleBox.innerHTML = `<p class="text-amber-300">Pinging ${target} with 32 bytes of data:</p>`;
-
             let count = 0;
             pingInterval = setInterval(() => {
                 count++;
                 const time = (Math.random() * 2 + 0.3).toFixed(1);
                 consoleBox.innerHTML += `<p class="text-green-400">Reply from ${target}: bytes=32 time=${time}ms TTL=64</p>`;
                 consoleBox.scrollTop = consoleBox.scrollHeight;
-
                 if (count >= 4) {
                     clearInterval(pingInterval);
                     pingInterval = null;
@@ -1240,7 +1334,6 @@
                     if (navigator.vibrate) navigator.vibrate([10, 50, 10]);
                 }
             }, 500);
-            
             showToast(`Memulai ping ke ${target}...`, 'info');
         }
 
@@ -1255,28 +1348,22 @@
         // Scroll Animation
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
         // Navbar Scroll
         const navbar = document.getElementById('navbar');
         const appStatusBar = document.getElementById('app-status-bar');
         let lastScrollY = window.scrollY;
-
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
-            
             if (currentScrollY > 50) {
                 navbar.classList.add('shadow-lg', 'bg-white/95');
             } else {
                 navbar.classList.remove('shadow-lg', 'bg-white/95');
             }
-            
             if (isAppMode) {
                 if (currentScrollY > lastScrollY && currentScrollY > 100) {
                     appStatusBar.classList.add('hide');
@@ -1284,7 +1371,6 @@
                     appStatusBar.classList.remove('hide');
                 }
             }
-            
             lastScrollY = currentScrollY;
             updateActiveBottomNav();
         }, { passive: true });
@@ -1293,7 +1379,6 @@
         function updateActiveBottomNav() {
             const sections = ['beranda', 'tools', 'kurikulum', 'galeri', 'kontak'];
             const scrollPos = window.scrollY + 150;
-            
             for (let i = sections.length - 1; i >= 0; i--) {
                 const section = document.getElementById(sections[i]);
                 if (section && section.offsetTop <= scrollPos) {
@@ -1322,11 +1407,9 @@
         });
 
         // Init
-        window.addEventListener('DOMContentLoaded', () => {
-            detectAppMode();
-        });
+        window.addEventListener('DOMContentLoaded', () => detectAppMode());
 
-        // Escape key
+        // Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 mobileMenu.classList.add('hidden');
