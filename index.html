@@ -87,7 +87,6 @@
         .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         
-        /* === LUXURY CARD === */
         .card {
             background: linear-gradient(135deg, rgba(26, 35, 50, 0.8), rgba(17, 24, 39, 0.7));
             backdrop-filter: blur(16px) saturate(180%);
@@ -95,9 +94,7 @@
             border: 1px solid rgba(251, 191, 36, 0.15);
             border-radius: 20px;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-            box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(251, 191, 36, 0.08);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.08);
             position: relative;
             overflow: hidden;
         }
@@ -113,10 +110,7 @@
         .card:hover::after { opacity: 1; }
         .card:hover {
             border-color: rgba(251, 191, 36, 0.45);
-            box-shadow: 
-                0 8px 32px rgba(251, 191, 36, 0.15),
-                0 0 0 1px rgba(251, 191, 36, 0.1),
-                inset 0 1px 0 rgba(251, 191, 36, 0.15);
+            box-shadow: 0 8px 32px rgba(251, 191, 36, 0.15), 0 0 0 1px rgba(251, 191, 36, 0.1), inset 0 1px 0 rgba(251, 191, 36, 0.15);
             transform: translateY(-3px);
         }
         
@@ -136,10 +130,7 @@
             -webkit-text-fill-color: transparent;
             animation: shimmer 5s ease-in-out infinite;
         }
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
+        @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         
         .gradient-gold {
             background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
@@ -166,11 +157,7 @@
         }
         .fade-in.visible { opacity: 1; transform: translate3d(0, 0, 0); }
         
-        .cursor-blink::after {
-            content: '▊';
-            animation: blink 1s step-end infinite;
-            color: #fbbf24;
-        }
+        .cursor-blink::after { content: '▊'; animation: blink 1s step-end infinite; color: #fbbf24; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         
         .gold-grid {
@@ -244,7 +231,6 @@
             position: fixed; bottom: 80px; left: 12px; right: 12px; z-index: 58;
             background: rgba(17, 24, 39, 0.95);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 2px solid rgba(251, 191, 36, 0.5);
             border-radius: 18px;
             padding: 14px 16px;
@@ -315,42 +301,147 @@
             -webkit-backdrop-filter: blur(10px);
         }
         
-        /* === GOLD LINE === */
-        .gold-line {
-            background: linear-gradient(to right, transparent, #fbbf24, transparent);
-            height: 1px;
-        }
-        
-        /* === BTC CHART MINI === */
-        .btc-card {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(26, 35, 50, 0.9));
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            border-radius: 16px;
-            padding: 12px;
+        /* === MARKET TICKER (BUKAN SALDO) === */
+        .market-ticker {
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(26, 35, 50, 0.85));
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            border-radius: 14px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .btc-card::before {
+        .market-ticker:hover {
+            border-color: rgba(251, 191, 36, 0.6);
+            box-shadow: 0 4px 16px rgba(251, 191, 36, 0.2);
+        }
+        .market-ticker::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.08), transparent 60%);
-            animation: rotate 20s linear infinite;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(251, 191, 36, 0.06) 50%, transparent 100%);
+            animation: tickerSlide 3s ease-in-out infinite;
             pointer-events: none;
         }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        .btc-price {
-            font-variant-numeric: tabular-nums;
-            font-weight: 800;
-            letter-spacing: -0.02em;
+        @keyframes tickerSlide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         
-        .btc-up { color: #10b981; }
-        .btc-down { color: #ef4444; }
+        .ticker-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+        
+        .ticker-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+            min-width: 0;
+        }
+        .ticker-label {
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #64748b;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+        .ticker-price {
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+        .ticker-change {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+        }
+        .ticker-change.up {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+        .ticker-change.down {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+        
+        /* Sparkline mini */
+        .ticker-spark {
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+            opacity: 0.9;
+        }
+        .ticker-spark path {
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        /* Live dot */
+        .live-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #10b981;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .live-dot::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: #10b981;
+            opacity: 0.4;
+            animation: livePulse 1.5s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.6; }
+            50% { transform: scale(1.6); opacity: 0; }
+        }
+        
+        /* Mobile ticker */
+        .market-ticker-mobile {
+            background: rgba(26, 35, 50, 0.85);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 10px;
+            padding: 5px 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .market-ticker-mobile .ticker-icon {
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            border-radius: 6px;
+        }
         
         /* === TOOL CARD === */
         .tool-card {
@@ -427,14 +518,19 @@
                 </nav>
 
                 <div class="hidden lg:flex items-center gap-3">
-                    <!-- BTC MINI TICKER -->
-                    <div class="btc-card flex items-center gap-2.5" style="padding: 8px 12px;">
-                        <i class="fa-brands fa-bitcoin text-gold-400 text-base"></i>
-                        <div class="flex flex-col leading-tight">
-                            <span class="btc-price text-xs text-white" id="btc-price">$--,---</span>
-                            <span class="text-[9px] font-semibold" id="btc-change">--%</span>
+                    <!-- MARKET TICKER (bukan saldo) -->
+                    <button onclick="openBtcDetail()" class="market-ticker">
+                        <div class="live-dot"></div>
+                        <div class="ticker-icon">₿</div>
+                        <div class="ticker-info">
+                            <span class="ticker-label">BTC / USD</span>
+                            <span class="ticker-price" id="btc-price">--,---</span>
                         </div>
-                    </div>
+                        <span class="ticker-change up" id="btc-change">--%</span>
+                        <svg class="ticker-spark" viewBox="0 0 44 24" id="btc-spark">
+                            <path d="M 0 18 L 8 14 L 16 16 L 24 10 L 32 12 L 44 4" stroke="#fbbf24" />
+                        </svg>
+                    </button>
                     
                     <div class="px-3 py-2 rounded-xl bg-navy-700/60 border border-gold-400/20 flex items-center gap-2">
                         <i class="fa-solid fa-clock text-gold-400 text-xs"></i>
@@ -453,10 +549,11 @@
                 </div>
 
                 <div class="lg:hidden flex items-center gap-2">
-                    <div class="btc-card flex items-center gap-1.5" style="padding: 4px 8px;">
-                        <i class="fa-brands fa-bitcoin text-gold-400 text-xs"></i>
-                        <span class="btc-price text-[10px] text-white" id="btc-price-mobile">$--</span>
-                    </div>
+                    <button onclick="openBtcDetail()" class="market-ticker-mobile">
+                        <div class="live-dot"></div>
+                        <div class="ticker-icon">₿</div>
+                        <span class="text-[10px] font-bold text-white font-mono" id="btc-price-mobile">--k</span>
+                    </button>
                     <button id="install-btn-mobile" class="hidden w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 text-white items-center justify-center shadow-md" onclick="installApp()" aria-label="Install">
                         <i class="fa-solid fa-download text-sm"></i>
                     </button>
@@ -1241,7 +1338,9 @@
         setInterval(updateClockWIB, 1000);
         updateClockWIB();
 
-        // BITCOIN PRICE REALTIME (CoinGecko - free, no API key)
+        // === BITCOIN MARKET TICKER (CoinGecko - free, no API key) ===
+        let btcHistory = [64200, 64500, 64100, 64800, 65200, 65000, 65400]; // dummy awal
+        
         async function fetchBTC() {
             try {
                 const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
@@ -1249,30 +1348,62 @@
                 const price = data.bitcoin.usd;
                 const change = data.bitcoin.usd_24h_change;
                 
+                // Update history untuk sparkline
+                btcHistory.push(price);
+                if (btcHistory.length > 10) btcHistory.shift();
+                
+                // Format harga
                 const priceStr = '$' + price.toLocaleString('en-US', { maximumFractionDigits: 0 });
                 const changeStr = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
-                const changeClass = change >= 0 ? 'btc-up' : 'btc-down';
+                const changeClass = change >= 0 ? 'up' : 'down';
                 const changeIcon = change >= 0 ? '▲' : '▼';
+                const sparkColor = change >= 0 ? '#10b981' : '#ef4444';
                 
                 const priceEl = document.getElementById('btc-price');
                 const changeEl = document.getElementById('btc-change');
                 const mobileEl = document.getElementById('btc-price-mobile');
+                const sparkEl = document.getElementById('btc-spark');
                 
                 if (priceEl) priceEl.textContent = priceStr;
                 if (changeEl) {
                     changeEl.textContent = changeIcon + ' ' + changeStr;
-                    changeEl.className = 'text-[9px] font-semibold ' + changeClass;
+                    changeEl.className = 'ticker-change ' + changeClass;
                 }
                 if (mobileEl) {
                     const shortPrice = '$' + (price / 1000).toFixed(1) + 'k';
                     mobileEl.textContent = shortPrice;
+                }
+                
+                // Update sparkline
+                if (sparkEl && btcHistory.length >= 2) {
+                    const min = Math.min(...btcHistory);
+                    const max = Math.max(...btcHistory);
+                    const range = max - min || 1;
+                    const points = btcHistory.map((val, i) => {
+                        const x = (i / (btcHistory.length - 1)) * 44;
+                        const y = 22 - ((val - min) / range) * 20;
+                        return `${x.toFixed(1)} ${y.toFixed(1)}`;
+                    }).join(' L ');
+                    
+                    const path = sparkEl.querySelector('path');
+                    if (path) {
+                        path.setAttribute('d', `M ${points}`);
+                        path.setAttribute('stroke', sparkColor);
+                    }
                 }
             } catch (e) {
                 console.log('BTC fetch error:', e);
             }
         }
         fetchBTC();
-        setInterval(fetchBTC, 60000); // Update tiap 60 detik
+        setInterval(fetchBTC, 60000);
+
+        // Open BTC Detail (toast simulasi)
+        function openBtcDetail() {
+            const price = document.getElementById('btc-price')?.textContent || '--';
+            const change = document.getElementById('btc-change')?.textContent || '--';
+            showToast(`BTC ${price} • ${change} (24h)`, 'info', 3500);
+        }
 
         // SPLASH
         window.addEventListener('load', () => {
