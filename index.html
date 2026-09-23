@@ -45,7 +45,7 @@
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         html { scroll-behavior: smooth; scroll-padding-top: 80px; }
-        html, body { overscroll-behavior-y: contain; }
+        html, body { overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
         
         body {
             font-family: 'Inter', sans-serif;
@@ -72,6 +72,8 @@
                 radial-gradient(ellipse 60% 50% at 50% 50%, rgba(139, 92, 246, 0.15), transparent 70%),
                 linear-gradient(135deg, #050a14 0%, #0a1628 50%, #050a14 100%);
             pointer-events: none;
+            transform: translateZ(0);
+            will-change: transform;
         }
         
         body::after {
@@ -83,6 +85,7 @@
                 radial-gradient(ellipse at top-left, rgba(34, 211, 238, 0.08), transparent 40%),
                 radial-gradient(ellipse at bottom-right, rgba(16, 185, 129, 0.08), transparent 40%);
             pointer-events: none;
+            transform: translateZ(0);
         }
         
         input, textarea, .selectable { -webkit-user-select: text; user-select: text; }
@@ -320,6 +323,7 @@
             border: 1px solid rgba(34, 211, 238, 0.12);
             border-radius: 16px;
             transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+            contain: content;
         }
         @media (hover: hover) {
             .card:hover { 
@@ -332,6 +336,8 @@
         .glass {
             background: rgba(5, 10, 20, 0.75);
             border-bottom: 1px solid rgba(34, 211, 238, 0.15);
+            transform: translateZ(0);
+            will-change: transform;
         }
         @media (min-width: 1024px) {
             .glass {
@@ -347,6 +353,10 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: gradientShift 6s ease-in-out infinite;
+            animation-play-state: paused;
+        }
+        .gradient-text.in-view {
+            animation-play-state: running;
         }
         @keyframes gradientShift {
             0%, 100% { background-position: 0% 50%; }
@@ -368,7 +378,7 @@
             position: fixed;
             bottom: 16px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateZ(0);
             z-index: 55;
             background: rgba(5, 10, 20, 0.85);
             backdrop-filter: blur(24px) saturate(180%);
@@ -383,6 +393,7 @@
                 0 0 0 1px rgba(34, 211, 238, 0.08),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
             margin-bottom: env(safe-area-inset-bottom);
+            will-change: transform;
         }
         #bottom-nav.show { display: flex; }
         
@@ -526,6 +537,7 @@
             border-radius: 16px;
             position: relative;
             overflow: hidden;
+            contain: content;
         }
         .stat-card::before {
             content: '';
@@ -545,6 +557,7 @@
             padding: 16px; 
             position: relative;
             transition: all 0.25s;
+            contain: content;
         }
         .tool-card:hover {
             border-color: rgba(34, 211, 238, 0.5);
@@ -774,6 +787,24 @@
             vertical-align: middle;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ============================================ */
+        /* PERFORMANCE: DISABLE BACKDROP-FILTER WHILE SCROLLING (MOBILE) */
+        /* Keeps the exact same look at rest; only skips the expensive   */
+        /* blur repaint during the scroll gesture itself for smooth FPS */
+        /* ============================================ */
+        body.is-scrolling .card,
+        body.is-scrolling .glass,
+        body.is-scrolling #bottom-nav {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* Defer offscreen section rendering for a lighter main thread while scrolling */
+        #tools, #tentang, #kurikulum, #fasilitas, #galeri, #kontak {
+            content-visibility: auto;
+            contain-intrinsic-size: 1px 1400px;
+        }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
@@ -1753,9 +1784,17 @@
             document.getElementById('welcome-screen').classList.add('hidden-welcome');
             if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
             showToast('Welcome, technician! 🚀', 'success', 3000);
+            setTimeout(() => {
+                const w = document.getElementById('welcome-screen');
+                if (w) w.style.display = 'none';
+            }, 700);
         }
         function skipWelcome() {
             document.getElementById('welcome-screen').classList.add('hidden-welcome');
+            setTimeout(() => {
+                const w = document.getElementById('welcome-screen');
+                if (w) w.style.display = 'none';
+            }, 700);
         }
 
         // ================= JAM WIB =================
@@ -1998,6 +2037,34 @@
             });
         }, { threshold: 0.05 });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // ================= GRADIENT TEXT: PAUSE WHEN OFFSCREEN =================
+        // The gradient-text shimmer used to run forever on every heading at once,
+        // repainting text on every frame even while off-screen — a major source
+        // of scroll jank on mobile. Now it only animates while actually visible.
+        const gradientObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                entry.target.classList.toggle('in-view', entry.isIntersecting);
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.gradient-text').forEach(el => gradientObserver.observe(el));
+
+        // ================= SCROLL PERFORMANCE: PAUSE BLUR WHILE SCROLLING =================
+        // backdrop-filter (glass blur) is the single most expensive paint operation
+        // for mobile GPUs during scroll. We briefly disable it only while the user
+        // is actively scrolling, then restore it ~150ms after scrolling stops —
+        // the visual result at rest is identical, but frames stay smooth in motion.
+        let scrollPerfTimeout;
+        function handleScrollPerf() {
+            if (!document.body.classList.contains('is-scrolling')) {
+                document.body.classList.add('is-scrolling');
+            }
+            clearTimeout(scrollPerfTimeout);
+            scrollPerfTimeout = setTimeout(() => {
+                document.body.classList.remove('is-scrolling');
+            }, 150);
+        }
+        window.addEventListener('scroll', handleScrollPerf, { passive: true });
 
         // ================= BOTTOM NAV =================
         const navObserver = new IntersectionObserver((entries) => {
