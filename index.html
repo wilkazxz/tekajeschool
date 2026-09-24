@@ -24,7 +24,6 @@
                         cream: { 50: '#fffdf7', 100: '#fef9e7', 200: '#fdf3c4' },
                         gold: { 300: '#fcd34d', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
                         emerald: { 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857' },
-                        glass: 'rgba(255, 255, 255, 0.7)',
                         ink: { 900: '#1a2332', 800: '#2d3748', 700: '#4a5568', 600: '#718096' }
                     },
                     fontFamily: {
@@ -48,67 +47,57 @@
         html, body { overscroll-behavior-y: contain; }
         
         /* ============================================ */
-        /* BACKGROUND: KUNING CERAH GRADIENT */
+        /* BODY: SATU LINEAR GRADIENT STATIC */
+        /* Nggak ada radial, nggak ada fixed attachment */
         /* ============================================ */
         body {
             font-family: 'Inter', sans-serif;
-            background: 
-                linear-gradient(135deg, #fef9e7 0%, #fef3c7 25%, #fffdf7 50%, #fef9e7 100%);
+            background-color: #fef9e7;
+            background-image: linear-gradient(180deg, #fef9e7 0%, #fef3c7 50%, #fffdf7 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 100vh;
             color: #1a2332;
             padding-bottom: env(safe-area-inset-bottom);
             -webkit-user-select: none;
             user-select: none;
             min-height: 100vh;
-            position: relative;
-        }
-        
-        /* Aksen kuning-hijau diagonal */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: 
-                radial-gradient(ellipse 60% 40% at 100% 0%, rgba(251, 191, 36, 0.25), transparent 60%),
-                radial-gradient(ellipse 60% 40% at 0% 100%, rgba(52, 211, 153, 0.18), transparent 60%);
-            pointer-events: none;
-            z-index: 0;
         }
         
         input, textarea, .selectable { -webkit-user-select: text; user-select: text; }
         
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #fef9e7; }
         ::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
         
         .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         
         /* ============================================ */
-        /* GLASS CARD (KUNING TRANSPARAN) */
+        /* CARD: SOLID COLOR, NO BLUR */
         /* ============================================ */
         .card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            background: #ffffff;
+            border: 1px solid rgba(251, 191, 36, 0.35);
             border-radius: 16px;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.08);
+            transition: border-color 0.2s ease;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.08);
         }
         @media (hover: hover) {
-            .card:hover { 
-                border-color: #fbbf24; 
-                box-shadow: 0 8px 24px rgba(251, 191, 36, 0.2);
-            }
+            .card:hover { border-color: #fbbf24; }
         }
         
         .glass {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: #ffffff;
             border-bottom: 1px solid rgba(251, 191, 36, 0.3);
             box-shadow: 0 2px 12px rgba(251, 191, 36, 0.08);
+        }
+        /* Blur CUMAN di desktop, itu pun yang support GPU kuat */
+        @media (min-width: 1024px) {
+            .glass {
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
         }
         
         .gradient-text {
@@ -118,31 +107,34 @@
             -webkit-text-fill-color: transparent;
         }
         
-        .logo-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: visible;
+        /* Logo transparan tanpa filter */
+        .logo-img {
+            display: block;
+            object-fit: contain;
             background: transparent;
         }
-        .logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
+        /* Drop shadow cuma di desktop */
+        @media (min-width: 1024px) {
+            .logo-img { filter: drop-shadow(0 3px 10px rgba(217, 119, 6, 0.35)); }
+        }
         
-        .fade-in { opacity: 0; transition: opacity 0.4s ease-out; }
+        .fade-in { opacity: 0; transition: opacity 0.35s ease-out; }
         .fade-in.visible { opacity: 1; }
         
         /* ============================================ */
-        /* WELCOME SCREEN - KUNING CERAH */
+        /* WELCOME SCREEN: SOLID, NO BLUR */
         /* ============================================ */
         #welcome-screen {
             position: fixed;
             inset: 0;
             z-index: 9999;
-            background: linear-gradient(135deg, #fef9e7 0%, #fef3c7 50%, #fffdf7 100%);
+            background: #fef9e7;
+            background-image: linear-gradient(180deg, #fef9e7 0%, #fef3c7 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+            transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
         }
         #welcome-screen.hidden-welcome {
             opacity: 0;
@@ -153,23 +145,21 @@
         .welcome-terminal {
             width: 100%;
             max-width: 460px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: #ffffff;
             border: 2px solid rgba(251, 191, 36, 0.5);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 25px 60px rgba(251, 191, 36, 0.25);
-            animation: welcomeIn 0.5s ease-out;
+            box-shadow: 0 20px 50px rgba(251, 191, 36, 0.2);
+            animation: welcomeIn 0.4s ease-out;
         }
         @keyframes welcomeIn {
-            0% { opacity: 0; transform: translateY(20px); }
+            0% { opacity: 0; transform: translateY(15px); }
             100% { opacity: 1; transform: translateY(0); }
         }
         
         .welcome-header {
             padding: 12px 16px;
-            background: linear-gradient(180deg, #fef3c7, #fef9e7);
+            background: #fef3c7;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -195,7 +185,7 @@
             color: #1a2332;
         }
         
-        .welcome-line { opacity: 0; animation: lineAppear 0.3s ease forwards; }
+        .welcome-line { opacity: 0; animation: lineAppear 0.25s ease forwards; }
         @keyframes lineAppear { to { opacity: 1; } }
         
         .welcome-prompt { color: #10b981; font-weight: 700; margin-right: 6px; }
@@ -209,19 +199,18 @@
             gap: 14px;
             margin-bottom: 16px;
             padding: 14px;
-            background: rgba(251, 191, 36, 0.12);
+            background: #fef9e7;
             border: 1px solid rgba(251, 191, 36, 0.4);
             border-radius: 14px;
         }
         .welcome-logo-box {
-            width: 60px; height: 60px;
+            width: 64px; height: 64px;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
             background: transparent;
         }
         .welcome-logo-box img { 
             width: 100%; height: 100%; object-fit: contain;
-            filter: drop-shadow(0 4px 12px rgba(217, 119, 6, 0.4));
         }
         .welcome-brand h1 {
             font-family: 'Space Grotesk', sans-serif;
@@ -249,7 +238,7 @@
             background: linear-gradient(90deg, #fbbf24, #10b981);
             border-radius: 4px;
             width: 0%;
-            animation: progressFill 2s ease-out forwards;
+            animation: progressFill 1.8s ease-out forwards;
         }
         @keyframes progressFill { to { width: 100%; } }
         
@@ -269,19 +258,16 @@
             gap: 10px;
         }
         .welcome-btn:active { transform: scale(0.97); }
-        
         .welcome-btn-primary {
             background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
             color: #ffffff;
-            box-shadow: 0 8px 24px rgba(217, 119, 6, 0.35);
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.3);
         }
-        
         .welcome-btn-secondary {
-            background: rgba(255, 255, 255, 0.6);
+            background: #fef9e7;
             color: #b45309;
             border: 1px solid rgba(251, 191, 36, 0.5);
         }
-        
         .welcome-cursor {
             display: inline-block;
             width: 8px; height: 13px;
@@ -293,7 +279,7 @@
         @keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         
         /* ============================================ */
-        /* BOTTOM NAV */
+        /* BOTTOM NAV: SOLID, NO BLUR */
         /* ============================================ */
         #bottom-nav {
             position: fixed;
@@ -301,25 +287,22 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 55;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: #ffffff;
             border: 2px solid rgba(251, 191, 36, 0.4);
             border-radius: 22px;
             padding: 8px;
             display: none;
             max-width: 92vw;
-            box-shadow: 0 12px 40px rgba(251, 191, 36, 0.25);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.2);
             margin-bottom: env(safe-area-inset-bottom);
         }
         #bottom-nav.show { display: flex; }
-        
         .bottom-nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 8px 10px;
             color: #718096;
             font-size: 9px; font-weight: 600;
-            transition: all 0.2s ease;
+            transition: color 0.15s ease, background 0.15s ease;
             text-decoration: none;
             border-radius: 14px;
             min-width: 52px;
@@ -327,22 +310,20 @@
         .bottom-nav-item i { font-size: 16px; margin-bottom: 3px; }
         .bottom-nav-item.active { 
             color: #b45309;
-            background: rgba(251, 191, 36, 0.2);
+            background: #fef3c7;
         }
-        
         .bottom-nav-item.api-special {
             background: linear-gradient(135deg, #fbbf24, #d97706);
             color: #ffffff;
             margin: 0 4px;
             min-width: 60px;
             padding: 8px 12px;
-            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4);
         }
         .bottom-nav-item.api-special i { font-size: 18px; color: #ffffff; }
         .bottom-nav-item.api-special span { color: #ffffff; font-weight: 800; }
         
         /* ============================================ */
-        /* TOAST */
+        /* TOAST: SOLID */
         /* ============================================ */
         #toast-container {
             position: fixed;
@@ -356,8 +337,7 @@
             max-width: 400px;
         }
         .toast {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
+            background: #ffffff;
             border-left: 4px solid #fbbf24;
             border-top: 1px solid rgba(251, 191, 36, 0.3);
             border-right: 1px solid rgba(251, 191, 36, 0.3);
@@ -366,7 +346,7 @@
             border-radius: 12px;
             display: flex; align-items: center; gap: 12px;
             pointer-events: auto;
-            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.2);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.2);
         }
         .toast.success { border-left-color: #10b981; }
         .toast.error { border-left-color: #ef4444; }
@@ -374,14 +354,13 @@
         
         #install-banner {
             position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 58;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
+            background: #ffffff;
             border: 2px solid #fbbf24;
             border-radius: 16px; padding: 14px 16px;
             display: none; align-items: center; gap: 12px;
             width: calc(100% - 32px);
             max-width: 420px;
-            box-shadow: 0 12px 40px rgba(251, 191, 36, 0.25);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.2);
         }
         #install-banner.show { display: flex; }
         
@@ -405,8 +384,7 @@
         .market-ticker {
             display: flex; align-items: center; gap: 8px;
             padding: 6px 10px; 
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             border: 1px solid rgba(251, 191, 36, 0.4); 
             border-radius: 10px; 
             cursor: pointer;
@@ -414,32 +392,32 @@
         .ticker-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; color: #b45309; text-transform: uppercase; }
         .ticker-price { font-size: 12px; font-weight: 700; color: #1a2332; font-variant-numeric: tabular-nums; }
         .ticker-change { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
-        .ticker-change.up { background: rgba(16, 185, 129, 0.15); color: #047857; }
-        .ticker-change.down { background: rgba(244, 63, 94, 0.15); color: #be123c; }
+        .ticker-change.up { background: #d1fae5; color: #047857; }
+        .ticker-change.down { background: #fee2e2; color: #be123c; }
         
         .stat-card {
             padding: 16px;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             border: 1px solid rgba(251, 191, 36, 0.3);
             border-radius: 16px;
-            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.08);
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.08);
         }
         
         .tool-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             border: 1px solid rgba(251, 191, 36, 0.3);
             border-radius: 16px; 
             padding: 16px; 
             position: relative;
-            transition: all 0.25s;
-            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.08);
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.08);
         }
-        .tool-card:hover {
-            border-color: #fbbf24;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.2);
+        @media (hover: hover) {
+            .tool-card:hover {
+                border-color: #fbbf24;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(251, 191, 36, 0.15);
+            }
         }
         .tool-number {
             position: absolute; top: 12px; right: 14px;
@@ -453,8 +431,7 @@
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             border: 1px solid rgba(251, 191, 36, 0.5);
             border-radius: 100px; 
             color: #b45309;
@@ -467,9 +444,7 @@
         /* ============================================ */
         #api-panel-overlay {
             position: fixed; inset: 0; z-index: 90;
-            background: rgba(26, 35, 50, 0.4);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(26, 35, 50, 0.5);
             opacity: 0; visibility: hidden;
             transition: opacity 0.25s ease, visibility 0.25s ease;
         }
@@ -478,9 +453,7 @@
         #api-panel {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 95;
             max-height: 88vh;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            background: #ffffff;
             border-top-left-radius: 28px; border-top-right-radius: 28px;
             border: 2px solid rgba(251, 191, 36, 0.4);
             border-bottom: none;
@@ -489,7 +462,7 @@
             display: flex; flex-direction: column;
             overflow: hidden;
             padding-bottom: env(safe-area-inset-bottom);
-            box-shadow: 0 -12px 60px rgba(251, 191, 36, 0.25);
+            box-shadow: 0 -12px 50px rgba(251, 191, 36, 0.2);
         }
         #api-panel.show { transform: translateY(0); }
         @media (min-width: 1024px) {
@@ -532,7 +505,7 @@
         @media (min-width: 1024px) { .api-grid { grid-template-columns: repeat(4, 1fr); } }
         
         .api-item {
-            background: rgba(255, 255, 255, 0.7);
+            background: #ffffff;
             border: 1px solid rgba(251, 191, 36, 0.3);
             border-radius: 14px; 
             padding: 14px 12px;
@@ -540,19 +513,14 @@
             transition: all 0.15s ease;
             text-align: left;
         }
-        .api-item:hover {
-            border-color: #fbbf24;
-            background: rgba(254, 243, 199, 0.6);
-        }
         .api-item.active {
             border-color: #d97706;
-            background: rgba(254, 243, 199, 0.9);
-            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+            background: #fef3c7;
         }
         .api-item-icon {
             width: 32px; height: 32px;
             border-radius: 10px;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(52, 211, 153, 0.15));
+            background: #fef3c7;
             display: flex; align-items: center; justify-content: center;
             color: #d97706; font-size: 14px; margin-bottom: 8px;
         }
@@ -560,7 +528,7 @@
         .api-item p { font-size: 10px; color: #718096; line-height: 1.3; }
         
         /* ============================================ */
-        /* TERMINAL OUTPUT */
+        /* TERMINAL OUTPUT (DARK, TETAP KONTRAS) */
         /* ============================================ */
         #api-result-box {
             margin-bottom: 16px;
@@ -570,12 +538,12 @@
             overflow: hidden;
             display: none;
             font-family: 'Fira Code', monospace;
-            box-shadow: 0 8px 24px rgba(26, 35, 50, 0.2);
+            box-shadow: 0 8px 24px rgba(26, 35, 50, 0.15);
         }
         #api-result-box.show { display: block; }
         
         .terminal-header {
-            background: linear-gradient(180deg, #2d3748, #1a2332);
+            background: #0f1620;
             padding: 8px 14px;
             display: flex; align-items: center; gap: 8px;
             border-bottom: 1px solid rgba(251, 191, 36, 0.2);
@@ -594,7 +562,6 @@
             color: #a0aec0; cursor: pointer; padding: 4px 8px;
             border-radius: 6px; font-size: 12px;
         }
-        .terminal-close:hover { color: #fbbf24; }
         
         .terminal-body {
             padding: 14px 16px;
@@ -610,7 +577,7 @@
             display: flex; gap: 8px; padding: 1px 0;
             word-break: break-word;
             opacity: 0;
-            animation: termFadeIn 0.25s ease forwards;
+            animation: termFadeIn 0.2s ease forwards;
         }
         @keyframes termFadeIn { to { opacity: 1; } }
         
@@ -643,10 +610,6 @@
             margin: 8px 0;
         }
         
-        .terminal-body::-webkit-scrollbar { width: 6px; }
-        .terminal-body::-webkit-scrollbar-track { background: #0f1620; }
-        .terminal-body::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 3px; }
-        
         .spinner {
             width: 12px; height: 12px;
             border: 2px solid rgba(251, 191, 36, 0.2);
@@ -659,7 +622,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         
         /* ============================================ */
-        /* CREATED BY BUTTON */
+        /* CREATED BY */
         /* ============================================ */
         #created-by-btn {
             display: flex;
@@ -668,9 +631,7 @@
             gap: 8px;
             margin: 0 auto;
             padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: #ffffff;
             border: 2px solid rgba(251, 191, 36, 0.5);
             border-radius: 100px;
             color: #b45309;
@@ -678,18 +639,83 @@
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 16px rgba(251, 191, 36, 0.15);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(251, 191, 36, 0.15);
             max-width: fit-content;
-        }
-        #created-by-btn:hover {
-            border-color: #fbbf24;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
-            background: rgba(254, 243, 199, 0.95);
         }
         #created-by-btn:active { transform: scale(0.97); }
         #created-by-btn i { color: #d97706; }
+        
+        /* === CREATOR MODAL === */
+        #creator-modal-overlay {
+            position: fixed; inset: 0; z-index: 96;
+            background: rgba(26, 35, 50, 0.5);
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        #creator-modal-overlay.show { opacity: 1; visibility: visible; }
+        
+        #creator-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 97;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        #creator-modal.show { opacity: 1; visibility: visible; }
+        
+        .creator-terminal {
+            width: 100%;
+            max-width: 520px;
+            background: #1a2332;
+            border: 2px solid rgba(251, 191, 36, 0.5);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.92);
+            transition: transform 0.25s ease;
+        }
+        #creator-modal.show .creator-terminal { transform: scale(1); }
+        
+        .creator-header {
+            background: #0f1620;
+            padding: 10px 14px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        .creator-dots { display: flex; gap: 6px; }
+        .creator-dots span { width: 10px; height: 10px; border-radius: 50%; }
+        .creator-dots span:nth-child(1) { background: #ef4444; }
+        .creator-dots span:nth-child(2) { background: #fbbf24; }
+        .creator-dots span:nth-child(3) { background: #10b981; }
+        .creator-title {
+            color: #fbbf24;
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+        .creator-close {
+            margin-left: auto; background: transparent; border: none;
+            color: #a0aec0; cursor: pointer; padding: 4px 8px;
+            border-radius: 6px; font-size: 13px;
+        }
+        
+        .creator-body {
+            padding: 18px;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            line-height: 1.9;
+            color: #d1fae5;
+            background: #1a2332;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
@@ -715,19 +741,19 @@
                     </div>
                 </div>
                 
-                <div class="welcome-line" style="animation-delay: 0.3s">
+                <div class="welcome-line" style="animation-delay: 0.25s">
                     <span class="welcome-arrow">❯</span>
                     <span class="welcome-info">initializing system...</span>
                 </div>
-                <div class="welcome-line" style="animation-delay: 0.5s">
+                <div class="welcome-line" style="animation-delay: 0.4s">
                     <span class="welcome-prompt">[OK]</span>
                     <span>kernel loaded successfully</span>
                 </div>
-                <div class="welcome-line" style="animation-delay: 0.7s">
+                <div class="welcome-line" style="animation-delay: 0.55s">
                     <span class="welcome-prompt">[OK]</span>
                     <span>network interface ready</span>
                 </div>
-                <div class="welcome-line" style="animation-delay: 0.9s">
+                <div class="welcome-line" style="animation-delay: 0.7s">
                     <span class="welcome-arrow">❯</span>
                     <span class="welcome-warn">welcome, technician.</span>
                     <span class="welcome-cursor"></span>
@@ -758,8 +784,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-20">
                 <a href="#beranda" class="flex items-center space-x-3">
-                    <div class="logo-wrap w-11 h-11 lg:w-14 lg:h-14">
-                        <img src="tkj.jpeg" alt="Logo TKJ" style="filter: drop-shadow(0 4px 12px rgba(217, 119, 6, 0.4));" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-amber-600 text-2xl\'></i>';">
+                    <div class="w-11 h-11 lg:w-14 lg:h-14 flex items-center justify-center">
+                        <img src="tkj.jpeg" alt="Logo TKJ" class="w-full h-full object-contain logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-amber-600 text-2xl\'></i>';">
                     </div>
                     <div>
                         <span class="block font-bold text-base lg:text-xl gradient-text font-display">TKJ SMKN 2</span>
@@ -768,13 +794,13 @@
                 </a>
 
                 <nav class="hidden lg:flex items-center space-x-1">
-                    <a href="#beranda" class="px-3 py-2 rounded-lg text-sm font-semibold text-amber-700 bg-amber-100/60 transition-colors">Beranda</a>
-                    <a href="#tentang" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100/40 transition-colors">Tentang</a>
-                    <a href="#kurikulum" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100/40 transition-colors">Kurikulum</a>
-                    <a href="#tools" class="px-3 py-2 rounded-lg text-sm font-semibold text-amber-700 hover:bg-amber-100/60 transition-colors">Tools</a>
-                    <a href="#fasilitas" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100/40 transition-colors">Fasilitas</a>
-                    <a href="#galeri" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100/40 transition-colors">Galeri</a>
-                    <a href="#kontak" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100/40 transition-colors">Kontak</a>
+                    <a href="#beranda" class="px-3 py-2 rounded-lg text-sm font-semibold text-amber-700 bg-amber-100 transition-colors">Beranda</a>
+                    <a href="#tentang" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100 transition-colors">Tentang</a>
+                    <a href="#kurikulum" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100 transition-colors">Kurikulum</a>
+                    <a href="#tools" class="px-3 py-2 rounded-lg text-sm font-semibold text-amber-700 hover:bg-amber-100 transition-colors">Tools</a>
+                    <a href="#fasilitas" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100 transition-colors">Fasilitas</a>
+                    <a href="#galeri" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100 transition-colors">Galeri</a>
+                    <a href="#kontak" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-800 hover:text-amber-700 hover:bg-amber-100 transition-colors">Kontak</a>
                 </nav>
 
                 <div class="hidden lg:flex items-center gap-2">
@@ -787,16 +813,16 @@
                         <span class="ticker-change up" id="btc-change">--%</span>
                     </button>
                     
-                    <div class="px-3 py-2 rounded-xl bg-white/70 backdrop-blur border border-amber-300/60 flex items-center gap-2">
+                    <div class="px-3 py-2 rounded-xl bg-white border border-amber-300 flex items-center gap-2">
                         <i class="fa-solid fa-clock text-amber-600 text-xs"></i>
                         <span class="jam-wib text-xs font-bold text-ink-900" id="clock-wib-desktop">--:--:--</span>
                     </div>
                     
-                    <button id="install-btn-desktop" class="hidden px-4 py-2.5 rounded-xl bg-white/70 backdrop-blur border-2 border-amber-400 text-amber-700 font-semibold text-sm transition-all items-center gap-2" onclick="installApp()">
+                    <button id="install-btn-desktop" class="hidden px-4 py-2.5 rounded-xl bg-white border-2 border-amber-400 text-amber-700 font-semibold text-sm transition-all items-center gap-2" onclick="installApp()">
                         <i class="fa-solid fa-download"></i> Install
                     </button>
                     
-                    <a href="#tools" class="inline-flex items-center text-sm font-semibold rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-white px-5 py-2.5 shadow-lg">
+                    <a href="#tools" class="inline-flex items-center text-sm font-semibold rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-white px-5 py-2.5">
                         Tools IP <i class="fa-solid fa-bolt ml-2 text-xs"></i>
                     </a>
                 </div>
@@ -816,8 +842,8 @@
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-xl border-t border-amber-300/40 px-4 pt-3 pb-5 space-y-1">
-            <a href="#beranda" class="block px-3 py-2 rounded-md text-base font-semibold text-amber-700 bg-amber-100/60 transition-colors">Beranda</a>
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-amber-300/40 px-4 pt-3 pb-5 space-y-1">
+            <a href="#beranda" class="block px-3 py-2 rounded-md text-base font-semibold text-amber-700 bg-amber-100 transition-colors">Beranda</a>
             <a href="#tentang" class="block px-3 py-2 rounded-md text-base font-medium text-ink-800 transition-colors">Tentang Jurusan</a>
             <a href="#kurikulum" class="block px-3 py-2 rounded-md text-base font-medium text-ink-800 transition-colors">Kurikulum</a>
             <a href="#tools" class="block px-3 py-2 rounded-md text-base font-medium text-amber-700 transition-colors">🛠️ Tools TKJ</a>
@@ -827,17 +853,16 @@
         </div>
     </header>
 
-    <!-- BANNER -->
-    <div id="banner-visual" class="relative pt-20 lg:pt-24 overflow-hidden border-b border-amber-300/40">
-        <div class="absolute inset-0">
-            <img src="smkn.jpeg" alt="SMKN 2 Tembilahan" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
-            <div class="absolute inset-0 bg-gradient-to-b from-amber-100/95 via-amber-50/85 to-cream-100"></div>
+    <!-- BANNER (LOGO SMKN WATERMARK) -->
+    <div id="banner-visual" class="relative pt-20 lg:pt-24 overflow-hidden border-b border-amber-300/40" style="background: #fdf3c4;">
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+            <img src="smkn.jpeg" alt="SMKN 2 Tembilahan" class="max-w-xs lg:max-w-md max-h-48 lg:max-h-72 object-contain" loading="lazy" onerror="this.style.display='none';">
         </div>
         
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 text-center">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur border border-amber-400 text-amber-700 text-[10px] lg:text-xs font-semibold tracking-wider mb-3 shadow-sm">
-                <div class="logo-wrap w-5 h-5">
-                    <img src="tkj.jpeg" alt="TKJ">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-amber-400 text-amber-700 text-[10px] lg:text-xs font-semibold tracking-wider mb-3 shadow-sm">
+                <div class="w-5 h-5 flex items-center justify-center">
+                    <img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain">
                 </div>
                 <span>APLIKASI RESMI • LAB TKJ SMKN 2</span>
             </div>
@@ -866,37 +891,41 @@
                         Aplikasi resmi Jurusan Teknik Jaringan Komputer (TKJ) SMKN 2 Tembilahan. Dilengkapi simulator jaringan, kalkulator subnetting, dan tools siap pakai.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <a href="#tools" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold text-center flex items-center justify-center gap-2 ripple shadow-lg shadow-amber-400/30">
+                        <a href="#tools" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold text-center flex items-center justify-center gap-2 ripple shadow-lg">
                             <i class="fa-solid fa-screwdriver-wrench"></i> Akses Tools
                         </a>
-                        <button onclick="openApiPanel()" class="px-6 py-3.5 rounded-2xl bg-white/80 backdrop-blur text-amber-700 font-semibold text-center border-2 border-amber-300 flex items-center justify-center gap-2">
+                        <button onclick="openApiPanel()" class="px-6 py-3.5 rounded-2xl bg-white text-amber-700 font-semibold text-center border-2 border-amber-300 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-terminal"></i> Lab Console
                         </button>
                     </div>
                 </div>
 
+                <!-- LOGO SMKN TRANSPARAN -->
                 <div class="lg:col-span-5 fade-in">
                     <div class="relative w-full max-w-md mx-auto">
-                        <div class="bg-white/60 backdrop-blur-xl rounded-3xl p-3 border-2 border-amber-300/60 overflow-hidden shadow-xl shadow-amber-200/40">
-                            <div class="absolute top-6 left-6 z-20 w-12 h-12 logo-wrap">
-                                <img src="tkj.jpeg" alt="TKJ" style="filter: drop-shadow(0 4px 12px rgba(217, 119, 6, 0.4));">
+                        <div class="relative rounded-[36px] p-8 lg:p-12" style="background: #ffffff;">
+                            <div class="absolute top-4 left-4 z-20 w-12 h-12 flex items-center justify-center">
+                                <img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain logo-img">
                             </div>
-                            <div class="absolute top-6 right-6 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 text-white text-[10px] font-bold shadow-lg">
+                            <div class="absolute top-5 right-5 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 text-white text-[10px] font-bold">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
                                 AKTIF
                             </div>
                             
-                            <div class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-amber-50">
-                                <img src="smkn.jpeg" alt="SMKN 2 Tembilahan" class="w-full h-full object-cover" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center text-amber-600\'><i class=\'fa-solid fa-school text-6xl mb-3\'></i><span class=\'text-xs font-semibold\'>Foto tidak tersedia</span></div>';">
-                                <div class="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-ink-900/20 to-transparent"></div>
-                                
-                                <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
-                                    <div class="inline-block px-2.5 py-1 rounded-full bg-amber-400/30 backdrop-blur border border-amber-300/60 mb-2">
-                                        <span class="text-[9px] font-bold uppercase tracking-wider text-white">SMKN 2 TEMBILAHAN</span>
-                                    </div>
-                                    <h3 class="font-bold text-lg font-display text-white">Teknik Jaringan Komputer</h3>
-                                    <p class="text-[11px] text-amber-100/90 mt-0.5">Tembilahan • Indragiri Hilir • Riau</p>
+                            <div class="relative flex items-center justify-center py-8">
+                                <img src="smkn.jpeg" 
+                                     alt="SMKN 2 Tembilahan" 
+                                     class="w-full max-w-xs h-auto object-contain" 
+                                     loading="lazy"
+                                     onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'flex flex-col items-center justify-center text-amber-600 py-12\'><i class=\'fa-solid fa-school text-6xl mb-3\'></i><span class=\'text-xs font-semibold\'>Logo tidak tersedia</span></div>';">
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <div class="inline-block px-3 py-1 rounded-full bg-amber-100 border border-amber-400 mb-2">
+                                    <span class="text-[9px] font-bold uppercase tracking-wider text-amber-700">SMKN 2 TEMBILAHAN</span>
                                 </div>
+                                <h3 class="font-bold text-lg font-display text-ink-900">Teknik Jaringan Komputer</h3>
+                                <p class="text-[11px] text-ink-700 mt-0.5">Tembilahan • Indragiri Hilir • Riau</p>
                             </div>
                         </div>
                     </div>
@@ -1026,7 +1055,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-4">
-                    <div class="logo-wrap w-5 h-5"><img src="tkj.jpeg" alt="TKJ"></div>
+                    <div class="w-5 h-5 flex items-center justify-center"><img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain"></div>
                     Laboratorium Digital
                 </span>
                 <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-ink-900 font-display">
@@ -1039,10 +1068,10 @@
                 <button onclick="switchTab('subnet')" id="tab-subnet" class="tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-gradient-to-r from-amber-400 to-amber-600 text-white flex items-center gap-2 shadow-lg" aria-selected="true">
                     <i class="fa-solid fa-calculator"></i> Subnetting
                 </button>
-                <button onclick="switchTab('cable')" id="tab-cable" class="tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-white/70 backdrop-blur text-ink-800 border border-amber-300 flex items-center gap-2" aria-selected="false">
+                <button onclick="switchTab('cable')" id="tab-cable" class="tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-white text-ink-800 border border-amber-300 flex items-center gap-2" aria-selected="false">
                     <i class="fa-solid fa-ethernet"></i> Kabel UTP
                 </button>
-                <button onclick="switchTab('latency')" id="tab-latency" class="tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-white/70 backdrop-blur text-ink-800 border border-amber-300 flex items-center gap-2" aria-selected="false">
+                <button onclick="switchTab('latency')" id="tab-latency" class="tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-white text-ink-800 border border-amber-300 flex items-center gap-2" aria-selected="false">
                     <i class="fa-solid fa-satellite-dish"></i> Ping Test
                 </button>
             </div>
@@ -1058,11 +1087,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                     <div>
                         <label for="subnet-ip" class="block text-xs font-semibold text-amber-700 mb-2 uppercase tracking-wider">Alamat IP</label>
-                        <input type="text" id="subnet-ip" value="192.168.1.1" inputmode="numeric" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-amber-300 text-ink-900 font-mono text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" placeholder="192.168.1.1">
+                        <input type="text" id="subnet-ip" value="192.168.1.1" inputmode="numeric" class="w-full px-4 py-3 rounded-2xl bg-white border border-amber-300 text-ink-900 font-mono text-sm focus:outline-none focus:border-amber-500 transition-all" placeholder="192.168.1.1">
                     </div>
                     <div>
                         <label for="subnet-cidr" class="block text-xs font-semibold text-amber-700 mb-2 uppercase tracking-wider">Prefix CIDR</label>
-                        <select id="subnet-cidr" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-amber-300 text-ink-900 font-mono text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all">
+                        <select id="subnet-cidr" class="w-full px-4 py-3 rounded-2xl bg-white border border-amber-300 text-ink-900 font-mono text-sm focus:outline-none focus:border-amber-500 transition-all">
                             <option value="24">/24 (255.255.255.0 - 254 Host)</option>
                             <option value="25">/25 (255.255.255.128 - 126 Host)</option>
                             <option value="26">/26 (255.255.255.192 - 62 Host)</option>
@@ -1073,10 +1102,10 @@
                         </select>
                     </div>
                 </div>
-                <button onclick="calculateSubnet()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold mb-5 flex items-center justify-center gap-2 shadow-lg shadow-amber-400/30">
+                <button onclick="calculateSubnet()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold mb-5 flex items-center justify-center gap-2 shadow-lg">
                     Hitung Subnet <i class="fa-solid fa-arrow-right"></i>
                 </button>
-                <div id="subnet-result" class="hidden bg-white/90 backdrop-blur p-5 rounded-2xl border-2 border-amber-400 font-mono text-sm space-y-2 text-ink-800"></div>
+                <div id="subnet-result" class="hidden bg-amber-50 p-5 rounded-2xl border-2 border-amber-400 font-mono text-sm space-y-2 text-ink-800"></div>
             </div>
 
             <div id="tool-cable" class="tool-panel hidden card p-5 lg:p-8 max-w-4xl mx-auto">
@@ -1088,7 +1117,7 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-white/70 backdrop-blur p-5 rounded-2xl border border-amber-300">
+                    <div class="bg-amber-50 p-5 rounded-2xl border border-amber-300">
                         <h4 class="font-bold text-amber-700 mb-3 flex items-center gap-2 text-sm"><i class="fa-solid fa-circle-dot text-xs"></i> Straight-Through</h4>
                         <p class="text-xs text-ink-600 mb-4">Switch ke PC. Kedua ujung sama (T568B).</p>
                         <ol class="space-y-1.5 text-xs font-mono text-ink-800">
@@ -1102,7 +1131,7 @@
                             <li><span class="inline-block w-5 text-amber-700 font-bold">8.</span> Cokelat</li>
                         </ol>
                     </div>
-                    <div class="bg-white/70 backdrop-blur p-5 rounded-2xl border border-emerald-300">
+                    <div class="bg-emerald-50 p-5 rounded-2xl border border-emerald-300">
                         <h4 class="font-bold text-emerald-700 mb-3 flex items-center gap-2 text-sm"><i class="fa-solid fa-circle-dot text-xs"></i> Crossover</h4>
                         <p class="text-xs text-ink-600 mb-4">PC ke PC / Switch ke Switch.</p>
                         <ul class="space-y-2 text-xs font-mono text-ink-800">
@@ -1123,7 +1152,7 @@
                 </div>
                 <div class="space-y-4">
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <input type="text" id="ping-target" value="192.168.2.1" placeholder="Masukkan IP / Domain Target" class="flex-1 px-4 py-3 rounded-2xl bg-white/80 border border-amber-300 text-ink-900 font-mono text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all">
+                        <input type="text" id="ping-target" value="192.168.2.1" placeholder="Masukkan IP / Domain Target" class="flex-1 px-4 py-3 rounded-2xl bg-white border border-amber-300 text-ink-900 font-mono text-sm focus:outline-none focus:border-amber-500 transition-all">
                         <button onclick="runPing()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg">
                             <i class="fa-solid fa-play"></i> Run Ping
                         </button>
@@ -1141,7 +1170,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-4">
-                    <div class="logo-wrap w-5 h-5"><img src="tkj.jpeg" alt="TKJ"></div>
+                    <div class="w-5 h-5 flex items-center justify-center"><img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain"></div>
                     Kompetensi Keahlian
                 </span>
                 <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-ink-900 font-display">
@@ -1157,14 +1186,14 @@
                         Didukung oleh pengajar profesional bersertifikasi industri serta laboratorium modern berstandar tinggi, kami berkomitmen mencetak lulusan yang siap bersaing di dunia kerja maupun berwirausaha digital.
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                        <div class="flex items-start gap-3 p-4 rounded-2xl bg-white/70 backdrop-blur border border-amber-300">
+                        <div class="flex items-start gap-3 p-4 rounded-2xl bg-white border border-amber-300">
                             <div class="p-2 rounded-xl bg-amber-100 text-amber-700 flex-shrink-0"><i class="fa-solid fa-check text-sm"></i></div>
                             <div>
                                 <h4 class="font-bold text-ink-900 text-sm">Kurikulum Industri</h4>
                                 <p class="text-xs text-ink-600 mt-0.5">Materi adaptif teknologi terbaru.</p>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3 p-4 rounded-2xl bg-white/70 backdrop-blur border border-amber-300">
+                        <div class="flex items-start gap-3 p-4 rounded-2xl bg-white border border-amber-300">
                             <div class="p-2 rounded-xl bg-emerald-100 text-emerald-700 flex-shrink-0"><i class="fa-solid fa-check text-sm"></i></div>
                             <div>
                                 <h4 class="font-bold text-ink-900 text-sm">Sertifikasi Resmi</h4>
@@ -1213,7 +1242,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-4">
-                    <div class="logo-wrap w-5 h-5"><img src="tkj.jpeg" alt="TKJ"></div>
+                    <div class="w-5 h-5 flex items-center justify-center"><img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain"></div>
                     Materi Kejuruan
                 </span>
                 <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-ink-900 font-display">
@@ -1284,7 +1313,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-4">
-                    <div class="logo-wrap w-5 h-5"><img src="tkj.jpeg" alt="TKJ"></div>
+                    <div class="w-5 h-5 flex items-center justify-center"><img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain"></div>
                     Infrastruktur
                 </span>
                 <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-ink-900 font-display">
@@ -1319,7 +1348,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-4">
-                    <div class="logo-wrap w-5 h-5"><img src="tkj.jpeg" alt="TKJ"></div>
+                    <div class="w-5 h-5 flex items-center justify-center"><img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain"></div>
                     Dokumentasi
                 </span>
                 <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-ink-900 font-display">
@@ -1368,7 +1397,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10 lg:mb-14 fade-in">
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-4">
-                    <div class="logo-wrap w-5 h-5"><img src="tkj.jpeg" alt="TKJ"></div>
+                    <div class="w-5 h-5 flex items-center justify-center"><img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain"></div>
                     Hubungi Kami
                 </span>
                 <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight text-ink-900 font-display">
@@ -1379,8 +1408,8 @@
                 <div class="lg:col-span-5 fade-in">
                     <div class="card p-6 lg:p-8 space-y-5 h-full">
                         <div class="flex items-center gap-3 border-b border-amber-300/40 pb-5">
-                            <div class="logo-wrap w-16 h-16">
-                                <img src="tkj.jpeg" alt="TKJ" style="filter: drop-shadow(0 4px 12px rgba(217, 119, 6, 0.4));">
+                            <div class="w-16 h-16 flex items-center justify-center">
+                                <img src="tkj.jpeg" alt="TKJ" class="w-full h-full object-contain logo-img">
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold text-ink-900 font-display">SMKN 2 Tembilahan</h3>
@@ -1409,10 +1438,10 @@
                             </div>
                         </div>
                         <div class="pt-5 border-t border-amber-300/40 flex gap-2">
-                            <a href="#" class="w-10 h-10 rounded-xl bg-white/70 backdrop-blur hover:bg-amber-400 hover:text-white text-amber-700 flex items-center justify-center transition-all border border-amber-300" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-                            <a href="#" class="w-10 h-10 rounded-xl bg-white/70 backdrop-blur hover:bg-amber-400 hover:text-white text-amber-700 flex items-center justify-center transition-all border border-amber-300" aria-label="Instagram"><i class="fa-brands fa-instagram text-sm"></i></a>
-                            <a href="#" class="w-10 h-10 rounded-xl bg-white/70 backdrop-blur hover:bg-amber-400 hover:text-white text-amber-700 flex items-center justify-center transition-all border border-amber-300" aria-label="YouTube"><i class="fa-brands fa-youtube text-sm"></i></a>
-                            <a href="#" class="w-10 h-10 rounded-xl bg-white/70 backdrop-blur hover:bg-amber-400 hover:text-white text-amber-700 flex items-center justify-center transition-all border border-amber-300" aria-label="TikTok"><i class="fa-brands fa-tiktok text-sm"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-white hover:bg-amber-400 hover:text-white text-amber-700 flex items-center justify-center transition-all border border-amber-300" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-white hover:bg-amber-400 hover:text-white text-amber-700 flex items-center justify-center transition-all border border-amber-300" aria-label="Instagram"><i class="fa-brands fa-instagram text-sm"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-white hover:bg-amber-400 hover:text-white text-amber-700 flex items-center justify-center transition-all border border-amber-300" aria-label="YouTube"><i class="fa-brands fa-youtube text-sm"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-white hover:bg-amber-400 hover:text-white text-amber-700 flex items-center justify-center transition-all border border-amber-300" aria-label="TikTok"><i class="fa-brands fa-tiktok text-sm"></i></a>
                         </div>
                     </div>
                 </div>
@@ -1424,22 +1453,22 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label for="nama" class="block text-xs font-semibold text-amber-700 mb-2 uppercase tracking-wider">Nama Lengkap</label>
-                                    <input type="text" id="nama" required class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-amber-300 text-ink-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" placeholder="Nama Anda">
+                                    <input type="text" id="nama" required class="w-full px-4 py-3 rounded-2xl bg-white border border-amber-300 text-ink-900 text-sm focus:outline-none focus:border-amber-500 transition-all" placeholder="Nama Anda">
                                 </div>
                                 <div>
                                     <label for="kontak" class="block text-xs font-semibold text-amber-700 mb-2 uppercase tracking-wider">Email / WhatsApp</label>
-                                    <input type="text" id="kontak" required class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-amber-300 text-ink-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" placeholder="email / No HP">
+                                    <input type="text" id="kontak" required class="w-full px-4 py-3 rounded-2xl bg-white border border-amber-300 text-ink-900 text-sm focus:outline-none focus:border-amber-500 transition-all" placeholder="email / No HP">
                                 </div>
                             </div>
                             <div>
                                 <label for="subjek" class="block text-xs font-semibold text-amber-700 mb-2 uppercase tracking-wider">Subjek Pesan</label>
-                                <input type="text" id="subjek" required class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-amber-300 text-ink-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" placeholder="Contoh: Informasi PPDB TKJ">
+                                <input type="text" id="subjek" required class="w-full px-4 py-3 rounded-2xl bg-white border border-amber-300 text-ink-900 text-sm focus:outline-none focus:border-amber-500 transition-all" placeholder="Contoh: Informasi PPDB TKJ">
                             </div>
                             <div>
                                 <label for="pesan" class="block text-xs font-semibold text-amber-700 mb-2 uppercase tracking-wider">Pesan Anda</label>
-                                <textarea id="pesan" rows="4" required class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-amber-300 text-ink-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all" placeholder="Tuliskan isi pesan Anda..."></textarea>
+                                <textarea id="pesan" rows="4" required class="w-full px-4 py-3 rounded-2xl bg-white border border-amber-300 text-ink-900 text-sm focus:outline-none focus:border-amber-500 transition-all" placeholder="Tuliskan isi pesan Anda..."></textarea>
                             </div>
-                            <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-amber-400/30">
+                            <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg">
                                 Kirim Pesan <i class="fa-solid fa-paper-plane"></i>
                             </button>
                         </form>
@@ -1454,8 +1483,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center space-x-3">
-                    <div class="logo-wrap w-12 h-12">
-                        <img src="tkj.jpeg" alt="Logo TKJ" style="filter: drop-shadow(0 4px 10px rgba(217, 119, 6, 0.4));" onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-amber-400 flex items-center justify-center rounded-lg\'><i class=\'fa-solid fa-network-wired text-white\'></i></div>';">
+                    <div class="w-12 h-12 flex items-center justify-center">
+                        <img src="tkj.jpeg" alt="Logo TKJ" class="w-full h-full object-contain logo-img" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-amber-600 text-2xl\'></i>';">
                     </div>
                     <div>
                         <span class="block font-bold text-sm text-ink-900 font-display">Teknik Jaringan Komputer</span>
@@ -1471,7 +1500,6 @@
                 </div>
             </div>
             
-            <!-- CREATED BY BUTTON -->
             <div class="mt-8 flex justify-center">
                 <button id="created-by-btn" onclick="openCreatorTerminal()">
                     <i class="fa-solid fa-code"></i>
@@ -1512,8 +1540,8 @@
 
     <!-- INSTALL BANNER -->
     <div id="install-banner">
-        <div class="logo-wrap w-12 h-12 flex-shrink-0">
-            <img src="tkj.jpeg" alt="Install">
+        <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center">
+            <img src="tkj.jpeg" alt="Install" class="w-full h-full object-contain logo-img">
         </div>
         <div class="flex-1 min-w-0">
             <h4 class="font-bold text-ink-900 text-sm">Install Aplikasi TKJ</h4>
@@ -1543,7 +1571,7 @@
                     <p class="text-[10px] text-amber-700 tracking-widest uppercase font-semibold">12 API Gratis • No Key</p>
                 </div>
             </div>
-            <button onclick="closeApiPanel()" class="w-9 h-9 rounded-xl bg-white/70 border border-amber-300 text-ink-800 hover:text-amber-700 flex items-center justify-center transition-all" aria-label="Tutup">
+            <button onclick="closeApiPanel()" class="w-9 h-9 rounded-xl bg-white border border-amber-300 text-ink-800 hover:text-amber-700 flex items-center justify-center transition-all" aria-label="Tutup">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -1551,7 +1579,6 @@
         <div class="panel-body">
             <p class="text-xs text-ink-600 mb-3">Klik salah satu API untuk fetch data real-time via terminal.</p>
             
-            <!-- TERMINAL OUTPUT (PINDAH KE ATAS GRID) -->
             <div id="api-result-box">
                 <div class="terminal-header">
                     <div class="terminal-dots">
@@ -1567,7 +1594,7 @@
         </div>
     </div>
 
-    <!-- CREATOR TERMINAL MODAL -->
+    <!-- CREATOR MODAL -->
     <div id="creator-modal-overlay" onclick="closeCreatorTerminal()"></div>
     <div id="creator-modal">
         <div class="creator-terminal">
@@ -1584,91 +1611,11 @@
         </div>
     </div>
 
-    <style>
-        /* CREATOR MODAL */
-        #creator-modal-overlay {
-            position: fixed; inset: 0; z-index: 96;
-            background: rgba(26, 35, 50, 0.5);
-            backdrop-filter: blur(6px);
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        #creator-modal-overlay.show { opacity: 1; visibility: visible; }
-        
-        #creator-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 97;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        #creator-modal.show { opacity: 1; visibility: visible; }
-        
-        .creator-terminal {
-            width: 100%;
-            max-width: 520px;
-            background: #1a2332;
-            border: 2px solid rgba(251, 191, 36, 0.5);
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-        #creator-modal.show .creator-terminal { transform: scale(1); }
-        
-        .creator-header {
-            background: linear-gradient(180deg, #2d3748, #1a2332);
-            padding: 10px 14px;
-            display: flex; align-items: center; gap: 8px;
-            border-bottom: 1px solid rgba(251, 191, 36, 0.3);
-        }
-        .creator-dots { display: flex; gap: 6px; }
-        .creator-dots span { width: 10px; height: 10px; border-radius: 50%; }
-        .creator-dots span:nth-child(1) { background: #ef4444; }
-        .creator-dots span:nth-child(2) { background: #fbbf24; }
-        .creator-dots span:nth-child(3) { background: #10b981; }
-        .creator-title {
-            color: #fbbf24;
-            font-family: 'Fira Code', monospace;
-            font-size: 11px;
-            font-weight: 600;
-            margin-left: 6px;
-        }
-        .creator-close {
-            margin-left: auto; background: transparent; border: none;
-            color: #a0aec0; cursor: pointer; padding: 4px 8px;
-            border-radius: 6px; font-size: 13px;
-        }
-        .creator-close:hover { color: #fbbf24; }
-        
-        .creator-body {
-            padding: 18px;
-            font-family: 'Fira Code', monospace;
-            font-size: 12px;
-            line-height: 1.9;
-            color: #d1fae5;
-            background: #1a2332;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-        
-        .creator-body::-webkit-scrollbar { width: 6px; }
-        .creator-body::-webkit-scrollbar-track { background: #0f1620; }
-        .creator-body::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 3px; }
-    </style>
-
     <script>
         let deferredPrompt = null;
         let isAppMode = false;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-        // WELCOME SCREEN
         function enterApp() {
             document.getElementById('welcome-screen').classList.add('hidden-welcome');
             if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
@@ -1678,7 +1625,6 @@
             document.getElementById('welcome-screen').classList.add('hidden-welcome');
         }
 
-        // JAM WIB
         function updateClockWIB() {
             const now = new Date();
             const timeStr = now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
@@ -1688,7 +1634,6 @@
         setInterval(updateClockWIB, 1000);
         updateClockWIB();
 
-        // BTC
         async function fetchBTC() {
             try {
                 const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
@@ -1718,7 +1663,6 @@
             showToast(`₿ BTC ${price} • ${change} (24h)`, 'info', 3500);
         }
 
-        // APP MODE
         function detectAppMode() {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             const isSmallScreen = window.innerWidth < 1024;
@@ -1729,7 +1673,6 @@
             }
         }
 
-        // PWA
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -1764,7 +1707,6 @@
             localStorage.setItem('install-dismissed', 'true');
         }
 
-        // TOAST
         function showToast(message, type = 'info', duration = 3000) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -1778,7 +1720,6 @@
             }, duration);
         }
 
-        // MOBILE MENU
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const menuIcon = document.getElementById('menu-icon');
@@ -1795,11 +1736,10 @@
             });
         });
 
-        // TOOL TABS
         function switchTab(tabName) {
             const tabs = ['subnet', 'cable', 'latency'];
             const activeClasses = 'tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-gradient-to-r from-amber-400 to-amber-600 text-white flex items-center gap-2 shadow-lg';
-            const inactiveClasses = 'tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-white/70 backdrop-blur text-ink-800 border border-amber-300 flex items-center gap-2';
+            const inactiveClasses = 'tool-tab flex-shrink-0 px-5 py-3 rounded-2xl font-semibold text-sm transition-all bg-white text-ink-800 border border-amber-300 flex items-center gap-2';
             tabs.forEach(t => {
                 const panel = document.getElementById('tool-' + t);
                 const btn = document.getElementById('tab-' + t);
@@ -1813,7 +1753,6 @@
             });
         }
 
-        // SUBNET
         function calculateSubnet() {
             const ip = document.getElementById('subnet-ip').value.trim();
             const cidr = parseInt(document.getElementById('subnet-cidr').value);
@@ -1868,7 +1807,6 @@
         }
         window.addEventListener('DOMContentLoaded', () => calculateSubnet());
 
-        // PING
         let pingInterval = null;
         function runPing() {
             const target = document.getElementById('ping-target').value.trim() || '192.168.2.1';
@@ -1891,14 +1829,12 @@
             showToast(`Memulai ping ke ${target}...`, 'info');
         }
 
-        // FORM
         function handleFormSubmit(event) {
             event.preventDefault();
             showToast('Pesan berhasil terkirim! Terima kasih.', 'success', 4000);
             document.getElementById('contact-form').reset();
         }
 
-        // FADE IN
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1909,7 +1845,6 @@
         }, { threshold: 0.05 });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-        // BOTTOM NAV
         const navObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1925,7 +1860,6 @@
             if (el) navObserver.observe(el);
         });
 
-        // API LIST
         const API_LIST = [
             { id: 'btc', icon: 'fa-brands fa-bitcoin', title: 'Bitcoin', subtitle: 'Crypto realtime', cmd: 'curl -s "api.coingecko.com/v3/price?ids=bitcoin"', fetch: async () => {
                 const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,idr&include_24hr_change=true');
@@ -2031,7 +1965,6 @@
             title.textContent = `terminal — tkj@smkn2:~/api/${api.id}`;
             body.innerHTML = '';
             
-            // AUTO SCROLL ke terminal (yang udah di atas)
             setTimeout(() => {
                 box.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
@@ -2048,36 +1981,33 @@
                 });
             };
             await appendLine(`<div class="term-line term-cmd"><span class="arrow">❯</span><span>${api.cmd}</span></div>`, 0);
-            await appendLine(`<div class="term-status info"><span class="badge">[INFO]</span><span>Connecting to ${api.title}...</span></div>`, 200);
-            await appendLine(`<div class="term-status info" id="term-loading"><span class="badge">[INFO]</span><span>Fetching <span class="spinner"></span></span></div>`, 200);
+            await appendLine(`<div class="term-status info"><span class="badge">[INFO]</span><span>Connecting to ${api.title}...</span></div>`, 150);
+            await appendLine(`<div class="term-status info" id="term-loading"><span class="badge">[INFO]</span><span>Fetching <span class="spinner"></span></span></div>`, 150);
             try {
                 const startTime = performance.now();
                 const data = await api.fetch();
                 const elapsed = (performance.now() - startTime).toFixed(0);
                 document.getElementById('term-loading')?.remove();
-                await appendLine(`<div class="term-status ok"><span class="badge">[OK]</span><span>200 — ${elapsed}ms</span></div>`, 80);
-                await appendLine(`<div class="term-divider"></div>`, 80);
-                await appendLine(`<div class="term-line"><span class="term-prompt">$</span><span class="term-key">${api.title.toUpperCase()}</span><span class="term-sep">→</span><span class="term-val str">live data</span></div>`, 80);
+                await appendLine(`<div class="term-status ok"><span class="badge">[OK]</span><span>200 — ${elapsed}ms</span></div>`, 60);
+                await appendLine(`<div class="term-divider"></div>`, 60);
+                await appendLine(`<div class="term-line"><span class="term-prompt">$</span><span class="term-key">${api.title.toUpperCase()}</span><span class="term-sep">→</span><span class="term-val str">live data</span></div>`, 60);
                 const entries = Object.entries(data);
                 for (let i = 0; i < entries.length; i++) {
                     const [k, v] = entries[i];
                     const valStr = String(v);
                     const valClass = !isNaN(v) && v !== '' && typeof v !== 'string' ? 'num' : 'str';
-                    await appendLine(`<div class="term-line"><span class="term-prompt">├─</span><span class="term-key">${k}</span><span class="term-sep">:</span><span class="term-val ${valClass}">${valStr}</span></div>`, 60);
+                    await appendLine(`<div class="term-line"><span class="term-prompt">├─</span><span class="term-key">${k}</span><span class="term-sep">:</span><span class="term-val ${valClass}">${valStr}</span></div>`, 50);
                 }
-                await appendLine(`<div class="term-divider"></div>`, 80);
-                await appendLine(`<div class="term-line"><span class="term-prompt">$</span><span class="term-val">_</span><span class="term-cursor"></span></div>`, 80);
+                await appendLine(`<div class="term-divider"></div>`, 60);
+                await appendLine(`<div class="term-line"><span class="term-prompt">$</span><span class="term-val">_</span><span class="term-cursor"></span></div>`, 60);
             } catch (e) {
                 document.getElementById('term-loading')?.remove();
-                await appendLine(`<div class="term-status err"><span class="badge">[ERR]</span><span>${e.message}</span></div>`, 80);
-                await appendLine(`<div class="term-line"><span class="term-prompt">$</span><span class="term-val" style="color:#f43f5e">connection failed.</span><span class="term-cursor"></span></div>`, 80);
+                await appendLine(`<div class="term-status err"><span class="badge">[ERR]</span><span>${e.message}</span></div>`, 60);
+                await appendLine(`<div class="term-line"><span class="term-prompt">$</span><span class="term-val" style="color:#f43f5e">connection failed.</span><span class="term-cursor"></span></div>`, 60);
                 showToast('Gagal memuat data', 'error');
             }
         }
 
-        // ============================================
-        // CREATOR TERMINAL
-        // ============================================
         function openCreatorTerminal() {
             document.getElementById('creator-modal-overlay').classList.add('show');
             document.getElementById('creator-modal').classList.add('show');
@@ -2096,17 +2026,17 @@
             
             const lines = [
                 { delay: 0, html: `<div class="term-line term-cmd"><span class="arrow" style="color:#fbbf24">❯</span><span style="color:#34d399">./introduce.sh</span></div>` },
-                { delay: 300, html: `<div class="term-status info"><span class="badge" style="color:#38bdf8">[INFO]</span><span>loading creator profile...</span></div>` },
+                { delay: 200, html: `<div class="term-status info"><span class="badge" style="color:#38bdf8">[INFO]</span><span>loading creator profile...</span></div>` },
+                { delay: 200, html: `<div style="border-top:1px dashed rgba(251,191,36,0.3);margin:12px 0;"></div>` },
+                { delay: 200, html: `<div class="term-line"><span style="color:#10b981;font-weight:700">$</span><span style="color:#fbbf24">creator</span><span style="color:#718096">→</span><span style="color:#ffffff">Wilka</span></div>` },
+                { delay: 300, html: `<div class="term-line"><span style="color:#10b981;font-weight:700">$</span><span style="color:#fbbf24">role</span><span style="color:#718096">→</span><span style="color:#fcd34d">Web Developer</span></div>` },
                 { delay: 300, html: `<div style="border-top:1px dashed rgba(251,191,36,0.3);margin:12px 0;"></div>` },
-                { delay: 300, html: `<div class="term-line"><span style="color:#10b981;font-weight:700">$</span><span style="color:#fbbf24">creator</span><span style="color:#718096">→</span><span style="color:#ffffff">Wilka</span></div>` },
-                { delay: 400, html: `<div class="term-line"><span style="color:#10b981;font-weight:700">$</span><span style="color:#fbbf24">role</span><span style="color:#718096">→</span><span style="color:#fcd34d">Web Developer</span></div>` },
+                { delay: 300, html: `<div style="color:#fcd34d;line-height:2;font-size:12px;">Hai, saya <span style="color:#10b981;font-weight:700">Wilka</span> 👋</div>` },
+                { delay: 400, html: `<div style="color:#d1fae5;line-height:2;font-size:12px;">Yang membuat & membangun website ini.</div>` },
+                { delay: 400, html: `<div style="color:#d1fae5;line-height:2;font-size:12px;">Semoga kalian bisa menggunakan tools ini dengan bijak ya 🙏</div>` },
                 { delay: 400, html: `<div style="border-top:1px dashed rgba(251,191,36,0.3);margin:12px 0;"></div>` },
-                { delay: 400, html: `<div style="color:#fcd34d;line-height:2;font-size:12px;">Hai, saya <span style="color:#10b981;font-weight:700">Wilka</span> 👋</div>` },
-                { delay: 500, html: `<div style="color:#d1fae5;line-height:2;font-size:12px;">Yang membuat & membangun website ini.</div>` },
-                { delay: 500, html: `<div style="color:#d1fae5;line-height:2;font-size:12px;">Semoga kalian bisa menggunakan tools ini dengan bijak ya 🙏</div>` },
-                { delay: 500, html: `<div style="border-top:1px dashed rgba(251,191,36,0.3);margin:12px 0;"></div>` },
-                { delay: 400, html: `<div class="term-status ok"><span class="badge" style="color:#10b981">[OK]</span><span>creator profile loaded</span></div>` },
-                { delay: 300, html: `<div class="term-line"><span style="color:#10b981;font-weight:700">$</span><span style="color:#d1fae5">Next: </span><span style="color:#fbbf24">thank you ❤️</span><span style="display:inline-block;width:8px;height:14px;background:#34d399;vertical-align:middle;margin-left:4px;animation:termBlink 1s step-end infinite"></span></div>` }
+                { delay: 300, html: `<div class="term-status ok"><span class="badge" style="color:#10b981">[OK]</span><span>creator profile loaded</span></div>` },
+                { delay: 250, html: `<div class="term-line"><span style="color:#10b981;font-weight:700">$</span><span style="color:#d1fae5">Next: </span><span style="color:#fbbf24">thank you ❤️</span><span style="display:inline-block;width:8px;height:14px;background:#34d399;vertical-align:middle;margin-left:4px;animation:termBlink 1s step-end infinite"></span></div>` }
             ];
             
             for (const line of lines) {
