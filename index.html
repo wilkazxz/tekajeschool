@@ -163,6 +163,8 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
 .live:after{content:"";position:absolute;inset:0;border-radius:50%;background:#2ebd7b;animation:pl 1.6s ease-out infinite}
 @keyframes pl{to{transform:scale(3);opacity:0}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+.ph{display:grid;place-items:center;color:var(--ac);font-size:34px}
+.hrow .ph{font-size:48px}.wl .ph{font-size:80px}.tlogo .ph{font-size:34px}
 </style>
 </head>
 <body>
@@ -170,7 +172,7 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
 <!-- SPLASH -->
 <div id="ws">
   <div class="wp"><img data-logo="gedung" alt="">
-    <div class="wl"><img data-logo="tkj" alt="TKJ"><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
+    <div class="wl"><img data-logo="tkj" data-ph="fa-network-wired" alt="TKJ"><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
   <div class="wb">
     <h2>WELCOME</h2>
     <p>Portal resmi Jurusan Teknik Jaringan Komputer.<br>Tools, materi, &amp; informasi TKJ ada di sini.</p>
@@ -184,7 +186,7 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
 <div id="tb"><div class="tw g">
   <div class="th"><span><s></s><s></s><s></s></span>root@smkn2-tkj:~$ ./boot.sh</div>
   <div class="tbd">
-    <div class="tlogo tl" style="animation-delay:.1s"><img data-logo="tkj" alt=""><div><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
+    <div class="tlogo tl" style="animation-delay:.1s"><img data-logo="tkj" data-ph="fa-network-wired" alt=""><div><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
     <div class="tl" style="animation-delay:.25s"><span style="color:#2f6fd0">❯</span> initializing system...</div>
     <div class="tl" style="animation-delay:.4s"><span style="color:#2e9e6b">[OK]</span> kernel loaded successfully</div>
     <div class="tl" style="animation-delay:.55s"><span style="color:#2e9e6b">[OK]</span> network interface ready</div>
@@ -202,7 +204,7 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
 <!-- HOME -->
 <section class="scr on" id="s-home">
   <div class="top">
-    <div class="who"><img class="lg" data-logo="tkj" alt="TKJ"><div><small>Selamat datang,</small><b>TKJ SMKN 2</b></div></div>
+    <div class="who"><img class="lg" data-logo="tkj" data-ph="fa-network-wired" alt="TKJ"><div><small>Selamat datang,</small><b>TKJ SMKN 2</b></div></div>
     <button class="ib" onclick="openConsole()" aria-label="Console"><i class="fa-solid fa-terminal"></i><span class="dot"></span></button>
     <button class="ib" onclick="toast('Tidak ada notifikasi baru')" aria-label="Notifikasi"><i class="fa-regular fa-bell"></i></button>
   </div>
@@ -210,7 +212,7 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
     <div class="lb" style="display:flex;justify-content:space-between;align-items:center">SMKN 2 TEMBILAHAN<button class="onl" onclick="openOnline()" aria-label="User online"><i class="live"></i><b id="on-n">1</b> online</button></div>
     <h2>Teknik Jaringan Komputer</h2>
     <p>Tembilahan • Indragiri Hilir • Riau</p>
-    <div class="hrow"><img data-logo="smkn" alt="SMKN"><div>SISWA AKTIF<b>350+</b></div></div>
+    <div class="hrow"><img data-logo="smkn" data-ph="fa-school" alt="SMKN"><div>SISWA AKTIF<b>350+</b></div></div>
     <div class="acts">
       <button class="act" onclick="goSec('tools')"><i class="fa-solid fa-toolbox"></i>Tools</button>
       <button class="act" onclick="goSec('kurikulum')"><i class="fa-solid fa-book"></i>Materi</button>
@@ -428,11 +430,13 @@ const a=document.createElement('a');a.href=APK;a.download='TKJ-SMKN2.apk';docume
 function installApp(){if(deferred){deferred.prompt();deferred.userChoice.then(r=>{if(r.outcome==='accepted')toast('Aplikasi berhasil di-install!');deferred=null})}else toast('Gunakan menu browser → "Add to Home Screen"')}
 function copyNo(){const n=$('cno').textContent;(navigator.clipboard?navigator.clipboard.writeText(n):Promise.reject()).then(()=>toast('Nomor kartu disalin'),()=>toast('Nomor kartu: '+n))}
 
-/* ===== logo: cari png/webp/jpeg otomatis, tampil sesuai bentuk asli ===== */
-const EXT=['png','webp','jpeg','jpg','svg'],LG={};let sd;
-const findLogo=n=>LG[n]||(LG[n]=new Promise(res=>{let i=0;const t=()=>{if(i>=EXT.length)return res(null);const u=n+'.'+EXT[i++],im=new Image();im.onload=()=>res(u);im.onerror=t;im.src=u};t()}));
+/* ===== logo: cari otomatis (png, jpeg, jpg, webp, svg; huruf kecil / kapital) ===== */
+const EXT=['png','webp','jpeg','jpg','svg','PNG','JPG'],LG={};let sd;
+const cap=n=>n[0].toUpperCase()+n.slice(1);
+const probe=u=>new Promise(r=>{const i=new Image();i.onload=()=>r(u);i.onerror=()=>r(null);i.src=u});
+const findLogo=n=>LG[n]||(LG[n]=Promise.all([n,cap(n),n.toUpperCase()].flatMap(b=>EXT.map(e=>probe(b+'.'+e)))).then(a=>a.find(Boolean)||null));
 document.querySelectorAll('img[data-logo]').forEach(async im=>{const u=await findLogo(im.dataset.logo);
- if(!u){if(im.classList.contains('lg'))im.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-network-wired'}));else im.remove();return}
+ if(!u){console.warn('Logo tidak ditemukan:',im.dataset.logo);const ph=im.dataset.ph;if(ph){const i=document.createElement('i');i.className='fa-solid '+ph+' ph';im.replaceWith(i)}else im.remove();return}
  im.decoding='async';im.onload=()=>im.classList.add('ok');im.src=u;if(im.complete)im.classList.add('ok')});
 findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}});
 
