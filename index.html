@@ -440,26 +440,36 @@ findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}});
 const ME=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const setOnline=n=>{$('on-n').textContent=n;const e=$('on-n2');if(e)e.textContent=n};
 function openOnline(){const kv=(a,b,id='')=>`<div class="kv"><span>${a}</span><b id="${id}">${b}</b></div>`;
- sheet('User Online',kv('Online sekarang',$('on-n').textContent,'on-n2')+kv('Mode',FIREBASE_URL?'Realtime · semua perangkat':'Lokal · tab di perangkat ini')+`<p style="font-size:11px;color:var(--mut);line-height:1.7;margin-top:10px">${FIREBASE_URL?'Setiap HP atau laptop yang membuka aplikasi dihitung 1 dan diperbarui otomatis.':'Untuk menghitung semua HP dan laptop, isi <b>FIREBASE_URL</b> di bagian atas script.'}</p>`)}
-if(!FIREBASE_URL){
+ sheet('User Online',kv('Online sekarang',$('on-n').textContent,'on-n2')+kv('Mode',FIREBASE_URL?'Realtime · semua perangkat':'Lokal · tab di perangkat ini')+`<p style="font-size:11px;color:var(--mut);line-height:1.7;margin-top:10px">${FIREBASE_URL?'Setiap HP atau laptop dihitung 1 (beberapa tab di perangkat yang sama tetap 1). Saat web ditutup, angka berkurang otomatis.':'Untuk menghitung semua HP dan laptop, isi <b>FIREBASE_URL</b> di bagian atas script.'}</p>`)}
+/* id per perangkat (tetap saat refresh) dan per tab */
+const gid=(st,k,fb)=>{try{let d=st.getItem(k);if(!d){d=Math.random().toString(36).slice(2,10);st.setItem(k,d)}return d}catch(e){return fb}};
+const DEV=gid(localStorage,'tkj_dev',ME),TAB=gid(sessionStorage,'tkj_tab',ME);
+/* angka naik langsung, turun setelah 2,5 dtk agar tidak berkedip saat refresh */
+let shown=0,dt;
+function showOnline(n){clearTimeout(dt);if(!shown||n>=shown){shown=n;setOnline(n)}else dt=setTimeout(()=>{shown=n;setOnline(n)},2500)}
+
+function startLocal(){
  const seen={[ME]:Date.now()},bc='BroadcastChannel' in window?new BroadcastChannel('tkj-online'):null;
  const cnt=()=>{const now=Date.now();seen[ME]=now;for(const k in seen)if(now-seen[k]>12000)delete seen[k];setOnline(Object.keys(seen).length)};
  const tick=()=>{if(bc)bc.postMessage(ME);cnt()};
  if(bc){bc.onmessage=e=>{const d=String(e.data);if(d.startsWith('bye:'))delete seen[d.slice(4)];else{if(!(d in seen))bc.postMessage(ME);seen[d]=Date.now()}cnt()};addEventListener('pagehide',()=>bc.postMessage('bye:'+ME))}
  tick();setInterval(tick,4000);
-}else{
- const base=FIREBASE_URL.replace(/\/$/,'')+'/presence';let peers={},off=0;
- const recount=()=>{const now=Date.now()+off;let n=0;for(const k in peers){const v=peers[k];if(v&&v.t>now-90000)n++;else if(v&&v.t<now-600000&&Math.random()<.2){fetch(`${base}/${k}.json`,{method:'DELETE'}).catch(()=>{});delete peers[k]}}setOnline(Math.max(n,1))};
- const beat=async()=>{try{const r=await fetch(`${base}/${ME}.json`,{method:'PUT',body:JSON.stringify({t:{'.sv':'timestamp'}})});const d=await r.json();if(d&&d.t){off=d.t-Date.now();peers[ME]=d;recount()}}catch(e){}};
- const h=e=>{try{const m=JSON.parse(e.data);if(!m)return;const p=m.path,d=m.data;
-  if(p==='/'){if(e.type==='put')peers=d||{};else if(d)for(const k in d){if(d[k]===null)delete peers[k];else peers[k]=d[k]}}
-  else{const a=p.split('/');if(a.length===2){if(d===null)delete peers[a[1]];else peers[a[1]]=d}}
-  recount()}catch(_){}};
- const es=new EventSource(base+'.json');es.addEventListener('put',h);es.addEventListener('patch',h);
- beat();setInterval(beat,25000);setInterval(recount,5000);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)beat()});
- addEventListener('pagehide',()=>{try{fetch(`${base}/${ME}.json`,{method:'DELETE',keepalive:true})}catch(e){}});
 }
+function startFB(){
+ const load=src=>new Promise((res,rej)=>{const t=document.createElement('script');t.src=src;t.onload=res;t.onerror=rej;document.head.appendChild(t)});
+ const V='https://www.gstatic.com/firebasejs/10.12.2/';
+ load(V+'firebase-app-compat.js').then(()=>load(V+'firebase-database-compat.js')).then(()=>{
+  firebase.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')});
+  const db=firebase.database(),me=db.ref(`presence/${DEV}/${TAB}`);
+  /* server menghapus otomatis saat koneksi putus: tab ditutup, HP mati, sinyal hilang */
+  db.ref('.info/connected').on('value',s=>{if(s.val()===true)me.onDisconnect().remove().then(()=>me.set(true))});
+  db.ref('presence').on('value',s=>{const v=s.val()||{};
+   const n=Object.values(v).filter(d=>d&&typeof d==='object'&&Object.values(d).some(x=>x===true)).length;showOnline(Math.max(n,1))});
+  addEventListener('pagehide',()=>{me.remove()});
+  addEventListener('pageshow',e=>{if(e.persisted)me.set(true)});
+ }).catch(startLocal);
+}
+FIREBASE_URL?startFB():startLocal();
 
 setCidr(24);renderHist();
 </script>
