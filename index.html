@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="TKJ SMKN 2">
 <title>TKJ SMKN 2 Tembilahan</title>
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22TKJ%20SMKN%202%20Tembilahan%22%2C%22short_name%22%3A%22TKJ%20SMKN2%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23eaf3fe%22%2C%22theme_color%22%3A%22%235b9bef%22%2C%22orientation%22%3A%22portrait%22%7D">
-<link rel="icon" href="tkj.jpeg">
-<link rel="apple-touch-icon" href="tkj.jpeg">
+<link rel="icon" id="fav" href="data:,">
+<link rel="apple-touch-icon" id="ati" href="data:,">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Urbanist:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -134,14 +134,43 @@ input[type=range]{width:100%;accent-color:var(--ac)}
 .tlogo img{width:50px;height:50px;object-fit:contain}.tlogo b{font:800 16px Urbanist;display:block}.tlogo small{font:600 9px Urbanist;color:#3d6ea8;text-transform:uppercase;letter-spacing:.08em}
 .pr{height:4px;background:#d5e5fa;border-radius:4px;overflow:hidden;margin:12px 0 16px}.pr div{height:100%;background:var(--ac);animation:ld 1.8s forwards}
 .cur{display:inline-block;width:7px;height:12px;background:var(--ac);vertical-align:middle;margin-left:3px;animation:bl 1s step-end infinite}@keyframes bl{50%{opacity:0}}
+
+/* ===== smooth + logo ===== */
+body{background:#eaf3fe;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;top:0;left:0;width:auto;height:auto;border-radius:0;filter:none;opacity:1;z-index:0;pointer-events:none;background:radial-gradient(circle at 0 0,#b9d8fb,transparent 45%),radial-gradient(circle at 100% 100%,#cfe3fd,transparent 50%),linear-gradient(160deg,#e4f0ff,#f5f9ff 50%,#e1edff)}
+body:after{display:none}
+button{touch-action:manipulation;transition:transform .12s ease}
+.g,.ib,#nav,#sh{backdrop-filter:none;-webkit-backdrop-filter:none}
+.g{background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,255,255,.66));box-shadow:0 4px 14px rgba(91,155,239,.12)}
+#nav{background:rgba(255,255,255,.95)}
+.hero{box-shadow:0 6px 18px rgba(91,155,239,.16)}
+@keyframes ld{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.ld,.pr div{width:100%;transform-origin:left}
+.hold .f{width:100%;transform:scaleX(0);transform-origin:left;will-change:transform}
+#ov{display:flex!important;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+#ov.on{opacity:1;visibility:visible}
+#sh{transform:translate3d(0,100%,0);transition:transform .32s cubic-bezier(.2,.8,.2,1);will-change:transform}
+#ov.on #sh{transform:translate3d(0,0,0)}
+.scr.on{animation-duration:.2s}
+img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
+.lg{height:42px;width:auto;max-width:70px;object-fit:contain;display:block;flex:none}
+.hrow img{width:auto;height:64px;max-width:110px;object-fit:contain}
+.wl img{width:auto;height:120px;max-width:70%;object-fit:contain}
+.wp>img{width:100%;height:100%;object-fit:cover}
+.tlogo img{width:auto;height:50px;max-width:80px;object-fit:contain}
+.onl{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.85);border:0;border-radius:99px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--ink);cursor:pointer;letter-spacing:0}
+.live{position:relative;width:8px;height:8px;border-radius:50%;background:#2ebd7b;display:inline-block}
+.live:after{content:"";position:absolute;inset:0;border-radius:50%;background:#2ebd7b;animation:pl 1.6s ease-out infinite}
+@keyframes pl{to{transform:scale(3);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
 
 <!-- SPLASH -->
 <div id="ws">
-  <div class="wp"><img src="gedung.jpeg" alt="" onerror="this.remove()">
-    <div class="wl"><img src="tkj.jpeg" alt="TKJ" onerror="this.style.display='none'"><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
+  <div class="wp"><img data-logo="gedung" alt="">
+    <div class="wl"><img data-logo="tkj" alt="TKJ"><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
   <div class="wb">
     <h2>WELCOME</h2>
     <p>Portal resmi Jurusan Teknik Jaringan Komputer.<br>Tools, materi, &amp; informasi TKJ ada di sini.</p>
@@ -155,7 +184,7 @@ input[type=range]{width:100%;accent-color:var(--ac)}
 <div id="tb"><div class="tw g">
   <div class="th"><span><s></s><s></s><s></s></span>root@smkn2-tkj:~$ ./boot.sh</div>
   <div class="tbd">
-    <div class="tlogo tl" style="animation-delay:.1s"><img src="tkj.jpeg" alt="" onerror="this.style.display='none'"><div><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
+    <div class="tlogo tl" style="animation-delay:.1s"><img data-logo="tkj" alt=""><div><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
     <div class="tl" style="animation-delay:.25s"><span style="color:#2f6fd0">❯</span> initializing system...</div>
     <div class="tl" style="animation-delay:.4s"><span style="color:#2e9e6b">[OK]</span> kernel loaded successfully</div>
     <div class="tl" style="animation-delay:.55s"><span style="color:#2e9e6b">[OK]</span> network interface ready</div>
@@ -173,15 +202,15 @@ input[type=range]{width:100%;accent-color:var(--ac)}
 <!-- HOME -->
 <section class="scr on" id="s-home">
   <div class="top">
-    <div class="who"><div class="av"><img src="tkj.jpeg" alt="" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-user'}))"></div><div><small>Selamat datang,</small><b>TKJ SMKN 2</b></div></div>
+    <div class="who"><img class="lg" data-logo="tkj" alt="TKJ"><div><small>Selamat datang,</small><b>TKJ SMKN 2</b></div></div>
     <button class="ib" onclick="openConsole()" aria-label="Console"><i class="fa-solid fa-terminal"></i><span class="dot"></span></button>
     <button class="ib" onclick="toast('Tidak ada notifikasi baru')" aria-label="Notifikasi"><i class="fa-regular fa-bell"></i></button>
   </div>
   <div class="hero">
-    <div class="lb">SMKN 2 TEMBILAHAN</div>
+    <div class="lb" style="display:flex;justify-content:space-between;align-items:center">SMKN 2 TEMBILAHAN<button class="onl" onclick="openOnline()" aria-label="User online"><i class="live"></i><b id="on-n">1</b> online</button></div>
     <h2>Teknik Jaringan Komputer</h2>
     <p>Tembilahan • Indragiri Hilir • Riau</p>
-    <div class="hrow"><img src="smkn.jpeg" alt="SMKN" onerror="this.style.display='none'"><div>SISWA AKTIF<b>350+</b></div></div>
+    <div class="hrow"><img data-logo="smkn" alt="SMKN"><div>SISWA AKTIF<b>350+</b></div></div>
     <div class="acts">
       <button class="act" onclick="goSec('tools')"><i class="fa-solid fa-toolbox"></i>Tools</button>
       <button class="act" onclick="goSec('kurikulum')"><i class="fa-solid fa-book"></i>Materi</button>
@@ -273,7 +302,7 @@ input[type=range]{width:100%;accent-color:var(--ac)}
 <!-- SEARCH -->
 <section class="scr" id="s-search">
   <div class="top"><button class="ib" onclick="go('home')"><i class="fa-solid fa-arrow-left"></i></button><h1>Cari</h1><span style="width:38px"></span></div>
-  <input class="in" id="q" placeholder="Cari tools, materi, fasilitas, kontak..." oninput="doSearch()" style="font-family:Urbanist">
+  <input class="in" id="q" placeholder="Cari tools, materi, fasilitas, kontak..." oninput="clearTimeout(sd);sd=setTimeout(doSearch,80)" style="font-family:Urbanist">
   <div class="lw g" id="sr"></div>
 </section>
 
@@ -295,6 +324,9 @@ Materi:[['Subnetting & VLSM','fa-calculator','Membagi jaringan IPv4'],['Routing 
 Fasilitas:[['Lab Komputer & PC','fa-desktop','PC high-spec & jaringan dasar'],['Cisco & MikroTik','fa-server','Router, Switch, & Rack Server'],['Fiber Optic & Splicer','fa-wave-square','Fusion Splicer & OTDR']],
 Kontak:[['Alamat Sekolah','fa-location-dot','Jl. Pendidikan / Parit 10, Tembilahan Hulu'],['Email','fa-envelope','tkj@smkn2tembilahan.sch.id'],['Telepon / WhatsApp','fa-phone','+62 812-7654-3210']]};
 const APK='tkj.apk';
+/* Isi dengan URL Firebase Realtime Database agar online dihitung dari semua HP/laptop.
+   Contoh: 'https://nama-project-default-rtdb.asia-southeast1.firebasedatabase.app' */
+const FIREBASE_URL='';
 let deferred=null,hist=[],pi=null;
 try{hist=JSON.parse(localStorage.getItem('tkjh')||'[]')}catch(e){}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e});
@@ -351,8 +383,8 @@ function calc(){
   sheet('Hasil '+ip+'/'+cidr,kv('Netmask',mask(cidr))+kv('Wildcard',w)+kv('Network',o(nb))+kv('Host pertama',first)+kv('Host terakhir',last)+kv('Broadcast',o(bb))+kv('Total IP',h.toLocaleString('id-ID'))+kv('Host valid',u.toLocaleString('id-ID')));
   log('Subnet '+ip+'/'+cidr,'Network '+o(nb),'fa-calculator','/'+cidr);if(navigator.vibrate)navigator.vibrate(20)}
 let ht;const hb=$('hold'),hf=$('hf');
-hb.addEventListener('pointerdown',e=>{e.preventDefault();hf.style.transition='width .8s linear';hf.style.width='100%';ht=setTimeout(()=>{stopHold();calc()},800)});
-function stopHold(){clearTimeout(ht);hf.style.transition='width .2s';hf.style.width='0'}
+hb.addEventListener('pointerdown',e=>{e.preventDefault();hf.style.transition='transform .8s linear';hf.style.transform='scaleX(1)';ht=setTimeout(()=>{stopHold();calc()},800)});
+function stopHold(){clearTimeout(ht);hf.style.transition='transform .2s';hf.style.transform='scaleX(0)'}
 ['pointerup','pointerleave','pointercancel'].forEach(ev=>hb.addEventListener(ev,stopHold));
 hb.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();calc()}});
 
@@ -395,6 +427,39 @@ async function dlApk(){try{const r=await fetch(APK,{method:'HEAD'});if(!r.ok)ret
 const a=document.createElement('a');a.href=APK;a.download='TKJ-SMKN2.apk';document.body.appendChild(a);a.click();a.remove();toast('Mengunduh APK...');log('Unduh APK','TKJ-SMKN2 v2.0.0','fa-download','Mulai')}
 function installApp(){if(deferred){deferred.prompt();deferred.userChoice.then(r=>{if(r.outcome==='accepted')toast('Aplikasi berhasil di-install!');deferred=null})}else toast('Gunakan menu browser → "Add to Home Screen"')}
 function copyNo(){const n=$('cno').textContent;(navigator.clipboard?navigator.clipboard.writeText(n):Promise.reject()).then(()=>toast('Nomor kartu disalin'),()=>toast('Nomor kartu: '+n))}
+
+/* ===== logo: cari png/webp/jpeg otomatis, tampil sesuai bentuk asli ===== */
+const EXT=['png','webp','jpeg','jpg','svg'],LG={};let sd;
+const findLogo=n=>LG[n]||(LG[n]=new Promise(res=>{let i=0;const t=()=>{if(i>=EXT.length)return res(null);const u=n+'.'+EXT[i++],im=new Image();im.onload=()=>res(u);im.onerror=t;im.src=u};t()}));
+document.querySelectorAll('img[data-logo]').forEach(async im=>{const u=await findLogo(im.dataset.logo);
+ if(!u){if(im.classList.contains('lg'))im.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-network-wired'}));else im.remove();return}
+ im.decoding='async';im.onload=()=>im.classList.add('ok');im.src=u;if(im.complete)im.classList.add('ok')});
+findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}});
+
+/* ===== user online realtime ===== */
+const ME=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const setOnline=n=>{$('on-n').textContent=n;const e=$('on-n2');if(e)e.textContent=n};
+function openOnline(){const kv=(a,b,id='')=>`<div class="kv"><span>${a}</span><b id="${id}">${b}</b></div>`;
+ sheet('User Online',kv('Online sekarang',$('on-n').textContent,'on-n2')+kv('Mode',FIREBASE_URL?'Realtime · semua perangkat':'Lokal · tab di perangkat ini')+`<p style="font-size:11px;color:var(--mut);line-height:1.7;margin-top:10px">${FIREBASE_URL?'Setiap HP atau laptop yang membuka aplikasi dihitung 1 dan diperbarui otomatis.':'Untuk menghitung semua HP dan laptop, isi <b>FIREBASE_URL</b> di bagian atas script.'}</p>`)}
+if(!FIREBASE_URL){
+ const seen={[ME]:Date.now()},bc='BroadcastChannel' in window?new BroadcastChannel('tkj-online'):null;
+ const cnt=()=>{const now=Date.now();seen[ME]=now;for(const k in seen)if(now-seen[k]>12000)delete seen[k];setOnline(Object.keys(seen).length)};
+ const tick=()=>{if(bc)bc.postMessage(ME);cnt()};
+ if(bc){bc.onmessage=e=>{const d=String(e.data);if(d.startsWith('bye:'))delete seen[d.slice(4)];else{if(!(d in seen))bc.postMessage(ME);seen[d]=Date.now()}cnt()};addEventListener('pagehide',()=>bc.postMessage('bye:'+ME))}
+ tick();setInterval(tick,4000);
+}else{
+ const base=FIREBASE_URL.replace(/\/$/,'')+'/presence';let peers={},off=0;
+ const recount=()=>{const now=Date.now()+off;let n=0;for(const k in peers){const v=peers[k];if(v&&v.t>now-90000)n++;else if(v&&v.t<now-600000&&Math.random()<.2){fetch(`${base}/${k}.json`,{method:'DELETE'}).catch(()=>{});delete peers[k]}}setOnline(Math.max(n,1))};
+ const beat=async()=>{try{const r=await fetch(`${base}/${ME}.json`,{method:'PUT',body:JSON.stringify({t:{'.sv':'timestamp'}})});const d=await r.json();if(d&&d.t){off=d.t-Date.now();peers[ME]=d;recount()}}catch(e){}};
+ const h=e=>{try{const m=JSON.parse(e.data);if(!m)return;const p=m.path,d=m.data;
+  if(p==='/'){if(e.type==='put')peers=d||{};else if(d)for(const k in d){if(d[k]===null)delete peers[k];else peers[k]=d[k]}}
+  else{const a=p.split('/');if(a.length===2){if(d===null)delete peers[a[1]];else peers[a[1]]=d}}
+  recount()}catch(_){}};
+ const es=new EventSource(base+'.json');es.addEventListener('put',h);es.addEventListener('patch',h);
+ beat();setInterval(beat,25000);setInterval(recount,5000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)beat()});
+ addEventListener('pagehide',()=>{try{fetch(`${base}/${ME}.json`,{method:'DELETE',keepalive:true})}catch(e){}});
+}
 
 setCidr(24);renderHist();
 </script>
