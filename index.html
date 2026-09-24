@@ -46,9 +46,6 @@
         html { scroll-behavior: smooth; scroll-padding-top: 90px; }
         html, body { overscroll-behavior-y: contain; }
         
-        /* ============================================ */
-        /* BODY: SOFT BLUE WAVE BACKGROUND (STATIC SVG) */
-        /* ============================================ */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f6ff;
@@ -56,7 +53,6 @@
             background-repeat: no-repeat;
             background-position: bottom center;
             background-size: 100% auto;
-            background-attachment: scroll;
             color: #1a2b4a;
             padding-bottom: env(safe-area-inset-bottom);
             -webkit-user-select: none;
@@ -74,9 +70,6 @@
         .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         
-        /* ============================================ */
-        /* CARD: PUTIH SOLID + SHADOW SOFT */
-        /* ============================================ */
         .card {
             background: #ffffff;
             border: 1px solid rgba(163, 204, 251, 0.3);
@@ -111,7 +104,6 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* LOGO TRANSPARAN */
         .logo-img {
             display: block;
             object-fit: contain;
@@ -125,21 +117,226 @@
         .fade-in.visible { opacity: 1; }
         
         /* ============================================ */
-        /* WELCOME SCREEN */
+        /* SPLASH WELCOME (FINDORA STYLE) */
         /* ============================================ */
         #welcome-screen {
             position: fixed;
             inset: 0;
             z-index: 9999;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+            overflow: hidden;
+        }
+        #welcome-screen.hidden-welcome {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        /* Panel Atas - Foto Gedung */
+        .welcome-photo {
+            position: relative;
+            flex: 0 0 62vh;
+            overflow: hidden;
+            background: #1a2b4a;
+        }
+        .welcome-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* Overlay gradient gelap di bawah foto */
+        .welcome-photo::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 31, 61, 0.3) 0%, rgba(15, 31, 61, 0.1) 40%, rgba(15, 31, 61, 0.6) 100%);
+            pointer-events: none;
+        }
+        
+        /* Logo bulat di tengah foto */
+        .welcome-photo-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            text-align: center;
+        }
+        .welcome-logo-circle {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            margin: 0 auto 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        .welcome-logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .welcome-brand-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.02em;
+            line-height: 1.1;
+            text-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+        }
+        .welcome-brand-tag {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+            margin-top: 4px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.05em;
+        }
+        
+        /* Curved arc pemisah */
+        .welcome-photo::before {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #ffffff;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            z-index: 1;
+        }
+        
+        /* Panel Bawah - Welcome Text & Tombol */
+        .welcome-panel {
+            flex: 1;
+            background: #ffffff;
+            padding: 12px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: #1a2b4a;
+            letter-spacing: 0.05em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-subtitle {
+            font-size: 13px;
+            color: #4a5578;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 320px;
+            margin-bottom: 26px;
+        }
+        
+        .welcome-btn-group {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .welcome-btn {
+            width: 100%;
+            padding: 15px 24px;
+            border-radius: 100px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.2s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .welcome-btn:active { transform: scale(0.97); }
+        
+        .welcome-btn-primary {
+            background: #1a2b4a;
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(26, 43, 74, 0.25);
+        }
+        .welcome-btn-primary:hover {
+            background: #0f1f3d;
+        }
+        
+        .welcome-btn-secondary {
+            background: #ffffff;
+            color: #1a2b4a;
+            border: 1.5px solid rgba(163, 204, 251, 0.6);
+        }
+        .welcome-btn-secondary:hover {
+            background: #f0f6ff;
+            border-color: #a3ccfb;
+        }
+        
+        .welcome-copyright {
+            margin-top: 22px;
+            font-size: 10px;
+            color: #a3ccfb;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        /* Loading bar di bawah splash */
+        .welcome-loading-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #fbbf24, #10b981);
+            width: 0%;
+            animation: loadingFill 2s ease-out forwards;
+        }
+        @keyframes loadingFill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        /* ============================================ */
+        /* TERMINAL BOOT (setelah splash) */
+        /* ============================================ */
+        #terminal-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
             background: #f0f6ff;
             background-image: linear-gradient(180deg, #f0f6ff 0%, #ffffff 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
         }
-        #welcome-screen.hidden-welcome {
+        #terminal-screen.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        #terminal-screen.hidden-terminal {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -153,11 +350,6 @@
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(74, 144, 226, 0.15);
-            animation: welcomeIn 0.4s ease-out;
-        }
-        @keyframes welcomeIn {
-            0% { opacity: 0; transform: translateY(15px); }
-            100% { opacity: 1; transform: translateY(0); }
         }
         
         .welcome-header {
@@ -173,7 +365,7 @@
         .welcome-dots span:nth-child(1) { background: #ef4444; }
         .welcome-dots span:nth-child(2) { background: #fbbf24; }
         .welcome-dots span:nth-child(3) { background: #10b981; }
-        .welcome-title {
+        .welcome-title-term {
             color: #b45309;
             font-family: 'Fira Code', monospace;
             font-size: 11px;
@@ -249,7 +441,7 @@
             display: flex; flex-direction: column; gap: 10px; margin-top: 20px;
         }
         
-        .welcome-btn {
+        .welcome-btn-term {
             padding: 14px 18px;
             border-radius: 16px;
             font-family: 'Space Grotesk', sans-serif;
@@ -260,13 +452,13 @@
             display: flex; align-items: center; justify-content: center;
             gap: 10px;
         }
-        .welcome-btn:active { transform: scale(0.97); }
-        .welcome-btn-primary {
+        .welcome-btn-term:active { transform: scale(0.97); }
+        .welcome-btn-primary-term {
             background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
             color: #ffffff;
             box-shadow: 0 6px 20px rgba(217, 119, 6, 0.25);
         }
-        .welcome-btn-secondary {
+        .welcome-btn-secondary-term {
             background: #f0f6ff;
             color: #4a90e2;
             border: 1px solid rgba(163, 204, 251, 0.5);
@@ -282,7 +474,7 @@
         @keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         
         /* ============================================ */
-        /* HEADER APP-STYLE */
+        /* HEADER APP */
         /* ============================================ */
         .header-app {
             display: flex;
@@ -351,9 +543,7 @@
             border: 2px solid #ffffff;
         }
         
-        /* ============================================ */
         /* SEARCH BAR */
-        /* ============================================ */
         .search-wrapper {
             padding: 0 16px 12px;
         }
@@ -394,9 +584,7 @@
             border: none;
         }
         
-        /* ============================================ */
-        /* CHIP NAVIGATION */
-        /* ============================================ */
+        /* CHIP NAV */
         .chip-nav {
             display: flex;
             gap: 8px;
@@ -432,9 +620,7 @@
         }
         .chip.active i { color: #ffffff; }
         
-        /* ============================================ */
-        /* SECTION HEADER DENGAN SEE ALL */
-        /* ============================================ */
+        /* SECTION HEADER */
         .section-header {
             display: flex;
             align-items: center;
@@ -471,9 +657,7 @@
         }
         .section-header .see-all i { font-size: 10px; }
         
-        /* ============================================ */
-        /* BOTTOM NAV FLOATING + FAB */
-        /* ============================================ */
+        /* BOTTOM NAV */
         #bottom-nav {
             position: fixed;
             bottom: 16px;
@@ -505,7 +689,6 @@
         .bottom-nav-item.active { color: #4a90e2; }
         .bottom-nav-item.active i { color: #4a90e2; }
         
-        /* FAB di tengah */
         .bottom-nav-fab {
             width: 54px; height: 54px;
             border-radius: 50%;
@@ -522,9 +705,7 @@
         }
         .bottom-nav-fab:active { transform: scale(0.92); }
         
-        /* ============================================ */
         /* TOAST */
-        /* ============================================ */
         #toast-container {
             position: fixed;
             top: 80px;
@@ -595,7 +776,6 @@
         .ticker-change.up { background: #d1fae5; color: #047857; }
         .ticker-change.down { background: #fee2e2; color: #be123c; }
         
-        /* STAT CARD (gaya resort app - bundle) */
         .stat-card {
             padding: 16px;
             background: #ffffff;
@@ -604,7 +784,6 @@
             box-shadow: 0 2px 8px rgba(74, 144, 226, 0.06);
         }
         
-        /* TOOL CARD (gaya resort app - bundle) */
         .tool-card {
             background: #ffffff;
             border: 1px solid rgba(163, 204, 251, 0.4);
@@ -641,9 +820,7 @@
             font-weight: 600;
         }
         
-        /* ============================================ */
         /* API PANEL */
-        /* ============================================ */
         #api-panel-overlay {
             position: fixed; inset: 0; z-index: 90;
             background: rgba(26, 43, 74, 0.4);
@@ -729,9 +906,6 @@
         .api-item h4 { font-size: 12px; font-weight: 700; color: #1a2b4a; margin-bottom: 2px; line-height: 1.2; }
         .api-item p { font-size: 10px; color: #4a5578; line-height: 1.3; }
         
-        /* ============================================ */
-        /* TERMINAL OUTPUT */
-        /* ============================================ */
         #api-result-box {
             margin-bottom: 16px;
             background: #0f1f3d;
@@ -823,9 +997,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* ============================================ */
-        /* CREATED BY */
-        /* ============================================ */
         #created-by-btn {
             display: flex;
             align-items: center;
@@ -921,14 +1092,61 @@
 </head>
 <body class="antialiased overflow-x-hidden">
 
-    <!-- WELCOME SCREEN -->
+    <!-- ============================================ -->
+    <!-- SPLASH WELCOME (FINDORA STYLE) -->
+    <!-- ============================================ -->
     <div id="welcome-screen">
+        <!-- Panel Atas: Foto Gedung + Logo -->
+        <div class="welcome-photo">
+            <!-- Foto gedung - GANTI "gedung.jpeg" dengan nama file foto Anda -->
+            <img src="gedung.jpeg" alt="SMKN 2 Tembilahan" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;background:linear-gradient(135deg, #1a2b4a, #4a90e2);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;\'><div style=\'text-align:center\'><i class=\'fa-solid fa-school\' style=\'font-size:60px;margin-bottom:12px;opacity:0.5\'></i><div>Foto gedung.jpeg tidak ditemukan</div></div></div>';">
+            
+            <!-- Logo Bulat + Brand -->
+            <div class="welcome-photo-logo">
+                <div class="welcome-logo-circle">
+                    <img src="tkj.jpeg" alt="TKJ" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-3xl text-amber-600\'></i>';">
+                </div>
+                <div class="welcome-brand-name">TKJ SMKN 2</div>
+                <div class="welcome-brand-tag">Tembilahan • Indragiri Hilir</div>
+            </div>
+        </div>
+        
+        <!-- Panel Bawah: Welcome + Tombol -->
+        <div class="welcome-panel">
+            <div class="welcome-title">WELCOME</div>
+            <p class="welcome-subtitle">
+                Portal resmi Jurusan Teknik Jaringan Komputer.<br>
+                Temukan tools, materi, & informasi seputar TKJ di sini.
+            </p>
+            
+            <div class="welcome-btn-group">
+                <button onclick="showTerminalBoot()" class="welcome-btn welcome-btn-primary">
+                    <i class="fa-solid fa-rocket"></i>
+                    Masuk Aplikasi
+                </button>
+                <button onclick="skipToApp()" class="welcome-btn welcome-btn-secondary">
+                    <i class="fa-solid fa-forward"></i>
+                    Langsung Masuk
+                </button>
+            </div>
+            
+            <div class="welcome-copyright">© 2026 SMKN 2 Tembilahan</div>
+            
+            <!-- Loading bar -->
+            <div class="welcome-loading-bar"></div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TERMINAL BOOT SCREEN -->
+    <!-- ============================================ -->
+    <div id="terminal-screen">
         <div class="welcome-terminal">
             <div class="welcome-header">
                 <div class="welcome-dots">
                     <span></span><span></span><span></span>
                 </div>
-                <span class="welcome-title">root@smkn2-tkj:~$ ./boot.sh</span>
+                <span class="welcome-title-term">root@smkn2-tkj:~$ ./boot.sh</span>
             </div>
             
             <div class="welcome-body">
@@ -965,13 +1183,9 @@
                 </div>
                 
                 <div class="welcome-actions">
-                    <button onclick="enterApp()" class="welcome-btn welcome-btn-primary">
+                    <button onclick="enterApp()" class="welcome-btn-term welcome-btn-primary-term">
                         <i class="fa-solid fa-terminal"></i>
                         ENTER CONSOLE
-                    </button>
-                    <button onclick="skipWelcome()" class="welcome-btn welcome-btn-secondary">
-                        <i class="fa-solid fa-forward"></i>
-                        Skip Intro
                     </button>
                 </div>
             </div>
@@ -983,14 +1197,11 @@
     <!-- HEADER -->
     <header class="fixed top-0 left-0 right-0 z-50 glass" id="navbar">
         <div class="max-w-7xl mx-auto">
-            <!-- Header App Style -->
             <div class="header-app">
-                <!-- Avatar Logo TKJ -->
                 <div class="avatar-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
                     <img src="tkj.jpeg" alt="TKJ" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-network-wired text-white text-lg\'></i>';">
                 </div>
                 
-                <!-- Lokasi + Info -->
                 <div class="location-block">
                     <div class="label">Current Location</div>
                     <div class="value">
@@ -999,7 +1210,6 @@
                     </div>
                 </div>
                 
-                <!-- Icon Actions -->
                 <div class="hidden lg:flex items-center gap-2">
                     <button onclick="openBtcDetail()" class="market-ticker">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
@@ -1015,7 +1225,6 @@
                     </div>
                 </div>
                 
-                <!-- Mobile BTC + Notif -->
                 <div class="lg:hidden flex items-center gap-2">
                     <button onclick="openBtcDetail()" class="market-ticker" style="padding: 5px 8px;">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
@@ -1027,7 +1236,6 @@
                     </button>
                 </div>
                 
-                <!-- Desktop Notification -->
                 <div class="hidden lg:flex items-center gap-2">
                     <button onclick="openApiPanel()" class="icon-btn-round" aria-label="Console">
                         <i class="fa-solid fa-terminal"></i>
@@ -1039,7 +1247,6 @@
                 </div>
             </div>
             
-            <!-- Search Bar -->
             <div class="search-wrapper">
                 <div class="search-bar">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -1050,7 +1257,6 @@
                 </div>
             </div>
             
-            <!-- Chip Navigation -->
             <div class="chip-nav">
                 <a href="#beranda" class="chip active" data-chip="beranda">
                     <i class="fa-solid fa-house"></i> Beranda
@@ -1168,7 +1374,6 @@
     <!-- 10 TOOLS -->
     <section id="tools" class="section-pad">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section Header dengan See All -->
             <div class="section-header fade-in">
                 <h2>
                     <i class="fa-solid fa-toolbox text-amber-500"></i>
@@ -1805,15 +2010,42 @@
         let isAppMode = false;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-        function enterApp() {
+        // ============================================
+        // SPLASH SCREEN FLOW
+        // ============================================
+        function showTerminalBoot() {
             document.getElementById('welcome-screen').classList.add('hidden-welcome');
+            setTimeout(() => {
+                document.getElementById('terminal-screen').classList.add('show');
+                if (navigator.vibrate) navigator.vibrate(15);
+            }, 400);
+        }
+        
+        function skipToApp() {
+            document.getElementById('welcome-screen').classList.add('hidden-welcome');
+            // Langsung hilangin welcome, terminal boot di-skip juga
+        }
+        
+        // Auto-hide splash setelah 8 detik kalau user nggak klik
+        setTimeout(() => {
+            const welcome = document.getElementById('welcome-screen');
+            if (!welcome.classList.contains('hidden-welcome')) {
+                welcome.classList.add('hidden-welcome');
+            }
+        }, 8000);
+        
+        function enterApp() {
+            document.getElementById('terminal-screen').classList.add('hidden-terminal');
+            setTimeout(() => {
+                document.getElementById('terminal-screen').style.display = 'none';
+            }, 400);
             if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
             showToast('Welcome, technician! 🚀', 'success', 3000);
         }
-        function skipWelcome() {
-            document.getElementById('welcome-screen').classList.add('hidden-welcome');
-        }
 
+        // ============================================
+        // JAM & BTC
+        // ============================================
         function updateClockWIB() {
             const now = new Date();
             const timeStr = now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
@@ -1913,7 +2145,6 @@
 
         function handleSearch(event) {
             const query = event.target.value.toLowerCase();
-            // Simple filter untuk tools
             const tools = document.querySelectorAll('.tool-card');
             tools.forEach(tool => {
                 const text = tool.textContent.toLowerCase();
