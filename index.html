@@ -126,17 +126,22 @@ input[type=range]{width:100%;accent-color:var(--ac)}
 .wb i.cp{font-style:normal;font-size:9px;color:#9ab6da;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}
 .ld{position:absolute;left:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--ac),var(--ac2));animation:ld 2s forwards}
 @keyframes ld{from{width:0}to{width:100%}}
-#tb{position:fixed;inset:0;z-index:149;background:linear-gradient(160deg,#e4f0ff,#f5f9ff);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:.4s}
-#tb.show{opacity:1;visibility:visible}
-.tw{width:100%;max-width:420px;border-radius:22px;overflow:hidden}
-.th{padding:10px 14px;display:flex;gap:8px;align-items:center;border-bottom:1px solid rgba(91,155,239,.2);font:600 10px 'Fira Code',monospace;color:#2f6fd0}
-.th s{width:9px;height:9px;border-radius:50%;background:#ff8c8c;display:inline-block;margin-right:4px;text-decoration:none}.th s+s{background:#ffd27a}.th s+s+s{background:#7ad6a4}
-.tbd{padding:16px;font:11px/1.9 'Fira Code',monospace}
-.tl{opacity:0;animation:tl .25s forwards}@keyframes tl{to{opacity:1}}
-.tlogo{display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,255,255,.7);border-radius:14px;margin-bottom:12px}
-.tlogo img{width:50px;height:50px;object-fit:contain}.tlogo b{font:800 16px Urbanist;display:block}.tlogo small{font:600 9px Urbanist;color:#3d6ea8;text-transform:uppercase;letter-spacing:.08em}
-.pr{height:4px;background:#d5e5fa;border-radius:4px;overflow:hidden;margin:12px 0 16px}.pr div{height:100%;background:var(--ac);animation:ld 1.8s forwards}
 .cur{display:inline-block;width:7px;height:12px;background:var(--ac);vertical-align:middle;margin-left:3px;animation:bl 1s step-end infinite}@keyframes bl{50%{opacity:0}}
+
+/* lock pattern overlay */
+#lockov{position:fixed;inset:0;z-index:170;background:linear-gradient(160deg,#e4f0ff,#f5f9ff 50%,#e1edff);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#lockov.show{display:flex}
+.lkicon{width:64px;height:64px;border-radius:50%;background:var(--soft);color:#2f6fd0;display:grid;place-items:center;font-size:24px;margin-bottom:14px}
+#lockov h2{font-size:20px;font-weight:800;margin-bottom:6px}
+#lockov p{font-size:12px;color:var(--mut);max-width:280px;line-height:1.6;margin-bottom:22px}
+.lkbox{position:relative;width:260px;height:260px;max-width:70vw;max-height:70vw}
+.lksvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lksvg line{stroke:var(--ac);stroke-width:4;stroke-linecap:round}
+.lkgrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);touch-action:none}
+.lkdot{display:flex;align-items:center;justify-content:center}
+.lkdot i{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #bcd8fa;display:block;transition:.15s}
+.lkdot.on i{background:var(--ac);border-color:var(--ac);transform:scale(1.15);box-shadow:0 0 0 8px rgba(91,155,239,.18)}
+.lkerr{color:#d2566b;font-size:12px;font-weight:700;margin-top:16px;min-height:16px}
 
 /* ===== smooth + logo ===== */
 body{background:#eaf3fe;-webkit-font-smoothing:antialiased}
@@ -148,7 +153,7 @@ button{touch-action:manipulation;transition:transform .12s ease}
 #nav{background:rgba(255,255,255,.95)}
 .hero{box-shadow:0 6px 18px rgba(91,155,239,.16)}
 @keyframes ld{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.ld,.pr div{width:100%;transform-origin:left}
+.ld{width:100%;transform-origin:left}
 .hold .f{width:100%;transform:scaleX(0);transform-origin:left;will-change:transform}
 #ov{display:flex!important;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
 #ov.on{opacity:1;visibility:visible}
@@ -160,14 +165,13 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
 .hrow img{width:auto;height:64px;max-width:110px;object-fit:contain}
 .wl img{width:auto;height:120px;max-width:70%;object-fit:contain}
 .wp>img{width:100%;height:100%;object-fit:cover}
-.tlogo img{width:auto;height:50px;max-width:80px;object-fit:contain}
 .onl{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.85);border:0;border-radius:99px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--ink);cursor:pointer;letter-spacing:0}
 .live{position:relative;width:8px;height:8px;border-radius:50%;background:#2ebd7b;display:inline-block}
 .live:after{content:"";position:absolute;inset:0;border-radius:50%;background:#2ebd7b;animation:pl 1.6s ease-out infinite}
 @keyframes pl{to{transform:scale(3);opacity:0}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 .ph{display:grid;place-items:center;color:var(--ac);font-size:34px}
-.hrow .ph{font-size:48px}.wl .ph{font-size:80px}.tlogo .ph{font-size:34px}
+.hrow .ph{font-size:48px}.wl .ph{font-size:80px}
 @keyframes in{from{opacity:0}}
 body:before{transform:translateZ(0)}
 .live.off{background:#b7c7dc}.live.off:after{display:none}
@@ -201,25 +205,22 @@ body:before{transform:translateZ(0)}
   <div class="wb">
     <h2>WELCOME</h2>
     <p>Portal resmi Jurusan Teknik Jaringan Komputer.<br>Tools, materi, &amp; informasi TKJ ada di sini.</p>
-    <button class="pb" onclick="bootTerm()"><i class="fa-solid fa-rocket"></i>Masuk Aplikasi</button>
-    <button class="pb2" onclick="skip()"><i class="fa-solid fa-forward"></i>Langsung Masuk</button>
+    <button class="pb" onclick="enterApp()"><i class="fa-solid fa-rocket"></i>Masuk Aplikasi</button>
     <i class="cp">© 2026 SMKN 2 Tembilahan</i><div class="ld"></div>
   </div>
 </div>
 
-<!-- TERMINAL BOOT -->
-<div id="tb"><div class="tw g">
-  <div class="th"><span><s></s><s></s><s></s></span>root@smkn2-tkj:~$ ./boot.sh</div>
-  <div class="tbd">
-    <div class="tlogo tl" style="animation-delay:.1s"><img data-logo="tkj" data-ph="fa-network-wired" alt=""><div><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
-    <div class="tl" style="animation-delay:.25s"><span style="color:#2f6fd0">❯</span> initializing system...</div>
-    <div class="tl" style="animation-delay:.4s"><span style="color:#2e9e6b">[OK]</span> kernel loaded successfully</div>
-    <div class="tl" style="animation-delay:.55s"><span style="color:#2e9e6b">[OK]</span> network interface ready</div>
-    <div class="tl" style="animation-delay:.7s"><span style="color:#2f6fd0">❯</span> welcome, technician.<span class="cur"></span></div>
-    <div class="pr"><div></div></div>
-    <button class="pb" onclick="enterApp()"><i class="fa-solid fa-terminal"></i>ENTER CONSOLE</button>
+<!-- LOCK PATTERN -->
+<div id="lockov">
+  <div class="lkicon"><i class="fa-solid fa-lock"></i></div>
+  <h2 id="lktitle">Buat Pola Kunci</h2>
+  <p id="lksub">Silakan buat pola kunci kamu sendiri untuk mengunci akses aplikasi ini.</p>
+  <div class="lkbox">
+    <svg class="lksvg" id="lksvg" viewBox="0 0 260 260"></svg>
+    <div class="lkgrid" id="lkgrid"></div>
   </div>
-</div></div>
+  <div class="lkerr" id="lkerr"></div>
+</div>
 
 <div id="toast"></div>
 <div id="ov" onclick="if(event.target===this)closeSheet()"><div id="sh"><div class="hd"></div><h3 id="st"></h3><div id="sb"></div></div></div>
@@ -368,19 +369,107 @@ Materi:[
 Fasilitas:[['Lab Komputer & PC','fa-desktop','PC high-spec & jaringan dasar'],['Cisco & MikroTik','fa-server','Router, Switch, & Rack Server'],['Fiber Optic & Splicer','fa-wave-square','Fusion Splicer & OTDR']],
 Kontak:[['Alamat Sekolah','fa-location-dot','Jl. Pendidikan / Parit 10, Tembilahan Hulu'],['Email','fa-envelope','tkj@smkn2tembilahan.sch.id'],['Telepon / WhatsApp','fa-phone','+62 812-7654-3210']]};
 const APK='tkj.apk';
-/* Isi dengan URL Firebase Realtime Database agar online dihitung dari semua HP/laptop.
+/* Isi dengan URL Firebase Realtime Database agar online & pola kunci tersimpan permanen di semua HP/laptop.
    Contoh: 'https://nama-project-default-rtdb.asia-southeast1.firebasedatabase.app' */
 const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
 let deferred=null,hist=[],pi=null;
 try{hist=JSON.parse(localStorage.getItem('tkjh')||'[]')}catch(e){}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e});
 
+/* ===== identitas perangkat (dipakai untuk pola kunci & hitungan online) ===== */
+const ME=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const gid=(st,k,fb)=>{try{let d=st.getItem(k);if(!d){d=Math.random().toString(36).slice(2,10);st.setItem(k,d)}return d}catch(e){return fb}};
+const DEV=gid(localStorage,'tkj_dev',ME),TAB=Math.random().toString(36).slice(2,8);
+
+/* ===== koneksi firebase bersama (dipakai lock & online) ===== */
+let fbdb=null,fbInitP=null;
+function getDb(){
+  if(fbdb)return Promise.resolve(fbdb);
+  if(!FIREBASE_URL)return Promise.resolve(null);
+  if(fbInitP)return fbInitP;
+  fbInitP=(async()=>{
+    try{
+      const V='https://www.gstatic.com/firebasejs/10.12.2/';
+      const[A,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js')]);
+      fbdb={d:D,db:D.getDatabase(A.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')}))};
+      return fbdb;
+    }catch(e){return null}
+  })();
+  return fbInitP;
+}
+
+/* ===== pola kunci: wajib dibuat sekali per perangkat, lalu wajib dimasukkan tiap buka ===== */
+let lkMode='create',lkPts=[],lkDown=false,lkFirst=null,lkStored=null,lkAttached=false;
+function buildLkGrid(){const g=$('lkgrid');if(g.children.length)return;g.innerHTML=Array.from({length:9},(_,i)=>`<div class="lkdot" data-i="${i}"><i></i></div>`).join('')}
+function lkCenters(){const b=$('lkgrid').getBoundingClientRect();return[...document.querySelectorAll('.lkdot')].map(d=>{const r=d.getBoundingClientRect();return{x:r.left-b.left+r.width/2,y:r.top-b.top+r.height/2}})}
+function lkReset(){lkPts=[];document.querySelectorAll('.lkdot').forEach(d=>d.classList.remove('on'));$('lksvg').innerHTML=''}
+function lkDrawLines(){const c=lkCenters();$('lksvg').innerHTML=lkPts.slice(1).map((idx,j)=>{const a=c[lkPts[j]],b=c[idx];return`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`}).join('')}
+function lkAdd(i){if(lkPts.includes(i))return;lkPts.push(i);document.querySelector(`.lkdot[data-i="${i}"]`).classList.add('on');lkDrawLines();if(navigator.vibrate)navigator.vibrate(8)}
+function lkNearest(x,y){const c=lkCenters(),b=$('lkgrid').getBoundingClientRect(),lx=x-b.left,ly=y-b.top;let best=-1,bd=34*34;c.forEach((p,i)=>{const d=(p.x-lx)**2+(p.y-ly)**2;if(d<bd){bd=d;best=i}});return best}
+function lkStart(e){lkReset();lkDown=true;lkMove(e)}
+function lkMove(e){if(!lkDown)return;const t=e.touches?e.touches[0]:e,i=lkNearest(t.clientX,t.clientY);if(i>-1)lkAdd(i)}
+function lkEnd(){if(!lkDown)return;lkDown=false;lkSubmit()}
+function lkAttach(){if(lkAttached)return;lkAttached=true;const g=$('lkgrid');
+ g.addEventListener('pointerdown',e=>{try{g.setPointerCapture(e.pointerId)}catch(x){}lkStart(e)});
+ g.addEventListener('pointermove',lkMove);g.addEventListener('pointerup',lkEnd);g.addEventListener('pointercancel',lkEnd)}
+function lkHash(arr){const s=arr.join('-');let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return(h>>>0).toString(36)}
+async function lkCheck(){
+  let local=null;try{local=localStorage.getItem('tkj_lk_'+DEV)}catch(e){}
+  const F=await getDb();
+  if(F){try{const snap=await F.d.get(F.d.ref(F.db,'locks/'+DEV));if(snap.exists())return snap.val().h}catch(e){}}
+  return local||null;
+}
+async function lkSave(h){
+  try{localStorage.setItem('tkj_lk_'+DEV,h)}catch(e){}
+  const F=await getDb();
+  if(F){try{await F.d.set(F.d.ref(F.db,'locks/'+DEV),{h,t:Date.now()})}catch(e){}}
+}
+async function lkSubmit(){
+  if(lkPts.length<4){$('lkerr').textContent='Pola minimal 4 titik, coba lagi.';setTimeout(lkReset,500);return}
+  $('lkerr').textContent='';
+  if(lkMode==='create'){
+    lkFirst=[...lkPts];lkMode='confirm';
+    $('lktitle').textContent='Ulangi Pola';$('lksub').textContent='Gambar ulang pola yang sama untuk konfirmasi.';
+    setTimeout(lkReset,250);return;
+  }
+  if(lkMode==='confirm'){
+    if(lkHash(lkPts)!==lkHash(lkFirst)){
+      $('lkerr').textContent='Pola tidak sama. Ulangi dari awal.';lkMode='create';lkFirst=null;
+      $('lktitle').textContent='Buat Pola Kunci';$('lksub').textContent='Silakan buat pola kunci kamu sendiri untuk mengunci akses aplikasi ini.';
+      setTimeout(lkReset,500);return;
+    }
+    await lkSave(lkHash(lkPts));lkClose();return;
+  }
+  if(lkMode==='verify'){
+    if(lkHash(lkPts)!==lkStored){
+      $('lkerr').textContent='Pola salah, coba lagi.';if(navigator.vibrate)navigator.vibrate(80);
+      setTimeout(lkReset,500);return;
+    }
+    lkClose();
+  }
+}
+function lkClose(){$('lockov').classList.remove('show')}
+async function initLock(){
+  buildLkGrid();lkAttach();
+  $('lockov').classList.add('show');
+  $('lkerr').textContent='Memeriksa…';
+  const stored=await lkCheck();
+  $('lkerr').textContent='';
+  if(stored){
+    lkStored=stored;lkMode='verify';
+    $('lktitle').textContent='Masukkan Pola';$('lksub').textContent='Gambar pola kunci kamu untuk membuka aplikasi ini di perangkat ini.';
+  }else{
+    lkMode='create';lkFirst=null;
+    $('lktitle').textContent='Buat Pola Kunci';$('lksub').textContent='Silakan buat pola kunci kamu sendiri. Pola ini wajib dimasukkan lagi setiap kali membuka aplikasi di perangkat ini.';
+  }
+  lkReset();
+}
+
 /* splash flow */
 const drop=id=>setTimeout(()=>{const e=$(id);e&&e.remove()},700);
-function bootTerm(){$('ws').classList.add('gone');drop('ws');setTimeout(()=>$('tb').classList.add('show'),400);if(navigator.vibrate)navigator.vibrate(15)}
-function skip(){$('ws').classList.add('gone');drop('ws');drop('tb')}
-function enterApp(){$('tb').classList.add('gone');drop('tb');if(navigator.vibrate)navigator.vibrate([20,50,20]);toast('Welcome, technician! 🚀')}
-setTimeout(()=>{const w=$('ws'),t=$('tb');if(w&&t&&!w.classList.contains('gone')&&!t.classList.contains('show'))skip()},8000);
+function afterEnter(){initLock()}
+function enterApp(){$('ws').classList.add('gone');drop('ws');if(navigator.vibrate)navigator.vibrate([20,50,20]);toast('Welcome, technician! 🚀');afterEnter()}
+setTimeout(()=>{const w=$('ws');if(w&&!w.classList.contains('gone'))enterApp()},5000);
 
 /* base */
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)}
@@ -518,9 +607,6 @@ document.querySelectorAll('img[data-logo]').forEach(im=>{const n=im.dataset.logo
 {const t0=lgGet('tkj');if(t0){$('fav').href=t0;$('ati').href=t0}else findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}})}
 
 /* ===== user online realtime ===== */
-const ME=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const gid=(st,k,fb)=>{try{let d=st.getItem(k);if(!d){d=Math.random().toString(36).slice(2,10);st.setItem(k,d)}return d}catch(e){return fb}};
-const DEV=gid(localStorage,'tkj_dev',ME),TAB=Math.random().toString(36).slice(2,8);
 let fbState='Menyambung…';
 const setStatus=t=>{fbState=t;const el=$('on-st');if(el)el.textContent=t};
 const setDot=on=>{const d=document.querySelector('.onl .live');if(d)d.classList.toggle('off',!on)};
@@ -538,9 +624,8 @@ function startLocal(){
 }
 async function startFB(){
  try{
-  const V='https://www.gstatic.com/firebasejs/10.12.2/';
-  const [A,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js')]);
-  const db=D.getDatabase(A.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')}));
+  const F=await getDb();if(!F)throw 0;
+  const D=F.d,db=F.db;
   const me=D.ref(db,`presence/${DEV}/${TAB}`);
   let conn=false,active=!document.hidden,hideT;
   const denied=()=>{setStatus('Ditolak · cek Rules Firebase lalu Publish');setDot(false)};
