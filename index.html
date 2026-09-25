@@ -12,8 +12,11 @@
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22TKJ%20SMKN%202%20Tembilahan%22%2C%22short_name%22%3A%22TKJ%20SMKN2%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23eaf3fe%22%2C%22theme_color%22%3A%22%235b9bef%22%2C%22orientation%22%3A%22portrait%22%7D">
 <link rel="icon" id="fav" href="data:,">
 <link rel="apple-touch-icon" id="ati" href="data:,">
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Urbanist:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin><link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"><link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Urbanist:wght@500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
 <style>
 :root{--ink:#1d3557;--mut:#6b84a3;--ac:#5b9bef;--ac2:#8ec0fa;--soft:#dcebfd;--gl:rgba(255,255,255,.6);--bd:rgba(255,255,255,.9);--sh:0 8px 24px rgba(91,155,239,.13)}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
@@ -165,6 +168,19 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 .ph{display:grid;place-items:center;color:var(--ac);font-size:34px}
 .hrow .ph{font-size:48px}.wl .ph{font-size:80px}.tlogo .ph{font-size:34px}
+@keyframes in{from{opacity:0}}
+body:before{transform:translateZ(0)}
+.live.off{background:#b7c7dc}.live.off:after{display:none}
+
+.bnr-wrap{margin:18px 0 6px;position:relative}
+.bnr-wrap.hide{display:none}
+.bnr{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:22px;gap:0;box-shadow:var(--sh);-webkit-overflow-scrolling:touch}
+.bnr::-webkit-scrollbar{display:none}
+.bnr .sl{flex:0 0 100%;scroll-snap-align:center;width:100%;aspect-ratio:16/8;object-fit:cover;background:var(--soft);display:block}
+.bnr .sl.load{display:grid;place-items:center;color:var(--ac);font-size:26px}
+.bdots{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.bdots span{width:6px;height:6px;border-radius:50%;background:#c5daf5;transition:.25s}
+.bdots span.on{width:18px;border-radius:4px;background:var(--ac)}
 </style>
 </head>
 <body>
@@ -220,6 +236,8 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
       <button class="act" onclick="goSec('kontak')"><i class="fa-solid fa-envelope"></i>Kontak</button>
     </div>
   </div>
+
+  <div class="bnr-wrap hide" id="bnr-wrap"><div class="bnr" id="bnr"></div><div class="bdots" id="bdots"></div></div>
 
   <div class="sh"><span>Tools Interaktif</span><a onclick="openConsole()">Buka</a></div>
   <div class="chips">
@@ -334,10 +352,11 @@ try{hist=JSON.parse(localStorage.getItem('tkjh')||'[]')}catch(e){}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e});
 
 /* splash flow */
-function bootTerm(){$('ws').classList.add('gone');setTimeout(()=>$('tb').classList.add('show'),400);if(navigator.vibrate)navigator.vibrate(15)}
-function skip(){$('ws').classList.add('gone')}
-function enterApp(){$('tb').classList.add('gone');setTimeout(()=>$('tb').style.display='none',400);if(navigator.vibrate)navigator.vibrate([20,50,20]);toast('Welcome, technician! 🚀')}
-setTimeout(()=>{if(!$('ws').classList.contains('gone')&&!$('tb').classList.contains('show'))skip()},8000);
+const drop=id=>setTimeout(()=>{const e=$(id);e&&e.remove()},700);
+function bootTerm(){$('ws').classList.add('gone');drop('ws');setTimeout(()=>$('tb').classList.add('show'),400);if(navigator.vibrate)navigator.vibrate(15)}
+function skip(){$('ws').classList.add('gone');drop('ws');drop('tb')}
+function enterApp(){$('tb').classList.add('gone');drop('tb');if(navigator.vibrate)navigator.vibrate([20,50,20]);toast('Welcome, technician! 🚀')}
+setTimeout(()=>{const w=$('ws'),t=$('tb');if(w&&t&&!w.classList.contains('gone')&&!t.classList.contains('show'))skip()},8000);
 
 /* base */
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)}
@@ -396,7 +415,7 @@ function openPing(){sheet('Simulator Ping',`<input class="in" id="pt" value="192
 function runPing(){const t=esc($('pt').value.trim()||'192.168.2.1'),c=$('pc');clearInterval(pi);c.innerHTML=`<span class="i">Pinging ${t} with 32 bytes of data:</span>\n`;let n=0;toast('Memulai ping ke '+t+'...');pi=setInterval(()=>{n++;c.innerHTML+=`<span class="o">Reply from ${t}: bytes=32 time=${(Math.random()*2+.3).toFixed(1)}ms TTL=64</span>\n`;c.scrollTop=c.scrollHeight;if(n>=4){clearInterval(pi);c.innerHTML+=`\n<b>Ping statistics: Sent = 4, Received = 4, Lost = 0 (0% loss)</b>`;log('Ping '+t,'4 paket diterima','fa-satellite-dish','0% loss')}},500)}
 
 /* console: 12 API */
-const J=async u=>(await fetch(u)).json(),fm=n=>Number(n).toLocaleString('id-ID');
+const J=async u=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);try{return await(await fetch(u,{signal:c.signal})).json()}finally{clearTimeout(t)}},fm=n=>Number(n).toLocaleString('id-ID');
 const APIS=[
 ['Bitcoin','fa-brands fa-bitcoin','Crypto',async()=>{const d=(await J('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,idr&include_24hr_change=true')).bitcoin;return{'BTC/USD':'$'+fm(d.usd),'BTC/IDR':'Rp '+fm(d.idr),'24h':d.usd_24h_change.toFixed(2)+'%'}}],
 ['Cuaca','fa-solid fa-cloud-sun','Tembilahan',async()=>{const d=(await J('https://api.open-meteo.com/v1/forecast?latitude=-0.5&longitude=103.0&current_weather=true')).current_weather;return{lokasi:'Tembilahan',suhu:d.temperature+'°C',angin:d.windspeed+' km/h',kode:d.weathercode}}],
@@ -411,11 +430,12 @@ const APIS=[
 ['Dog CEO','fa-solid fa-dog','Foto',async()=>{const d=await J('https://dog.ceo/api/breeds/image/random');return{status:d.status,url:d.message}}],
 ['Matahari','fa-solid fa-sun','Sunrise',async()=>{const d=(await J('https://api.sunrise-sunset.org/json?lat=-0.5&lng=103.0&formatted=0')).results,f=x=>new Date(x).toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta'});return{sunrise:f(d.sunrise),sunset:f(d.sunset)}}]];
 function openConsole(){sheet('Lab Console',`<p style="font-size:11px;color:var(--mut);margin:-6px 0 12px">12 API Gratis • No Key — ketuk untuk fetch data real-time.</p><div class="term" id="ct" style="display:none;margin:0 0 12px"></div><div class="apis">${APIS.map((a,i)=>`<button class="ai" id="ai${i}" onclick="runApi(${i})"><i class="${a[1]}"></i>${a[0]}<small style="font-weight:500;color:var(--mut);font-size:9px">${a[2]}</small></button>`).join('')}</div>`)}
-async function runApi(i){const a=APIS[i],c=$('ct');document.querySelectorAll('.ai').forEach(b=>b.classList.remove('on'));$('ai'+i).classList.add('on');c.style.display='block';c.innerHTML='';c.scrollIntoView({block:'nearest'});
+let apiBusy=false;
+async function runApi(i){if(apiBusy)return;apiBusy=true;const a=APIS[i],c=$('ct');document.querySelectorAll('.ai').forEach(b=>b.classList.remove('on'));$('ai'+i).classList.add('on');c.style.display='block';c.innerHTML='';c.scrollIntoView({block:'nearest'});
 const add=async(h,d=90)=>{await new Promise(r=>setTimeout(r,d));c.innerHTML+=h+'\n';c.scrollTop=c.scrollHeight};
 await add(`<span class="a">❯</span> curl ${a[0].toLowerCase()}`,0);await add('<span class="i">[INFO]</span> Menghubungi server...');const t=performance.now();
 try{const d=await a[3]();await add(`<span class="o">[OK]</span> 200 — ${(performance.now()-t).toFixed(0)}ms`);for(const[k,v]of Object.entries(d))await add(`├─ <span class="i">${k}</span>: ${esc(v)}`,50);log('Console: '+a[0],'Data berhasil diambil','fa-terminal','OK')}
-catch(e){await add('<span class="e">[ERR]</span> Gagal memuat data. Periksa koneksi internet.');toast('Gagal memuat data')}}
+catch(e){await add('<span class="e">[ERR]</span> Gagal memuat data. Periksa koneksi internet.');toast('Gagal memuat data')}apiBusy=false}
 
 /* creator */
 async function openCreator(){sheet('wilka@creator:~$ ./introduce.sh','<div class="term" id="cr" style="max-height:none"></div>');const c=$('cr'),L=[[0,'<span class="a">❯</span> ./introduce.sh'],[200,'<span class="i">[INFO]</span> loading creator...'],[200,'──────────────'],[200,'<span class="a">$</span> creator → <b>Wilka</b>'],[300,'<span class="a">$</span> role → Web Developer'],[300,'──────────────'],[300,'Hai, saya <b>Wilka</b> 👋'],[400,'Yang membuat & membangun website ini.'],[400,'Semoga kalian bisa menggunakan tools ini dengan bijak ya 🙏'],[300,'──────────────'],[300,'<span class="o">[OK]</span> profile loaded'],[250,'<span class="a">$</span> Next: <span class="i">thank you ❤️</span><span class="cur"></span>']];
@@ -430,48 +450,83 @@ const a=document.createElement('a');a.href=APK;a.download='TKJ-SMKN2.apk';docume
 function installApp(){if(deferred){deferred.prompt();deferred.userChoice.then(r=>{if(r.outcome==='accepted')toast('Aplikasi berhasil di-install!');deferred=null})}else toast('Gunakan menu browser → "Add to Home Screen"')}
 function copyNo(){const n=$('cno').textContent;(navigator.clipboard?navigator.clipboard.writeText(n):Promise.reject()).then(()=>toast('Nomor kartu disalin'),()=>toast('Nomor kartu: '+n))}
 
-/* ===== logo: cari otomatis (png, jpeg, jpg, webp, svg; huruf kecil / kapital) ===== */
-const EXT=['png','webp','jpeg','jpg','svg','PNG','JPG'],LG={};let sd;
-const cap=n=>n[0].toUpperCase()+n.slice(1);
+/* ===== logo: dicari sekali, path disimpan agar buka berikutnya instan ===== */
+let sd;const LK='tkj_logo_',LG={};
+const lgGet=n=>{try{return localStorage.getItem(LK+n)}catch(e){}},lgSet=(n,u)=>{try{u?localStorage.setItem(LK+n,u):localStorage.removeItem(LK+n)}catch(e){}};
 const probe=u=>new Promise(r=>{const i=new Image();i.onload=()=>r(u);i.onerror=()=>r(null);i.src=u});
-const findLogo=n=>LG[n]||(LG[n]=Promise.all([n,cap(n),n.toUpperCase()].flatMap(b=>EXT.map(e=>probe(b+'.'+e)))).then(a=>a.find(Boolean)||null));
-document.querySelectorAll('img[data-logo]').forEach(async im=>{const u=await findLogo(im.dataset.logo);
- if(!u){console.warn('Logo tidak ditemukan:',im.dataset.logo);const ph=im.dataset.ph;if(ph){const i=document.createElement('i');i.className='fa-solid '+ph+' ph';im.replaceWith(i)}else im.remove();return}
- im.decoding='async';im.onload=()=>im.classList.add('ok');im.src=u;if(im.complete)im.classList.add('ok')});
-findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}});
+const cap=n=>n[0].toUpperCase()+n.slice(1);
+const search=async n=>{const t=async(b,x)=>(await Promise.all(b.flatMap(k=>x.map(e=>probe(k+'.'+e))))).find(Boolean)||null;
+ return await t([n],['png','jpeg','jpg','webp','svg'])||await t([cap(n),n.toUpperCase()],['png','jpeg','jpg','webp','svg','PNG','JPG'])};
+const findLogo=n=>LG[n]||(LG[n]=search(n).then(u=>{lgSet(n,u);return u}));
+const noLogo=im=>{console.warn('Logo tidak ditemukan:',im.dataset.logo);const ph=im.dataset.ph;if(ph){const i=document.createElement('i');i.className='fa-solid '+ph+' ph';im.replaceWith(i)}else im.remove()};
+const setLogo=(im,u)=>{im.decoding='async';im.onload=()=>im.classList.add('ok');im.src=u;if(im.complete&&im.naturalWidth)im.classList.add('ok')};
+document.querySelectorAll('img[data-logo]').forEach(im=>{const n=im.dataset.logo,c=lgGet(n);
+ if(c){im.onerror=()=>{im.onerror=null;lgSet(n,null);delete LG[n];findLogo(n).then(u=>u?setLogo(im,u):noLogo(im))};setLogo(im,c)}
+ else findLogo(n).then(u=>u?setLogo(im,u):noLogo(im))});
+
+/* ===== banner carousel: cari banner1..banner5 otomatis, auto-slide + swipe manual ===== */
+(async function initBanner(){
+ const N=5,found=[];
+ await Promise.all(Array.from({length:N},(_,i)=>i+1).map(async n=>{
+  const names=[`banner${n}`,`baner${n}`,`Banner${n}`,`Baner${n}`],ext=['jpeg','jpg','png','webp'];
+  for(const b of names)for(const e of ext){const u=await probe(`${b}.${e}`);if(u){found[n-1]=u;return}}
+ }));
+ const list=found.filter(Boolean);
+ if(!list.length)return;
+ const wrap=$('bnr-wrap'),track=$('bnr'),dots=$('bdots');
+ track.innerHTML=list.map((u,i)=>`<img class="sl" data-i="${i}" alt="Banner ${i+1}" loading="${i?'lazy':'eager'}">`).join('');
+ dots.innerHTML=list.map((_,i)=>`<span class="${i?'':'on'}" data-i="${i}"></span>`).join('');
+ [...track.children].forEach((im,i)=>{im.onload=()=>im.classList.add('ok');im.src=list[i]});
+ wrap.classList.remove('hide');
+ const N2=list.length;let idx=0,userT;
+ const go=i=>{idx=(i+N2)%N2;track.scrollTo({left:track.clientWidth*idx,behavior:'smooth'});mark(idx)};
+ const mark=i=>dots.querySelectorAll('span').forEach((d,j)=>d.classList.toggle('on',j===i));
+ dots.addEventListener('click',e=>{const i=+e.target?.dataset?.i;if(!isNaN(i))go(i)});
+ let sT;track.addEventListener('scroll',()=>{clearTimeout(sT);sT=setTimeout(()=>{idx=Math.round(track.scrollLeft/track.clientWidth);mark(idx)},80)});
+ ['touchstart','pointerdown','wheel'].forEach(ev=>track.addEventListener(ev,()=>{clearTimeout(userT);userT=setTimeout(()=>{},0)},{passive:true}));
+ if(N2>1)setInterval(()=>{if(document.hidden)return;go(idx+1)},4200);
+})();
+
+{const t0=lgGet('tkj');if(t0){$('fav').href=t0;$('ati').href=t0}else findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}})}
 
 /* ===== user online realtime ===== */
 const ME=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const setOnline=n=>{$('on-n').textContent=n;const e=$('on-n2');if(e)e.textContent=n};
-function openOnline(){const kv=(a,b,id='')=>`<div class="kv"><span>${a}</span><b id="${id}">${b}</b></div>`;
- sheet('User Online',kv('Online sekarang',$('on-n').textContent,'on-n2')+kv('Mode',FIREBASE_URL?'Realtime · semua perangkat':'Lokal · tab di perangkat ini')+`<p style="font-size:11px;color:var(--mut);line-height:1.7;margin-top:10px">${FIREBASE_URL?'Setiap HP atau laptop dihitung 1 (beberapa tab di perangkat yang sama tetap 1). Saat web ditutup, angka berkurang otomatis.':'Untuk menghitung semua HP dan laptop, isi <b>FIREBASE_URL</b> di bagian atas script.'}</p>`)}
-/* id per perangkat (tetap saat refresh) dan per tab */
 const gid=(st,k,fb)=>{try{let d=st.getItem(k);if(!d){d=Math.random().toString(36).slice(2,10);st.setItem(k,d)}return d}catch(e){return fb}};
-const DEV=gid(localStorage,'tkj_dev',ME),TAB=gid(sessionStorage,'tkj_tab',ME);
-/* angka naik langsung, turun setelah 2,5 dtk agar tidak berkedip saat refresh */
-let shown=0,dt;
-function showOnline(n){clearTimeout(dt);if(!shown||n>=shown){shown=n;setOnline(n)}else dt=setTimeout(()=>{shown=n;setOnline(n)},2500)}
+const DEV=gid(localStorage,'tkj_dev',ME),TAB=Math.random().toString(36).slice(2,8);
+let fbState='Menyambung…';
+const setStatus=t=>{fbState=t;const el=$('on-st');if(el)el.textContent=t};
+const setDot=on=>{const d=document.querySelector('.onl .live');if(d)d.classList.toggle('off',!on)};
+const setOnline=n=>{$('on-n').textContent=n;const el=$('on-n2');if(el)el.textContent=n;try{localStorage.setItem('tkj_on',n)}catch(e){}};
+try{const c=+localStorage.getItem('tkj_on');if(c>0)$('on-n').textContent=c}catch(e){}
+function openOnline(){const kv=(a,b,id='')=>`<div class="kv"><span>${a}</span><b id="${id}">${b}</b></div>`;
+ sheet('User Online',kv('Online sekarang',$('on-n').textContent,'on-n2')+kv('Mode',FIREBASE_URL?'Realtime · semua perangkat':'Lokal · tab di perangkat ini')+kv('Status',fbState,'on-st')+`<p style="font-size:11px;color:var(--mut);line-height:1.7;margin-top:10px">${FIREBASE_URL?'Setiap HP atau laptop dihitung 1 (beberapa tab di perangkat yang sama tetap 1). Angka berubah otomatis tanpa refresh, dan berkurang begitu web ditutup atau ditinggalkan lebih dari 20 detik.':'Untuk menghitung semua HP dan laptop, isi <b>FIREBASE_URL</b> di bagian atas script.'}</p>`)}
 
 function startLocal(){
  const seen={[ME]:Date.now()},bc='BroadcastChannel' in window?new BroadcastChannel('tkj-online'):null;
  const cnt=()=>{const now=Date.now();seen[ME]=now;for(const k in seen)if(now-seen[k]>12000)delete seen[k];setOnline(Object.keys(seen).length)};
  const tick=()=>{if(bc)bc.postMessage(ME);cnt()};
  if(bc){bc.onmessage=e=>{const d=String(e.data);if(d.startsWith('bye:'))delete seen[d.slice(4)];else{if(!(d in seen))bc.postMessage(ME);seen[d]=Date.now()}cnt()};addEventListener('pagehide',()=>bc.postMessage('bye:'+ME))}
- tick();setInterval(tick,4000);
+ setStatus('Lokal');setDot(true);tick();setInterval(tick,4000);
 }
-function startFB(){
- const load=src=>new Promise((res,rej)=>{const t=document.createElement('script');t.src=src;t.onload=res;t.onerror=rej;document.head.appendChild(t)});
- const V='https://www.gstatic.com/firebasejs/10.12.2/';
- load(V+'firebase-app-compat.js').then(()=>load(V+'firebase-database-compat.js')).then(()=>{
-  firebase.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')});
-  const db=firebase.database(),me=db.ref(`presence/${DEV}/${TAB}`);
-  /* server menghapus otomatis saat koneksi putus: tab ditutup, HP mati, sinyal hilang */
-  db.ref('.info/connected').on('value',s=>{if(s.val()===true)me.onDisconnect().remove().then(()=>me.set(true))});
-  db.ref('presence').on('value',s=>{const v=s.val()||{};
-   const n=Object.values(v).filter(d=>d&&typeof d==='object'&&Object.values(d).some(x=>x===true)).length;showOnline(Math.max(n,1))});
-  addEventListener('pagehide',()=>{me.remove()});
-  addEventListener('pageshow',e=>{if(e.persisted)me.set(true)});
- }).catch(startLocal);
+async function startFB(){
+ try{
+  const V='https://www.gstatic.com/firebasejs/10.12.2/';
+  const [A,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js')]);
+  const db=D.getDatabase(A.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')}));
+  const me=D.ref(db,`presence/${DEV}/${TAB}`);
+  let conn=false,active=!document.hidden,hideT;
+  const denied=()=>{setStatus('Ditolak · cek Rules Firebase lalu Publish');setDot(false)};
+  const register=()=>{if(conn&&active)D.onDisconnect(me).remove().then(()=>D.set(me,true)).catch(denied)};
+  D.onValue(D.ref(db,'.info/connected'),s=>{conn=s.val()===true;setDot(conn);setStatus(conn?'Terhubung · realtime':'Menyambung…');register()});
+  D.onValue(D.ref(db,'presence'),s=>{const v=s.val()||{};let n=0;
+   for(const k in v){const d=v[k];if(d&&typeof d==='object')for(const t in d)if(d[t]===true){n++;break}}
+   setOnline(Math.max(n,1))},denied);
+  document.addEventListener('visibilitychange',()=>{clearTimeout(hideT);
+   if(document.hidden)hideT=setTimeout(()=>{active=false;D.remove(me).catch(()=>{})},20000);
+   else if(!active){active=true;register()}});
+  addEventListener('pagehide',()=>{D.remove(me).catch(()=>{})});
+  addEventListener('pageshow',e=>{if(e.persisted){active=true;register()}});
+ }catch(e){setStatus('SDK gagal dimuat · mode lokal');startLocal()}
 }
 FIREBASE_URL?startFB():startLocal();
 
