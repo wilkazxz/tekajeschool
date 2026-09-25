@@ -181,6 +181,15 @@ body:before{transform:translateZ(0)}
 .bdots{display:flex;justify-content:center;gap:6px;margin-top:10px}
 .bdots span{width:6px;height:6px;border-radius:50%;background:#c5daf5;transition:.25s}
 .bdots span.on{width:18px;border-radius:4px;background:var(--ac)}
+
+.gwrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gcard{border-radius:17px;padding:13px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:7px;min-height:108px}
+.gcard .ic{width:36px;height:36px;border-radius:11px;background:var(--soft);display:grid;place-items:center;color:#2f6fd0;font-size:14px;flex:none}
+.gcard b{font-size:12.5px;line-height:1.25}
+.gcard small{font-size:10.5px;color:var(--mut);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gcard .tag{align-self:flex-start;font-size:9px;font-weight:800;color:#2f6fd0;background:var(--soft);padding:3px 8px;border-radius:7px;display:flex;align-items:center;gap:4px}
+.dllink{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.desc{font-size:12px;line-height:1.7;color:#3d5a80;background:#fff;border:1px solid #d5e5fa;border-radius:14px;padding:12px;margin:4px 0 12px}
 </style>
 </head>
 <body>
@@ -252,10 +261,10 @@ body:before{transform:translateZ(0)}
   <div class="lw g" id="rl"></div>
 
   <div class="sh" id="tools"><span>10 Tools Wajib</span><a onclick="listSheet('Tools Wajib','Tool')">Semua</a></div>
-  <div class="lw g" id="l-tool"></div>
+  <div id="l-tool"></div>
 
   <div class="sh" id="kurikulum"><span>Materi</span><a onclick="listSheet('Materi','Materi')">Semua</a></div>
-  <div class="lw g" id="l-mat"></div>
+  <div id="l-mat"></div>
 
   <div class="sh" id="fasilitas"><span>Fasilitas Lab</span><a onclick="listSheet('Fasilitas Lab','Fasilitas')">Semua</a></div>
   <div class="lw g" id="l-fas"></div>
@@ -339,8 +348,23 @@ body:before{transform:translateZ(0)}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const SETS={
-Tool:[['Packet Tracer','fa-diagram-project','Simulator jaringan Cisco CCNA'],['GNS3','fa-network-wired','Simulator jaringan advanced'],['Wireshark','fa-fish','Packet analyzer jaringan'],['Nmap','fa-satellite-dish','Port scanning & security'],['PuTTY','fa-terminal','SSH / Telnet client'],['Winbox','fa-server','Konfigurasi MikroTik'],['VirtualBox','fa-cube','Virtualisasi server lab'],['Advanced IP Scanner','fa-magnifying-glass','Scan perangkat di LAN'],['The Dude','fa-chart-line','Monitoring jaringan MikroTik'],['FileZilla','fa-folder-tree','Klien FTP / SFTP']],
-Materi:[['Subnetting & VLSM','fa-calculator','Membagi jaringan IPv4'],['Routing Static & Dynamic','fa-route','RIP, OSPF, rute statis'],['VLAN & Trunking','fa-sitemap','Segmentasi jaringan'],['Konfigurasi MikroTik','fa-server','RouterOS, firewall, hotspot'],['Keamanan Jaringan','fa-shield-halved','Firewall & hardening']],
+Tool:[
+['Packet Tracer','fa-diagram-project','Simulator jaringan resmi Cisco untuk latihan CCNA','https://www.netacad.com/courses/packet-tracer','Software simulasi jaringan buatan Cisco. Dipakai untuk merancang, mengonfigurasi, dan menguji topologi router & switch tanpa perangkat fisik. Wajib untuk latihan CCNA. Perlu akun gratis Cisco Networking Academy (NetAcad) untuk mengunduh.'],
+['GNS3','fa-network-wired','Simulator jaringan advanced, bisa jalankan OS asli','https://www.gns3.com/software/download','Simulator jaringan tingkat lanjut yang bisa menjalankan image OS router/firewall asli (Cisco IOS, MikroTik, dsb), lebih dekat ke kondisi nyata dibanding Packet Tracer. Cocok untuk latihan topologi kompleks.'],
+['Wireshark','fa-fish','Menangkap & menganalisis paket data jaringan','https://www.wireshark.org/download.html','Packet analyzer paling populer di dunia. Menangkap trafik jaringan secara langsung untuk melihat isi paket, mendiagnosis masalah koneksi, dan belajar protokol seperti TCP/IP, HTTP, dan DNS.'],
+['Nmap','fa-satellite-dish','Port scanning & audit keamanan jaringan','https://nmap.org/download.html','Tool pemindai jaringan untuk menemukan perangkat aktif, port terbuka, dan celah keamanan. Dipakai luas dalam praktik keamanan jaringan dan pengujian penetrasi dasar.'],
+['PuTTY','fa-terminal','Klien SSH / Telnet untuk akses jarak jauh','https://www.putty.org/','Klien SSH dan Telnet ringan untuk mengakses dan mengonfigurasi router, switch, atau server dari jarak jauh lewat command line.'],
+['Winbox','fa-server','Aplikasi resmi konfigurasi router MikroTik','https://mikrotik.com/download','Aplikasi GUI resmi MikroTik untuk mengonfigurasi RouterOS: routing, firewall, hotspot, dan VLAN, tanpa perlu hafal semua perintah command line.'],
+['VirtualBox','fa-cube','Virtualisasi untuk simulasi server & OS lab','https://www.virtualbox.org/wiki/Downloads','Software virtualisasi gratis untuk menjalankan sistem operasi lain (Linux server, Windows Server, dsb) di dalam komputer, dipakai untuk praktik server tanpa perangkat tambahan.'],
+['Advanced IP Scanner','fa-magnifying-glass','Scan cepat perangkat yang terhubung di LAN','https://www.advanced-ip-scanner.com/','Tool ringan untuk memindai semua perangkat yang terhubung dalam satu jaringan LAN, menampilkan IP, MAC address, dan nama perangkat dengan cepat.'],
+['The Dude','fa-chart-line','Monitoring jaringan otomatis dari MikroTik','https://mikrotik.com/thedude','Software monitoring jaringan gratis dari MikroTik. Memetakan perangkat secara otomatis dan memberi notifikasi saat ada perangkat yang down.'],
+['FileZilla','fa-folder-tree','Klien FTP / SFTP untuk transfer file ke server','https://filezilla-project.org/download.php','Klien FTP/SFTP untuk mengunggah dan mengunduh file ke server jarak jauh, sering dipakai saat mengelola web server di lab.']],
+Materi:[
+['Subnetting & VLSM','fa-calculator','Membagi jaringan IPv4 sesuai kebutuhan host',null,'Subnetting adalah teknik membagi satu jaringan besar menjadi beberapa jaringan kecil (subnet) agar alokasi IP lebih efisien dan aman. VLSM (Variable Length Subnet Mask) memungkinkan tiap subnet punya ukuran berbeda sesuai jumlah host yang dibutuhkan, sehingga alamat IP tidak terbuang sia-sia. Materi ini dasar wajib sebelum praktik konfigurasi router, dan bisa langsung dicoba di menu Kalkulator Subnet pada aplikasi ini.'],
+['Routing Static & Dynamic','fa-route','RIP, OSPF, dan konfigurasi rute statis',null,'Routing adalah proses menentukan jalur data antar jaringan. Static routing diatur manual oleh admin dan cocok untuk jaringan kecil, sedangkan dynamic routing (RIP, OSPF, EIGRP) membiarkan router saling bertukar informasi rute secara otomatis, cocok untuk jaringan besar dan sering berubah.'],
+['VLAN & Trunking','fa-sitemap','Segmentasi jaringan dalam satu switch fisik',null,'VLAN (Virtual LAN) memisahkan satu switch fisik menjadi beberapa jaringan logis yang terpisah, meningkatkan keamanan dan mengurangi broadcast domain. Trunking menghubungkan beberapa VLAN antar switch lewat satu kabel menggunakan protokol seperti 802.1Q.'],
+['Konfigurasi MikroTik','fa-server','RouterOS: firewall, hotspot, dan bandwidth','https://mikrotik.com/download','MikroTik RouterOS adalah sistem operasi router yang banyak dipakai di Indonesia. Materi ini mencakup instalasi firewall, hotspot login, manajemen bandwidth, dan NAT, biasanya dipraktikkan lewat aplikasi Winbox.'],
+['Keamanan Jaringan','fa-shield-halved','Firewall, hardening, dan deteksi ancaman',null,'Mencakup dasar keamanan jaringan: konfigurasi firewall, menutup port yang tidak perlu, autentikasi yang kuat, dan cara mendeteksi trafik mencurigakan menggunakan tool seperti Wireshark atau Nmap.']],
 Fasilitas:[['Lab Komputer & PC','fa-desktop','PC high-spec & jaringan dasar'],['Cisco & MikroTik','fa-server','Router, Switch, & Rack Server'],['Fiber Optic & Splicer','fa-wave-square','Fusion Splicer & OTDR']],
 Kontak:[['Alamat Sekolah','fa-location-dot','Jl. Pendidikan / Parit 10, Tembilahan Hulu'],['Email','fa-envelope','tkj@smkn2tembilahan.sch.id'],['Telepon / WhatsApp','fa-phone','+62 812-7654-3210']]};
 const APK='tkj.apk';
@@ -373,14 +397,18 @@ function log(t,s,ic,v){hist.unshift({t,s,ic,v,time:new Date().toLocaleTimeString
 function clearHist(){hist=[];try{localStorage.removeItem('tkjh')}catch(e){}renderHist();toast('Riwayat dihapus')}
 
 /* lists */
-const rowL=(x,ty,i,ar=1)=>`<div class="tx" onclick="info(SETS.${ty}[${i}],'${ty}')"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><div><b>${x[0]}</b><small>${x[2]}</small></div>${ar?'<i class="fa-solid fa-chevron-right"></i>':''}</div>`;
+const rowL=(x,ty,i,ar=1)=>`<div class="tx" onclick="info(SETS.${ty}[${i}],'${ty}')"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><div><b>${x[0]}</b><small>${x[2]}</small></div>${x[3]?'<span class="tag" style="margin-right:4px"><i class="fa-solid fa-download"></i></span>':''}${ar?'<i class="fa-solid fa-chevron-right"></i>':''}</div>`;
+const gcard=(x,ty,i)=>`<div class="gcard g" onclick="info(SETS.${ty}[${i}],'${ty}')"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><b>${x[0]}</b><small>${x[2]}</small>${x[3]?'<span class="tag"><i class="fa-solid fa-download"></i>Unduh</span>':''}</div>`;
+const fillGrid=(id,ty,n)=>$(id).innerHTML=`<div class="gwrap">${SETS[ty].slice(0,n).map((x,i)=>gcard(x,ty,i)).join('')}</div>`;
 const fill=(id,ty,n)=>$(id).innerHTML=SETS[ty].slice(0,n).map((x,i)=>rowL(x,ty,i)).join('');
-fill('l-tool','Tool',5);fill('l-mat','Materi',5);fill('l-fas','Fasilitas',3);fill('l-kon','Kontak',3);
-function listSheet(t,ty){sheet(t,SETS[ty].map((x,i)=>rowL(x,ty,i)).join(''))}
+fillGrid('l-tool','Tool',4);fillGrid('l-mat','Materi',4);fill('l-fas','Fasilitas',3);fill('l-kon','Kontak',3);
+function listSheet(t,ty){sheet(t,`<div class="gwrap">${SETS[ty].map((x,i)=>gcard(x,ty,i)).join('')}</div>`)}
 function info(x,ty){let a='';
-if(x[0]==='Email')a=`<a href="mailto:${x[2]}" class="pb" style="margin-top:12px"><i class="fa-solid fa-paper-plane"></i>Kirim email</a>`;
-if(x[0].startsWith('Telepon'))a=`<a href="https://wa.me/6281276543210" target="_blank" rel="noopener" class="pb" style="margin-top:12px"><i class="fa-brands fa-whatsapp"></i>Buka WhatsApp</a>`;
-sheet(x[0],`<div class="tx" style="border:0;cursor:default"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><div><b>${ty}</b><small>${x[2]}</small></div></div>${a}`);log(x[0],ty,x[1],'Dibuka')}
+if(x[0]==='Email')a=`<a href="mailto:${x[2]}" class="pb dllink" style="margin-top:2px"><i class="fa-solid fa-paper-plane"></i>Kirim email</a>`;
+if(x[0].startsWith('Telepon'))a=`<a href="https://wa.me/6281276543210" target="_blank" rel="noopener" class="pb dllink" style="margin-top:2px"><i class="fa-brands fa-whatsapp"></i>Buka WhatsApp</a>`;
+if(x[3])a=`<a href="${x[3]}" target="_blank" rel="noopener" class="pb dllink" style="margin-top:2px"><i class="fa-solid fa-download"></i>Buka halaman unduh resmi</a>`;
+const body=x[4]||x[2];
+sheet(x[0],`<div class="tx" style="border:0;cursor:default;padding-top:0"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><div><b>${x[0]}</b><small>${ty}</small></div></div><div class="desc">${body}</div>${a}`);log(x[0],ty,x[1],'Dibuka')}
 function doSearch(){const q=$('q').value.toLowerCase().trim(),r=[];
 Object.entries(SETS).forEach(([ty,arr])=>arr.forEach((x,i)=>{if(!q||(x[0]+x[2]+ty).toLowerCase().includes(q))r.push(rowL(x,ty,i,0).replace('</div></div>',`</div><em>${ty}</em></div>`))}));
 $('sr').innerHTML=r.length?r.join(''):'<div class="empty">Tidak ada hasil. Coba kata kunci lain.</div>'}
