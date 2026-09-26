@@ -3,451 +3,763 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="robots" content="noindex,nofollow">
-<title>Admin • TKJ SMKN 2 Tembilahan</title>
+<meta name="description" content="Aplikasi resmi Jurusan Teknik Jaringan Komputer (TKJ) SMKN 2 Tembilahan.">
+<meta name="theme-color" content="#eaf3fe">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TKJ SMKN 2">
+<title>TKJ SMKN 2 Tembilahan</title>
+<link rel="manifest" id="manifestLink" href="data:application/manifest+json,%7B%22name%22%3A%22TKJ%20SMKN%202%20Tembilahan%22%2C%22short_name%22%3A%22TKJ%20SMKN2%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23eaf3fe%22%2C%22theme_color%22%3A%22%235b9bef%22%2C%22orientation%22%3A%22portrait%22%7D">
 <link rel="icon" id="fav" href="data:,">
+<link rel="apple-touch-icon" id="ati" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin><link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"><link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Urbanist:wght@500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
 <style>
-:root{--ink:#1d3557;--mut:#6b84a3;--ac:#5b9bef;--ac2:#8ec0fa;--soft:#dcebfd;--bd:rgba(255,255,255,.9);--sh:0 8px 24px rgba(91,155,239,.13);--danger:#e0587a;--ok:#2e9e6b;--side:230px}
+:root{--ink:#1d3557;--mut:#6b84a3;--ac:#5b9bef;--ac2:#8ec0fa;--soft:#dcebfd;--gl:rgba(255,255,255,.6);--bd:rgba(255,255,255,.9);--sh:0 8px 24px rgba(91,155,239,.13)}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
-body{font-family:Urbanist,sans-serif;color:var(--ink);min-height:100vh;background:#eaf3fe}
-body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 0 0,#b9d8fb,transparent 45%),radial-gradient(circle at 100% 100%,#cfe3fd,transparent 50%),linear-gradient(160deg,#e4f0ff,#f5f9ff 50%,#e1edff)}
-button{font-family:inherit;touch-action:manipulation;transition:transform .1s ease}
-button:active{transform:scale(.97)}
-input,textarea,select{font-family:inherit}
-.g{background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,255,255,.66));border:1px solid var(--bd);box-shadow:var(--sh)}
-.ph{display:grid;place-items:center;color:var(--ac);font-size:22px}
-img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
-
-/* ===== login ===== */
-#login{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.lcard{width:100%;max-width:360px;border-radius:26px;padding:28px 26px;text-align:center}
-.lcard .lg{height:52px;width:auto;max-width:100px;object-fit:contain;margin:0 auto 14px;display:block}
-.lcard h1{font-size:19px;font-weight:800;margin-bottom:4px}
-.lcard p{font-size:12px;color:var(--mut);margin-bottom:18px;line-height:1.6}
-.fld{text-align:left;margin-bottom:12px}
-.fld label{font-size:11px;font-weight:700;color:var(--mut);display:block;margin-bottom:5px}
-.fld input,.fld textarea{width:100%;padding:11px 13px;border-radius:12px;background:#fff;border:1px solid #c5daf5;color:var(--ink);font-size:14px;outline:none}
-.fld input:focus,.fld textarea:focus{border-color:var(--ac)}
-.pb{width:100%;padding:13px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(91,155,239,.3);display:flex;align-items:center;justify-content:center;gap:8px}
-.pb2{width:100%;padding:11px;border-radius:12px;background:#fff;border:1.5px solid #bcd8fa;color:#2f6fd0;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
-.err{color:var(--danger);font-size:12px;font-weight:700;min-height:16px;margin:6px 0}
-.lnote{font-size:10.5px;color:var(--mut);line-height:1.7;margin-top:16px;text-align:left;background:#fff;border:1px solid #d5e5fa;border-radius:12px;padding:10px}
-
-/* ===== dashboard shell ===== */
-#dash{display:none;position:relative;z-index:1;min-height:100vh}
-#dash.on{display:flex}
-.sidebar{width:var(--side);flex:none;min-height:100vh;padding:20px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;background:rgba(255,255,255,.85);border-right:1px solid var(--bd)}
-.brand{display:flex;align-items:center;gap:10px;padding:6px 8px 18px}
-.brand img{height:34px;width:auto;max-width:52px;object-fit:contain}
-.brand b{font-size:13px;line-height:1.2;display:block}.brand small{font-size:9.5px;color:var(--mut)}
-.nav-i{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;border:0;background:none;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;text-align:left;width:100%}
-.nav-i i{width:18px;color:#7fa5d8;font-size:14px}
-.nav-i.on{background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff}
-.nav-i.on i{color:#fff}
-.nav-sp{flex:1}
-.logout{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;border:0;background:none;color:var(--danger);font-size:13px;font-weight:700;cursor:pointer}
-main{flex:1;min-width:0;padding:22px 26px 60px}
-.topbar{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-.topbar h1{font-size:19px;font-weight:800;flex:1}
-.hbtn{display:none;width:38px;height:38px;border-radius:11px;border:1px solid var(--bd);background:#fff;color:var(--ink);align-items:center;justify-content:center;cursor:pointer}
-.pane{display:none}.pane.on{display:block;animation:in .2s}
-@keyframes in{from{opacity:0;transform:translateY(6px)}}
-
-/* ringkasan */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
-.stat{border-radius:18px;padding:16px}
-.stat i{color:#2f6fd0;font-size:16px;margin-bottom:8px;display:block}
-.stat b{font-size:24px;display:block}.stat small{font-size:11px;color:var(--mut)}
-.logorow{display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;margin-bottom:16px}
-.logorow img{height:48px;width:auto;max-width:80px;object-fit:contain}
-.logorow div{flex:1}.logorow b{font-size:13px;display:block}.logorow small{font-size:11px;color:var(--mut)}
-
-/* generic section header + button */
-.sech{display:flex;align-items:center;justify-content:between;gap:10px;margin-bottom:14px}
-.sech h2{font-size:15px;font-weight:800;flex:1}
-.addb{padding:9px 15px;border:0;border-radius:11px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px}
-
-/* list card items */
-.itemcard{border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.itemcard .ic{width:40px;height:40px;border-radius:12px;background:var(--soft);display:grid;place-items:center;color:#2f6fd0;flex:none}
-.itemcard div.tx{flex:1;min-width:0}.itemcard b{font-size:13px;display:block}.itemcard small{font-size:11px;color:var(--mut);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.itemcard .acts{display:flex;gap:6px;flex:none}
-.iconbtn{width:32px;height:32px;border-radius:9px;border:1px solid var(--bd);background:#fff;color:var(--ink);cursor:pointer;display:grid;place-items:center;font-size:12px}
-.iconbtn.del{color:var(--danger)}
-.empty2{text-align:center;color:var(--mut);font-size:12px;padding:26px 0}
-
-/* modal */
-#modal-ov{position:fixed;inset:0;background:rgba(29,53,87,.32);display:none;align-items:center;justify-content:center;z-index:80;padding:20px}
-#modal-ov.on{display:flex}
-.modal{width:100%;max-width:420px;border-radius:22px;padding:20px;max-height:88vh;overflow:auto}
-.modal h3{font-size:15px;font-weight:800;margin-bottom:14px}
-.mrow{display:flex;gap:10px;margin-top:10px}
-.mrow .pb2{flex:1}
-
-/* apk/banner forms */
-.card{border-radius:18px;padding:18px;margin-bottom:14px}
-.bimg{width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:12px;background:var(--soft);margin-top:8px}
-
-#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-20px);background:#fff;border:1px solid #c5daf5;color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:700;font-size:12px;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center;box-shadow:var(--sh)}
+body{font-family:Urbanist,sans-serif;color:var(--ink);background:linear-gradient(160deg,#e4f0ff,#f5f9ff 50%,#e1edff) fixed;display:flex;justify-content:center;user-select:none;-webkit-user-select:none;overscroll-behavior-y:contain}
+body:before,body:after{content:"";position:fixed;border-radius:50%;filter:blur(60px);z-index:0;pointer-events:none}
+body:before{width:260px;height:260px;background:#b9d8fb;top:-60px;left:-60px;opacity:.7}
+body:after{width:300px;height:300px;background:#cfe3fd;bottom:-80px;right:-80px;opacity:.8}
+button{font-family:inherit}
+.g{background:var(--gl);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--bd);box-shadow:var(--sh)}
+#app{width:100%;max-width:430px;min-height:100vh;position:relative;z-index:1}
+.scr{display:none;padding:calc(14px + env(safe-area-inset-top)) 18px 120px;min-height:100vh}
+.scr.on{display:block;animation:in .25s}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.top h1{flex:1;text-align:center;font-size:17px;font-weight:700}
+.ib{position:relative;width:38px;height:38px;border-radius:12px;color:var(--ink);border:1px solid var(--bd);background:var(--gl);backdrop-filter:blur(10px);font-size:14px;cursor:pointer;display:grid;place-items:center;flex:none}
+.ib .dot{position:absolute;top:7px;right:7px;width:8px;height:8px;border-radius:50%;background:var(--ac);border:2px solid #fff}
+.ib:active,.k:active,.act:active,.qb:active,.chip:active,.ni:active,.pb:active,.ai:active{transform:scale(.95)}
+.who{flex:1;display:flex;gap:10px;align-items:center;min-width:0}
+.av{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--soft);display:grid;place-items:center;overflow:hidden;color:var(--ac);flex:none}
+.av img{width:100%;height:100%;object-fit:contain;padding:3px}
+.who small{display:block;color:var(--mut);font-size:10px}.who b{font-size:14px}
+.hero{border-radius:26px;padding:18px;background:linear-gradient(135deg,rgba(142,192,250,.9),rgba(200,225,253,.9));border:1px solid var(--bd);box-shadow:var(--sh);position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-50px;top:-50px;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.35)}
+.hero>*{position:relative}
+.lb{font-size:11px;font-weight:700;letter-spacing:.06em;color:#3d6ea8}
+.hero h2{font-size:24px;font-weight:800;line-height:1.15;margin:4px 0}
+.hero p{font-size:11px;color:#3d6ea8}
+.hrow{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.hrow img{width:64px;height:64px;object-fit:contain}
+.hrow div{text-align:right;font-size:10px;color:#3d6ea8}.hrow b{display:block;font-size:26px;color:var(--ink)}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.act{background:none;border:0;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:700;cursor:pointer}
+.act i{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.75);color:#2f6fd0;display:grid;place-items:center;font-size:16px}
+.sh{display:flex;justify-content:space-between;align-items:center;margin:24px 0 10px;font-weight:800;font-size:15px}
+.sh a{color:var(--ac);font-size:11px;font-weight:700;cursor:pointer}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border-radius:14px;padding:6px 12px 6px 6px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer}
+.chip i{width:34px;height:34px;border-radius:11px;background:var(--soft);display:grid;place-items:center;color:#2f6fd0;font-size:13px}
+.chip.add{padding:6px}.chip.add i{background:none;border:1.5px dashed var(--ac);width:36px;height:36px}
+.lw{border-radius:20px;padding:4px 14px}
+.tx{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(91,155,239,.15);cursor:pointer}
+.tx:last-child{border:0}
+.tx .ic{width:40px;height:40px;border-radius:12px;background:var(--soft);display:grid;place-items:center;color:#2f6fd0;flex:none}
+.tx div{flex:1;min-width:0}.tx b{font-size:13px;display:block}.tx small{color:var(--mut);font-size:11px}
+.tx em{font-style:normal;font-weight:700;font-size:12px;text-align:right;color:#2f6fd0;white-space:nowrap}.tx em small{display:block;color:var(--mut);font-weight:500}
+.tx>.fa-chevron-right{color:#a9c8ef;font-size:11px}
+.empty{color:var(--mut);font-size:12px;text-align:center;padding:22px 0}
+.apk{border-radius:22px;padding:16px;display:flex;align-items:center;gap:14px;margin-top:24px;cursor:pointer}
+.apk .ic{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;display:grid;place-items:center;font-size:22px;flex:none}
+.apk b{display:block;font-size:14px}.apk small{color:var(--mut);font-size:11px}
+.apk .pb{width:auto;padding:10px 14px;font-size:12px;margin-left:auto}
+.amt{text-align:center;font-size:42px;font-weight:800;color:#2f6fd0;margin:22px 0 10px;word-break:break-all;min-height:52px}
+.lim{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-bottom:4px}
+input[type=range]{width:100%;accent-color:var(--ac)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.k{height:50px;border-radius:14px;color:var(--ink);font-size:18px;font-weight:700;cursor:pointer}
+.hold{position:relative;overflow:hidden;width:100%;height:58px;border-radius:29px;background:var(--ac2);border:0;color:#12305a;font-size:15px;font-weight:800;margin-top:16px;cursor:pointer;touch-action:none}
+.hold .f{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--ac)}
+.hold span{position:relative}
+.vc{border-radius:22px;padding:18px;height:180px;background:linear-gradient(135deg,rgba(120,175,245,.9),rgba(190,220,252,.9));border:1px solid var(--bd);position:relative;cursor:pointer;box-shadow:0 12px 0 -7px rgba(142,192,250,.6),0 22px 0 -14px rgba(142,192,250,.35)}
+.vc h2{font-size:20px;line-height:1.1;margin-top:10px}.vc .tg{position:absolute;right:18px;top:16px;font-weight:800;font-style:italic;font-size:18px;color:#2f6fd0}
+.vc .no{position:absolute;bottom:16px;left:18px;right:18px;display:flex;justify-content:space-between;font:600 12px 'Fira Code',monospace}
+.vc small{display:block;font-size:10px;opacity:.75}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.qb{aspect-ratio:1;border-radius:14px;color:var(--ink);font-size:10px;font-weight:700;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;cursor:pointer}
+.qb i{font-size:16px;color:#2f6fd0}
+.pb{width:100%;padding:13px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(91,155,239,.3);display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.pb2{width:100%;padding:13px;border-radius:14px;background:#fff;border:1.5px solid #bcd8fa;color:#2f6fd0;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.cb{display:flex;margin:22px auto 0;padding:10px 20px;border-radius:100px;font-size:11px;font-weight:800;color:#2f6fd0;cursor:pointer;gap:8px;align-items:center}
+.ver{text-align:center;font:10px 'Fira Code',monospace;color:var(--mut);padding:14px 0}
+#nav{position:fixed;bottom:calc(12px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:406px;border-radius:28px;height:64px;display:flex;justify-content:space-around;align-items:center;z-index:20;background:rgba(255,255,255,.75)}
+.ni{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#9ab6da;cursor:pointer;width:56px}
+.ni.on{color:#2f6fd0}.ni i{font-size:17px}
+.fab{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--ac2),var(--ac));border:5px solid #fff;color:#fff;font-size:21px;margin-top:-30px;cursor:pointer;box-shadow:0 8px 20px rgba(91,155,239,.4)}
+#ov{position:fixed;inset:0;background:rgba(29,53,87,.28);display:none;z-index:50;align-items:flex-end;justify-content:center}
+#ov.on{display:flex}
+#sh{width:100%;max-width:430px;background:rgba(250,252,255,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:28px 28px 0 0;padding:16px 18px calc(24px + env(safe-area-inset-bottom));max-height:86vh;overflow:auto;border-top:1px solid #fff;user-select:text;-webkit-user-select:text}
+#sh .hd{width:40px;height:4px;background:#c5daf5;border-radius:4px;margin:0 auto 14px}
+#sh h3{font-size:16px;margin-bottom:12px}
+.in{width:100%;padding:12px;border-radius:12px;background:#fff;border:1px solid #c5daf5;color:var(--ink);font:14px 'Fira Code',monospace;margin:6px 0 10px;outline:none}
+.in:focus{border-color:var(--ac)}
+.term{background:rgba(255,255,255,.8);border:1px solid #c5daf5;border-radius:12px;padding:12px;font:11px/1.7 'Fira Code',monospace;color:var(--ink);max-height:220px;overflow:auto;margin-top:10px;white-space:pre-wrap;word-break:break-all}
+.term .a,.term .o{color:#2e9e6b}.term .i{color:#2f6fd0}.term .e{color:#d2566b}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #e1ecfb;font-size:13px}.kv span{color:var(--mut)}.kv b{font:600 12px 'Fira Code',monospace;color:#2f6fd0;text-align:right}
+.apis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ai{border-radius:14px;padding:12px 6px;color:var(--ink);font-size:11px;font-weight:700;display:flex;flex-direction:column;gap:6px;align-items:center;cursor:pointer;border:1px solid var(--bd);background:var(--gl)}
+.ai i{color:#2f6fd0;font-size:16px}.ai.on{border-color:var(--ac);background:var(--soft)}
+.cab{font:12px/1.9 'Fira Code',monospace}.cab p{margin-bottom:10px;background:#fff;border:1px solid #d5e5fa;padding:10px;border-radius:12px}
+.stp{font-size:12px;color:var(--mut);line-height:1.8;margin:10px 0 14px;padding-left:18px}
+#toast{position:fixed;top:calc(16px + env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-20px);background:#fff;border:1px solid #c5daf5;color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:700;font-size:12px;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center;box-shadow:var(--sh)}
 #toast.on{opacity:1;transform:translateX(-50%)}
+/* splash */
+#ws{position:fixed;inset:0;z-index:150;background:#fff;display:flex;flex-direction:column;transition:opacity .5s,visibility .5s}
+.gone{opacity:0!important;visibility:hidden!important;pointer-events:none}
+.wp{position:relative;flex:0 0 56vh;background:linear-gradient(135deg,#8ec0fa,#cfe3fd);overflow:hidden}
+.wp>img{width:100%;height:100%;object-fit:cover;display:block}
+.wp:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.1) 50%,rgba(255,255,255,.55))}
+.wp:before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:46px;background:#fff;border-radius:50% 50% 0 0/100% 100% 0 0;z-index:2}
+.wl{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
+.wl img{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(29,53,87,.25))}
+.wl b{font-size:26px;font-weight:800}.wl small{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#3d6ea8}
+.wb{flex:1;padding:6px 24px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;text-align:center}
+.wb h2{font-size:26px;font-weight:800;letter-spacing:.06em}.wb p{font-size:12px;color:var(--mut);line-height:1.6;margin-bottom:10px}
+.wb .pb,.wb .pb2{max-width:300px;border-radius:100px}
+.wb i.cp{font-style:normal;font-size:9px;color:#9ab6da;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}
+.ld{position:absolute;left:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--ac),var(--ac2));animation:ld 2s forwards}
+@keyframes ld{from{width:0}to{width:100%}}
+.cur{display:inline-block;width:7px;height:12px;background:var(--ac);vertical-align:middle;margin-left:3px;animation:bl 1s step-end infinite}@keyframes bl{50%{opacity:0}}
 
-@media(max-width:880px){
-  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;transform:translateX(-105%);transition:transform .25s;box-shadow:0 0 30px rgba(0,0,0,.15)}
-  .sidebar.on{transform:translateX(0)}
-  .hbtn{display:grid;place-items:center}
-  main{padding:16px 14px 60px}
-  .stats{grid-template-columns:repeat(2,1fr)}
-}
+/* lock pattern overlay */
+#lockov{position:fixed;inset:0;z-index:170;background:linear-gradient(160deg,#e4f0ff,#f5f9ff 50%,#e1edff);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#lockov.show{display:flex}
+.lkicon{width:64px;height:64px;border-radius:50%;background:var(--soft);color:#2f6fd0;display:grid;place-items:center;font-size:24px;margin-bottom:14px}
+#lockov h2{font-size:20px;font-weight:800;margin-bottom:6px}
+#lockov p{font-size:12px;color:var(--mut);max-width:280px;line-height:1.6;margin-bottom:22px}
+.lkbox{position:relative;width:260px;height:260px;max-width:70vw;max-height:70vw}
+.lksvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lksvg line{stroke:var(--ac);stroke-width:4;stroke-linecap:round}
+.lkgrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);touch-action:none}
+.lkdot{display:flex;align-items:center;justify-content:center}
+.lkdot i{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #bcd8fa;display:block;transition:.15s}
+.lkdot.on i{background:var(--ac);border-color:var(--ac);transform:scale(1.15);box-shadow:0 0 0 8px rgba(91,155,239,.18)}
+.lkerr{color:#d2566b;font-size:12px;font-weight:700;margin-top:16px;min-height:16px}
+.lknote{font-size:10px;color:var(--mut);max-width:280px;line-height:1.6;margin-top:14px}
+
+/* ===== smooth + logo ===== */
+body{background:#eaf3fe;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;top:0;left:0;width:auto;height:auto;border-radius:0;filter:none;opacity:1;z-index:0;pointer-events:none;background:radial-gradient(circle at 0 0,#b9d8fb,transparent 45%),radial-gradient(circle at 100% 100%,#cfe3fd,transparent 50%),linear-gradient(160deg,#e4f0ff,#f5f9ff 50%,#e1edff)}
+body:after{display:none}
+button{touch-action:manipulation;transition:transform .12s ease}
+.g,.ib,#nav,#sh{backdrop-filter:none;-webkit-backdrop-filter:none}
+.g{background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,255,255,.66));box-shadow:0 4px 14px rgba(91,155,239,.12)}
+#nav{background:rgba(255,255,255,.95)}
+.hero{box-shadow:0 6px 18px rgba(91,155,239,.16)}
+@keyframes ld{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.ld{width:100%;transform-origin:left}
+.hold .f{width:100%;transform:scaleX(0);transform-origin:left;will-change:transform}
+#ov{display:flex!important;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+#ov.on{opacity:1;visibility:visible}
+#sh{transform:translate3d(0,100%,0);transition:transform .32s cubic-bezier(.2,.8,.2,1);will-change:transform}
+#ov.on #sh{transform:translate3d(0,0,0)}
+.scr.on{animation-duration:.2s}
+img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
+.lg{height:42px;width:auto;max-width:70px;object-fit:contain;display:block;flex:none}
+.hrow img{width:auto;height:64px;max-width:110px;object-fit:contain}
+.wl img{width:auto;height:120px;max-width:70%;object-fit:contain}
+.wp>img{width:100%;height:100%;object-fit:cover}
+.onl{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.85);border:0;border-radius:99px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--ink);cursor:pointer;letter-spacing:0}
+.live{position:relative;width:8px;height:8px;border-radius:50%;background:#2ebd7b;display:inline-block}
+.live:after{content:"";position:absolute;inset:0;border-radius:50%;background:#2ebd7b;animation:pl 1.6s ease-out infinite}
+@keyframes pl{to{transform:scale(3);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+.ph{display:grid;place-items:center;color:var(--ac);font-size:34px}
+.hrow .ph{font-size:48px}.wl .ph{font-size:80px}
+@keyframes in{from{opacity:0}}
+body:before{transform:translateZ(0)}
+.live.off{background:#b7c7dc}.live.off:after{display:none}
+
+.bnr-wrap{margin:18px 0 6px;position:relative}
+.bnr-wrap.hide{display:none}
+.bnr{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:22px;gap:0;box-shadow:var(--sh);-webkit-overflow-scrolling:touch}
+.bnr::-webkit-scrollbar{display:none}
+.bnr .sl{flex:0 0 100%;scroll-snap-align:center;width:100%;aspect-ratio:16/8;object-fit:cover;background:var(--soft);display:block}
+.bnr .sl.load{display:grid;place-items:center;color:var(--ac);font-size:26px}
+.bdots{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.bdots span{width:6px;height:6px;border-radius:50%;background:#c5daf5;transition:.25s}
+.bdots span.on{width:18px;border-radius:4px;background:var(--ac)}
+
+.gwrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gcard{border-radius:17px;padding:13px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:7px;min-height:108px}
+.gcard .ic{width:36px;height:36px;border-radius:11px;background:var(--soft);display:grid;place-items:center;color:#2f6fd0;font-size:14px;flex:none}
+.gcard b{font-size:12.5px;line-height:1.25}
+.gcard small{font-size:10.5px;color:var(--mut);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gcard .tag{align-self:flex-start;font-size:9px;font-weight:800;color:#2f6fd0;background:var(--soft);padding:3px 8px;border-radius:7px;display:flex;align-items:center;gap:4px}
+.dllink{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.desc{font-size:12px;line-height:1.7;color:#3d5a80;background:#fff;border:1px solid #d5e5fa;border-radius:14px;padding:12px;margin:4px 0 12px}
+
+/* ===== dark mode ===== */
 @media(prefers-color-scheme:dark){
-  :root{--ink:#e7eef9;--mut:#8ea3c2;--ac:#5b9bef;--ac2:#4577b8;--soft:#1c2c47;--bd:rgba(255,255,255,.08);--sh:0 8px 24px rgba(0,0,0,.35)}
-  body{background:#0f1626}
-  body:before{background:radial-gradient(circle at 0 0,#1c2c47,transparent 45%),radial-gradient(circle at 100% 100%,#16233b,transparent 50%),linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
-  .g,.card,.itemcard,.stat,.logorow,.modal,.lcard{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
-  .sidebar{background:rgba(18,26,42,.92)}
-  .fld input,.fld textarea,.iconbtn,.hbtn,.lnote{background:#182238;border-color:#22314f;color:var(--ink)}
-  #toast{background:#182238;border-color:#22314f;color:var(--ink)}
+:root{--ink:#e7eef9;--mut:#8ea3c2;--ac:#5b9bef;--ac2:#4577b8;--soft:#1c2c47;--gl:rgba(24,33,54,.6);--bd:rgba(255,255,255,.08);--sh:0 8px 24px rgba(0,0,0,.35)}
+body{background:#0f1626}
+body:before{background:radial-gradient(circle at 0 0,#1c2c47,transparent 45%),radial-gradient(circle at 100% 100%,#16233b,transparent 50%),linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
+.g{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
+#nav{background:rgba(18,26,42,.92)}
+#sh{background:rgba(15,22,36,.96);border-top-color:rgba(255,255,255,.06)}
+.hero{background:linear-gradient(135deg,rgba(40,60,95,.9),rgba(28,44,72,.9))}
+.hero:before{background:rgba(255,255,255,.06)}
+.lb,.hero p,.hrow div{color:#9db8e0}
+.av{background:#182238;border-color:#22314f}
+.in,.term,.cab p,.desc{background:#182238;border-color:#22314f;color:var(--ink)}
+.k,.pb2{background:#182238;color:var(--ink)}
+.pb2{border-color:#2c3e5f}
+.k{border:1px solid #22314f}
+.ai{background:var(--gl);border-color:var(--bd)}
+.ai.on{background:#22314f}
+#toast{background:#182238;border-color:#22314f;color:var(--ink)}
+#ws{background:#0f1626}
+#lockov{background:linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
+.lkdot i{background:#182238;border-color:#2c3e5f}
+.onl{background:rgba(24,33,54,.85)}
+.chip{color:var(--ink)}
+input[type=range]{accent-color:var(--ac)}
 }
 </style>
 </head>
 <body>
 
-<div id="toast"></div>
-
-<!-- LOGIN -->
-<div id="login">
-  <div class="lcard g">
-    <img class="lg" id="loginLogo" data-logo="tkj" alt="TKJ">
-    <h1>Admin Dashboard</h1>
-    <p>TKJ SMKN 2 Tembilahan</p>
-    <div class="fld"><label>Email</label><input type="email" id="em" placeholder="admin@sekolah.sch.id" autocomplete="username"></div>
-    <div class="fld"><label>Password</label><input type="password" id="pw" placeholder="••••••••" autocomplete="current-password"></div>
-    <div class="err" id="lerr"></div>
-    <button class="pb" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
-    <div class="lnote">Belum punya akun admin? Buat sekali di <b>Firebase Console → Authentication → Users → Add user</b> (email &amp; password), lalu login di sini. Dashboard ini tidak bisa dipakai tanpa akun tersebut — ini yang membuat panel admin aman dari pengunjung biasa.</div>
+<!-- SPLASH -->
+<div id="ws">
+  <div class="wp"><img data-logo="gedung" alt="">
+    <div class="wl"><img data-logo="tkj" data-ph="fa-network-wired" alt="TKJ"><b>TKJ SMKN 2</b><small>Tembilahan • Indragiri Hilir</small></div></div>
+  <div class="wb">
+    <h2>WELCOME</h2>
+    <p>Portal resmi Jurusan Teknik Jaringan Komputer.<br>Tools, materi, &amp; informasi TKJ ada di sini.</p>
+    <button class="pb" onclick="enterApp()"><i class="fa-solid fa-rocket"></i>Masuk Aplikasi</button>
+    <i class="cp">© 2026 SMKN 2 Tembilahan</i><div class="ld"></div>
   </div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dash">
-  <aside class="sidebar g" id="sidebar">
-    <div class="brand"><img data-logo="tkj" alt="TKJ"><div><b>TKJ SMKN 2</b><small>Admin Panel</small></div></div>
-    <button class="nav-i on" data-p="ringkasan" onclick="goPane('ringkasan')"><i class="fa-solid fa-gauge"></i>Ringkasan</button>
-    <button class="nav-i" data-p="tools" onclick="goPane('tools')"><i class="fa-solid fa-toolbox"></i>Tools</button>
-    <button class="nav-i" data-p="materi" onclick="goPane('materi')"><i class="fa-solid fa-book"></i>Materi</button>
-    <button class="nav-i" data-p="fasilitas" onclick="goPane('fasilitas')"><i class="fa-solid fa-building"></i>Fasilitas</button>
-    <button class="nav-i" data-p="kontak" onclick="goPane('kontak')"><i class="fa-solid fa-envelope"></i>Kontak</button>
-    <button class="nav-i" data-p="banner" onclick="goPane('banner')"><i class="fa-solid fa-images"></i>Banner</button>
-    <button class="nav-i" data-p="apk" onclick="goPane('apk')"><i class="fa-brands fa-android"></i>APK</button>
-    <button class="nav-i" data-p="kunci" onclick="goPane('kunci')"><i class="fa-solid fa-lock"></i>Kunci Pengguna</button>
-    <div class="nav-sp"></div>
-    <button class="logout" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Keluar</button>
-  </aside>
-
-  <main>
-    <div class="topbar">
-      <button class="hbtn g" onclick="$('sidebar').classList.toggle('on')"><i class="fa-solid fa-bars"></i></button>
-      <h1 id="paneTitle">Ringkasan</h1>
-    </div>
-
-    <!-- RINGKASAN -->
-    <section class="pane on" id="p-ringkasan">
-      <div class="logorow g">
-        <img data-logo="smkn" alt="SMKN"><img data-logo="tkj" alt="TKJ">
-        <div><b>SMKN 2 Tembilahan — Jurusan TKJ</b><small>Data di bawah tersambung realtime lewat Firebase. Perubahan di sini langsung tampil di aplikasi siswa.</small></div>
-      </div>
-      <div class="stats">
-        <div class="stat g"><i class="fa-solid fa-circle-nodes"></i><b id="st-online">–</b><small>Online sekarang</small></div>
-        <div class="stat g"><i class="fa-solid fa-toolbox"></i><b id="st-tools">–</b><small>Tools</small></div>
-        <div class="stat g"><i class="fa-solid fa-book"></i><b id="st-materi">–</b><small>Materi</small></div>
-        <div class="stat g"><i class="fa-solid fa-lock"></i><b id="st-locks">–</b><small>Perangkat terkunci</small></div>
-      </div>
-      <div class="card g">
-        <b style="font-size:13px">Status koneksi</b>
-        <p style="font-size:12px;color:var(--mut);margin-top:6px" id="fbStatusTxt">Menyambung ke Firebase…</p>
-      </div>
-    </section>
-
-    <!-- TOOLS -->
-    <section class="pane" id="p-tools">
-      <div class="sech"><h2>Tools Wajib</h2><button class="addb" onclick="openItemModal('tools',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
-      <div id="list-tools"></div>
-    </section>
-
-    <!-- MATERI -->
-    <section class="pane" id="p-materi">
-      <div class="sech"><h2>Materi</h2><button class="addb" onclick="openItemModal('materi',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
-      <div id="list-materi"></div>
-    </section>
-
-    <!-- FASILITAS -->
-    <section class="pane" id="p-fasilitas">
-      <div class="sech"><h2>Fasilitas Lab</h2><button class="addb" onclick="openItemModal('fasilitas',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
-      <div id="list-fasilitas"></div>
-    </section>
-
-    <!-- KONTAK -->
-    <section class="pane" id="p-kontak">
-      <div class="sech"><h2>Kontak</h2><button class="addb" onclick="openItemModal('kontak',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
-      <div id="list-kontak"></div>
-    </section>
-
-    <!-- BANNER -->
-    <section class="pane" id="p-banner">
-      <div class="sech"><h2>Banner Beranda</h2><button class="addb" onclick="openBannerModal(null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
-      <p style="font-size:11.5px;color:var(--mut);margin-bottom:12px">Masukkan URL gambar (hasil upload ke Google Drive/ImgBB/dll dengan link publik). Kosongkan semua supaya app kembali memakai banner1.jpeg dst dari server.</p>
-      <div id="list-banner"></div>
-    </section>
-
-    <!-- APK -->
-    <section class="pane" id="p-apk">
-      <div class="sech"><h2>Aplikasi Android (APK)</h2></div>
-      <div class="card g">
-        <div class="fld"><label>URL file APK</label><input id="apkUrl" placeholder="tkj.apk atau https://.../TKJ.apk"></div>
-        <div class="fld"><label>Versi</label><input id="apkVer" placeholder="2.0.1"></div>
-        <button class="pb" onclick="saveApk()"><i class="fa-solid fa-floppy-disk"></i>Simpan</button>
-      </div>
-    </section>
-
-    <!-- KUNCI -->
-    <section class="pane" id="p-kunci">
-      <div class="sech"><h2>Pola Kunci Perangkat</h2></div>
-      <p style="font-size:11.5px;color:var(--mut);margin-bottom:12px">Daftar perangkat yang sudah membuat pola kunci. Hapus salah satu supaya perangkat itu diminta membuat pola baru saat dibuka lagi (misal siswa lupa polanya).</p>
-      <div id="list-kunci"></div>
-    </section>
-  </main>
+<!-- LOCK PATTERN -->
+<div id="lockov">
+  <div class="lkicon"><i class="fa-solid fa-lock"></i></div>
+  <h2 id="lktitle">Buat Pola Kunci</h2>
+  <p id="lksub">Silakan buat pola kunci kamu sendiri untuk mengunci akses aplikasi ini.</p>
+  <div class="lkbox">
+    <svg class="lksvg" id="lksvg" viewBox="0 0 260 260"></svg>
+    <div class="lkgrid" id="lkgrid"></div>
+  </div>
+  <div class="lkerr" id="lkerr"></div>
+  <p class="lknote">Catatan: pola ini hanya untuk personalisasi tampilan di perangkat ini, bukan enkripsi. Jangan gunakan untuk mengunci data yang sifatnya rahasia/sensitif.</p>
 </div>
 
-<!-- MODAL: item editor (tools/materi/fasilitas/kontak) -->
-<div id="modal-ov"><div class="modal g" id="modalBox"></div></div>
+<div id="toast"></div>
+<div id="ov" onclick="if(event.target===this)closeSheet()"><div id="sh"><div class="hd"></div><h3 id="st"></h3><div id="sb"></div></div></div>
 
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getDatabase, ref, onValue, get, push, set, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+<div id="app">
 
-/* Samakan persis dengan FIREBASE_URL di index.html */
-const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
+<!-- HOME -->
+<section class="scr on" id="s-home">
+  <div class="top">
+    <div class="who"><img class="lg" data-logo="tkj" data-ph="fa-network-wired" alt="TKJ"><div><small>Selamat datang,</small><b>TKJ SMKN 2</b></div></div>
+    <button class="ib" onclick="openConsole()" aria-label="Console"><i class="fa-solid fa-terminal"></i><span class="dot"></span></button>
+    <button class="ib" onclick="toast('Tidak ada notifikasi baru')" aria-label="Notifikasi"><i class="fa-regular fa-bell"></i></button>
+  </div>
+  <div class="hero">
+    <div class="lb" style="display:flex;justify-content:space-between;align-items:center">SMKN 2 TEMBILAHAN<button class="onl" onclick="openOnline()" aria-label="User online"><i class="live"></i><b id="on-n">1</b> online</button></div>
+    <h2>Teknik Jaringan Komputer</h2>
+    <p>Tembilahan • Indragiri Hilir • Riau</p>
+    <div class="hrow"><img data-logo="smkn" data-ph="fa-school" alt="SMKN"><div>SISWA AKTIF<b>350+</b></div></div>
+    <div class="acts">
+      <button class="act" onclick="goSec('tools')"><i class="fa-solid fa-toolbox"></i>Tools</button>
+      <button class="act" onclick="goSec('kurikulum')"><i class="fa-solid fa-book"></i>Materi</button>
+      <button class="act" onclick="goSec('fasilitas')"><i class="fa-solid fa-building"></i>Fasilitas</button>
+      <button class="act" onclick="goSec('kontak')"><i class="fa-solid fa-envelope"></i>Kontak</button>
+    </div>
+  </div>
 
+  <div class="bnr-wrap hide" id="bnr-wrap"><div class="bnr" id="bnr"></div><div class="bdots" id="bdots"></div></div>
+
+  <div class="sh"><span>Tools Interaktif</span><a onclick="openConsole()">Buka</a></div>
+  <div class="chips">
+    <button class="chip g" onclick="go('send')"><i class="fa-solid fa-calculator"></i>Subnet</button>
+    <button class="chip g" onclick="openCable()"><i class="fa-solid fa-ethernet"></i>Kabel</button>
+    <button class="chip g" onclick="openPing()"><i class="fa-solid fa-satellite-dish"></i>Ping</button>
+    <button class="chip g add" onclick="openConsole()"><i class="fa-solid fa-terminal"></i></button>
+    <span style="font-size:11px;font-weight:700;align-self:center;padding-left:2px;color:var(--mut)">Console</span>
+  </div>
+
+  <div class="sh"><span>Aktivitas</span><a onclick="go('hist')">Lihat semua</a></div>
+  <div class="lw g" id="rl"></div>
+
+  <div class="sh" id="tools"><span>10 Tools Wajib</span><a onclick="listSheet('Tools Wajib','Tool')">Semua</a></div>
+  <div id="l-tool"></div>
+
+  <div class="sh" id="kurikulum"><span>Materi</span><a onclick="listSheet('Materi','Materi')">Semua</a></div>
+  <div id="l-mat"></div>
+
+  <div class="sh" id="fasilitas"><span>Fasilitas Lab</span><a onclick="listSheet('Fasilitas Lab','Fasilitas')">Semua</a></div>
+  <div class="lw g" id="l-fas"></div>
+
+  <div class="sh" id="kontak"><span>Kontak</span></div>
+  <div class="lw g" id="l-kon"></div>
+
+  <div class="apk g" onclick="openApk()">
+    <div class="ic"><i class="fa-brands fa-android"></i></div>
+    <div><b>Aplikasi Android</b><small>Unduh APK • v2.0.0</small></div>
+    <button class="pb" onclick="event.stopPropagation();openApk()"><i class="fa-solid fa-download"></i>Unduh</button>
+  </div>
+
+  <button class="cb g" onclick="openCreator()"><i class="fa-solid fa-code"></i>Created By<i class="fa-solid fa-arrow-up"></i></button>
+  <div class="ver" id="verTxt">v2.0.1 • PWA Ready • Offline Support</div>
+</section>
+
+<!-- SUBNET -->
+<section class="scr" id="s-send">
+  <div class="top"><button class="ib" onclick="go('home')"><i class="fa-solid fa-arrow-left"></i></button><h1>Kalkulator Subnet</h1><button class="ib" onclick="toast('Ketik IP, geser CIDR, lalu tahan tombol hitung')"><i class="fa-solid fa-circle-info"></i></button></div>
+  <div class="hero" style="padding:14px 16px">
+    <div class="lb" style="display:flex;justify-content:space-between">HITUNG DARI<button onclick="resetSub()" style="background:none;border:0;color:#2f6fd0;cursor:pointer"><i class="fa-solid fa-rotate-left"></i></button></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+      <div class="av"><i class="fa-solid fa-network-wired"></i></div>
+      <div style="flex:1;font-size:12px;font-weight:700">Jaringan Lab<br><span style="font-weight:500;color:#3d6ea8" id="sub-mask">255.255.255.0</span></div>
+      <span class="g" style="padding:5px 10px;border-radius:9px;font-size:11px;font-weight:700" id="sub-pill">/24 · 254 host</span>
+    </div>
+  </div>
+  <div class="amt" id="amt">192.168.1.1</div>
+  <div class="lim"><span>Prefix CIDR</span><span id="lim-v">/24</span></div>
+  <input type="range" id="cidr" min="8" max="30" value="24" oninput="setCidr(this.value)">
+  <div class="sh" style="margin-top:14px"><span>Preset IP</span><a onclick="resetSub()">Reset</a></div>
+  <div class="chips" id="presets"></div>
+  <div class="pad" id="pad"></div>
+  <button class="hold" id="hold"><div class="f" id="hf"></div><span><i class="fa-solid fa-fingerprint"></i> Tahan untuk hitung</span></button>
+</section>
+
+<!-- CARDS -->
+<section class="scr" id="s-cards">
+  <div class="top"><button class="ib" onclick="go('home')"><i class="fa-solid fa-arrow-left"></i></button><h1>Kartu</h1><button class="ib" onclick="toast('Tidak ada notifikasi baru')"><i class="fa-regular fa-bell"></i></button></div>
+  <div class="vc" onclick="copyNo()"><span class="tg">TKJ</span><h2>Siswa<br>TKJ</h2><small style="margin-top:8px"><i class="fa-solid fa-wifi"></i> Kartu pelajar</small>
+    <div class="no"><span><small>Berlaku</small>12/30</span><span id="cno">7820 5500 0835 3501</span></div></div>
+  <div class="sh" style="margin-top:34px"><span>Aksi Cepat</span></div>
+  <div class="qa">
+    <button class="qb g" onclick="go('send')"><i class="fa-solid fa-calculator"></i>Subnet</button>
+    <button class="qb g" onclick="openCable()"><i class="fa-solid fa-ethernet"></i>Kabel</button>
+    <button class="qb g" onclick="openPing()"><i class="fa-solid fa-satellite-dish"></i>Ping</button>
+    <button class="qb g" onclick="openConsole()"><i class="fa-solid fa-terminal"></i>Console</button>
+    <button class="qb g" onclick="listSheet('Materi','Materi')"><i class="fa-solid fa-book"></i>Materi</button>
+    <button class="qb g" onclick="listSheet('Fasilitas Lab','Fasilitas')"><i class="fa-solid fa-building"></i>Fasilitas</button>
+    <button class="qb g" onclick="listSheet('Kontak','Kontak')"><i class="fa-solid fa-envelope"></i>Kontak</button>
+    <button class="qb g" onclick="listSheet('Tools Wajib','Tool')"><i class="fa-solid fa-toolbox"></i>Tools</button>
+  </div>
+  <button class="pb" style="height:60px;margin-top:16px;border-radius:20px" onclick="openApk()"><i class="fa-brands fa-android"></i> Unduh APK Android</button>
+  <button class="pb2" style="margin-top:10px;border-radius:20px" onclick="installApp()"><i class="fa-solid fa-download"></i> Install sebagai PWA</button>
+</section>
+
+<!-- HISTORY -->
+<section class="scr" id="s-hist">
+  <div class="top"><button class="ib" onclick="go('home')"><i class="fa-solid fa-arrow-left"></i></button><h1>Riwayat</h1><button class="ib" onclick="clearHist()"><i class="fa-solid fa-trash"></i></button></div>
+  <div class="lw g" id="hl"></div>
+</section>
+
+<!-- SEARCH -->
+<section class="scr" id="s-search">
+  <div class="top"><button class="ib" onclick="go('home')"><i class="fa-solid fa-arrow-left"></i></button><h1>Cari</h1><span style="width:38px"></span></div>
+  <input class="in" id="q" placeholder="Cari tools, materi, fasilitas, kontak..." oninput="clearTimeout(sd);sd=setTimeout(doSearch,80)" style="font-family:Urbanist">
+  <div class="lw g" id="sr"></div>
+</section>
+
+<nav id="nav" class="g">
+  <button class="ni on" data-n="home" onclick="go('home')"><i class="fa-solid fa-house"></i>Home</button>
+  <button class="ni" data-n="cards" onclick="go('cards')"><i class="fa-solid fa-credit-card"></i>Kartu</button>
+  <button class="fab" onclick="openConsole()" aria-label="Console"><i class="fa-solid fa-terminal"></i></button>
+  <button class="ni" data-n="hist" onclick="go('hist')"><i class="fa-solid fa-clock-rotate-left"></i>Riwayat</button>
+  <button class="ni" data-n="search" onclick="go('search')"><i class="fa-solid fa-magnifying-glass"></i>Cari</button>
+</nav>
+</div>
+
+<script>
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const SETS={
+Tool:[
+['Packet Tracer','fa-diagram-project','Simulator jaringan resmi Cisco untuk latihan CCNA','https://www.netacad.com/courses/packet-tracer','Software simulasi jaringan buatan Cisco. Dipakai untuk merancang, mengonfigurasi, dan menguji topologi router & switch tanpa perangkat fisik. Wajib untuk latihan CCNA. Perlu akun gratis Cisco Networking Academy (NetAcad) untuk mengunduh.'],
+['GNS3','fa-network-wired','Simulator jaringan advanced, bisa jalankan OS asli','https://www.gns3.com/software/download','Simulator jaringan tingkat lanjut yang bisa menjalankan image OS router/firewall asli (Cisco IOS, MikroTik, dsb), lebih dekat ke kondisi nyata dibanding Packet Tracer. Cocok untuk latihan topologi kompleks.'],
+['Wireshark','fa-fish','Menangkap & menganalisis paket data jaringan','https://www.wireshark.org/download.html','Packet analyzer paling populer di dunia. Menangkap trafik jaringan secara langsung untuk melihat isi paket, mendiagnosis masalah koneksi, dan belajar protokol seperti TCP/IP, HTTP, dan DNS.'],
+['Nmap','fa-satellite-dish','Port scanning & audit keamanan jaringan','https://nmap.org/download.html','Tool pemindai jaringan untuk menemukan perangkat aktif, port terbuka, dan celah keamanan. Dipakai luas dalam praktik keamanan jaringan dan pengujian penetrasi dasar.'],
+['PuTTY','fa-terminal','Klien SSH / Telnet untuk akses jarak jauh','https://www.putty.org/','Klien SSH dan Telnet ringan untuk mengakses dan mengonfigurasi router, switch, atau server dari jarak jauh lewat command line.'],
+['Winbox','fa-server','Aplikasi resmi konfigurasi router MikroTik','https://mikrotik.com/download','Aplikasi GUI resmi MikroTik untuk mengonfigurasi RouterOS: routing, firewall, hotspot, dan VLAN, tanpa perlu hafal semua perintah command line.'],
+['VirtualBox','fa-cube','Virtualisasi untuk simulasi server & OS lab','https://www.virtualbox.org/wiki/Downloads','Software virtualisasi gratis untuk menjalankan sistem operasi lain (Linux server, Windows Server, dsb) di dalam komputer, dipakai untuk praktik server tanpa perangkat tambahan.'],
+['Advanced IP Scanner','fa-magnifying-glass','Scan cepat perangkat yang terhubung di LAN','https://www.advanced-ip-scanner.com/','Tool ringan untuk memindai semua perangkat yang terhubung dalam satu jaringan LAN, menampilkan IP, MAC address, dan nama perangkat dengan cepat.'],
+['The Dude','fa-chart-line','Monitoring jaringan otomatis dari MikroTik','https://mikrotik.com/thedude','Software monitoring jaringan gratis dari MikroTik. Memetakan perangkat secara otomatis dan memberi notifikasi saat ada perangkat yang down.'],
+['FileZilla','fa-folder-tree','Klien FTP / SFTP untuk transfer file ke server','https://filezilla-project.org/download.php','Klien FTP/SFTP untuk mengunggah dan mengunduh file ke server jarak jauh, sering dipakai saat mengelola web server di lab.']],
+Materi:[
+['Subnetting & VLSM','fa-calculator','Membagi jaringan IPv4 sesuai kebutuhan host',null,'Subnetting adalah teknik membagi satu jaringan besar menjadi beberapa jaringan kecil (subnet) agar alokasi IP lebih efisien dan aman. VLSM (Variable Length Subnet Mask) memungkinkan tiap subnet punya ukuran berbeda sesuai jumlah host yang dibutuhkan, sehingga alamat IP tidak terbuang sia-sia. Materi ini dasar wajib sebelum praktik konfigurasi router, dan bisa langsung dicoba di menu Kalkulator Subnet pada aplikasi ini.'],
+['Routing Static & Dynamic','fa-route','RIP, OSPF, dan konfigurasi rute statis',null,'Routing adalah proses menentukan jalur data antar jaringan. Static routing diatur manual oleh admin dan cocok untuk jaringan kecil, sedangkan dynamic routing (RIP, OSPF, EIGRP) membiarkan router saling bertukar informasi rute secara otomatis, cocok untuk jaringan besar dan sering berubah.'],
+['VLAN & Trunking','fa-sitemap','Segmentasi jaringan dalam satu switch fisik',null,'VLAN (Virtual LAN) memisahkan satu switch fisik menjadi beberapa jaringan logis yang terpisah, meningkatkan keamanan dan mengurangi broadcast domain. Trunking menghubungkan beberapa VLAN antar switch lewat satu kabel menggunakan protokol seperti 802.1Q.'],
+['Konfigurasi MikroTik','fa-server','RouterOS: firewall, hotspot, dan bandwidth','https://mikrotik.com/download','MikroTik RouterOS adalah sistem operasi router yang banyak dipakai di Indonesia. Materi ini mencakup instalasi firewall, hotspot login, manajemen bandwidth, dan NAT, biasanya dipraktikkan lewat aplikasi Winbox.'],
+['Keamanan Jaringan','fa-shield-halved','Firewall, hardening, dan deteksi ancaman',null,'Mencakup dasar keamanan jaringan: konfigurasi firewall, menutup port yang tidak perlu, autentikasi yang kuat, dan cara mendeteksi trafik mencurigakan menggunakan tool seperti Wireshark atau Nmap.']],
+Fasilitas:[['Lab Komputer & PC','fa-desktop','PC high-spec & jaringan dasar'],['Cisco & MikroTik','fa-server','Router, Switch, & Rack Server'],['Fiber Optic & Splicer','fa-wave-square','Fusion Splicer & OTDR']],
+Kontak:[['Alamat Sekolah','fa-location-dot','Jl. Pendidikan / Parit 10, Tembilahan Hulu'],['Email','fa-envelope','tkj@smkn2tembilahan.sch.id'],['Telepon / WhatsApp','fa-phone','+62 812-7654-3210']]};
+let APK='tkj.apk';
+/* Isi dengan URL Firebase Realtime Database agar online & pola kunci tersimpan permanen di semua HP/laptop.
+   Contoh: 'https://nama-project-default-rtdb.asia-southeast1.firebasedatabase.app'
+
+   PENTING — Firebase Security Rules:
+   Database ini diakses langsung dari browser sehingga URL-nya publik. Supaya orang lain tidak bisa
+   membaca hash pola kunci, merusak data presence, atau mengubah konten (Tools/Materi/dst) lewat
+   Admin Dashboard, aktifkan DUA metode Sign-in di Firebase Console (Authentication → Sign-in method):
+   "Anonymous" (dipakai app ini) dan "Email/Password" (dipakai admin.html). Lalu buat SATU akun admin
+   di Authentication → Users → Add user. Set Rules seperti ini:
+   {
+     "rules": {
+       "content": {
+         ".read": true,
+         ".write": "auth != null && auth.token.firebase.sign_in_provider === 'password'"
+       },
+       "locks": {
+         "$dev": { ".read": "auth != null", ".write": "auth != null" }
+       },
+       "presence": {
+         "$dev": { ".read": "auth != null", ".write": "auth != null" }
+       }
+     }
+   }
+   Rules di atas memastikan: siapa pun (termasuk pengunjung anonim app ini) boleh MEMBACA konten,
+   tapi hanya akun yang login pakai Email/Password lewat admin.html yang boleh MENULIS/mengubahnya.
+   Kode di bawah sudah mencoba sign-in anonymous otomatis lewat startFB()/getDb(); kalau Rules di atas
+   belum diaktifkan, aplikasi tetap jalan dalam mode lokal (fallback), dan admin.html tidak akan bisa
+   menyimpan perubahan sampai kamu mengaktifkannya. */
+const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
+let deferred=null,hist=[],pi=null;
+try{hist=JSON.parse(localStorage.getItem('tkjh')||'[]')}catch(e){}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e});
+
+/* ===== identitas perangkat (dipakai untuk pola kunci & hitungan online) ===== */
+const ME=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const gid=(st,k,fb)=>{try{let d=st.getItem(k);if(!d){d=Math.random().toString(36).slice(2,10);st.setItem(k,d)}return d}catch(e){return fb}};
+const DEV=gid(localStorage,'tkj_dev',ME),TAB=Math.random().toString(36).slice(2,8);
+
+/* ===== koneksi firebase bersama (dipakai lock & online) ===== */
+let fbdb=null,fbInitP=null;
+function getDb(){
+  if(fbdb)return Promise.resolve(fbdb);
+  if(!FIREBASE_URL)return Promise.resolve(null);
+  if(fbInitP)return fbInitP;
+  fbInitP=(async()=>{
+    try{
+      const V='https://www.gstatic.com/firebasejs/10.12.2/';
+      const[A,D,Au]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js'),import(V+'firebase-auth.js').catch(()=>null)]);
+      const app=A.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')});
+      let uid=null;
+      if(Au){
+        try{
+          const auth=Au.getAuth(app);
+          const cred=await Au.signInAnonymously(auth);
+          uid=cred.user.uid;
+        }catch(e){/* Anonymous Auth belum diaktifkan di Firebase Console; lanjut tanpa auth */}
+      }
+      fbdb={d:D,db:D.getDatabase(app),uid};
+      return fbdb;
+    }catch(e){return null}
+  })();
+  return fbInitP;
+}
+
+/* ===== pola kunci: wajib dibuat sekali per perangkat, lalu wajib dimasukkan tiap buka ===== */
+let lkMode='create',lkPts=[],lkDown=false,lkFirst=null,lkStored=null,lkAttached=false;
+function buildLkGrid(){const g=$('lkgrid');if(g.children.length)return;g.innerHTML=Array.from({length:9},(_,i)=>`<div class="lkdot" data-i="${i}"><i></i></div>`).join('')}
+function lkCenters(){const b=$('lkgrid').getBoundingClientRect();return[...document.querySelectorAll('.lkdot')].map(d=>{const r=d.getBoundingClientRect();return{x:r.left-b.left+r.width/2,y:r.top-b.top+r.height/2}})}
+function lkReset(){lkPts=[];document.querySelectorAll('.lkdot').forEach(d=>d.classList.remove('on'));$('lksvg').innerHTML=''}
+function lkDrawLines(){const c=lkCenters();$('lksvg').innerHTML=lkPts.slice(1).map((idx,j)=>{const a=c[lkPts[j]],b=c[idx];return`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`}).join('')}
+function lkAdd(i){if(lkPts.includes(i))return;lkPts.push(i);document.querySelector(`.lkdot[data-i="${i}"]`).classList.add('on');lkDrawLines();if(navigator.vibrate)navigator.vibrate(8)}
+function lkNearest(x,y){const c=lkCenters(),b=$('lkgrid').getBoundingClientRect(),lx=x-b.left,ly=y-b.top;let best=-1,bd=34*34;c.forEach((p,i)=>{const d=(p.x-lx)**2+(p.y-ly)**2;if(d<bd){bd=d;best=i}});return best}
+function lkStart(e){lkReset();lkDown=true;lkMove(e)}
+function lkMove(e){if(!lkDown)return;const t=e.touches?e.touches[0]:e,i=lkNearest(t.clientX,t.clientY);if(i>-1)lkAdd(i)}
+function lkEnd(){if(!lkDown)return;lkDown=false;lkSubmit()}
+function lkAttach(){if(lkAttached)return;lkAttached=true;const g=$('lkgrid');
+ g.addEventListener('pointerdown',e=>{try{g.setPointerCapture(e.pointerId)}catch(x){}lkStart(e)});
+ g.addEventListener('pointermove',lkMove);g.addEventListener('pointerup',lkEnd);g.addEventListener('pointercancel',lkEnd)}
+function lkHash(arr){const s=arr.join('-');let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return(h>>>0).toString(36)}
+async function lkCheck(){
+  let local=null;try{local=localStorage.getItem('tkj_lk_'+DEV)}catch(e){}
+  const F=await getDb();
+  if(F){try{const snap=await F.d.get(F.d.ref(F.db,'locks/'+DEV));if(snap.exists())return snap.val().h}catch(e){}}
+  return local||null;
+}
+async function lkSave(h){
+  try{localStorage.setItem('tkj_lk_'+DEV,h)}catch(e){}
+  const F=await getDb();
+  if(F){try{await F.d.set(F.d.ref(F.db,'locks/'+DEV),{h,t:Date.now()})}catch(e){}}
+}
+async function lkSubmit(){
+  if(lkPts.length<4){$('lkerr').textContent='Pola minimal 4 titik, coba lagi.';setTimeout(lkReset,500);return}
+  $('lkerr').textContent='';
+  if(lkMode==='create'){
+    lkFirst=[...lkPts];lkMode='confirm';
+    $('lktitle').textContent='Ulangi Pola';$('lksub').textContent='Gambar ulang pola yang sama untuk konfirmasi.';
+    setTimeout(lkReset,250);return;
+  }
+  if(lkMode==='confirm'){
+    if(lkHash(lkPts)!==lkHash(lkFirst)){
+      $('lkerr').textContent='Pola tidak sama. Ulangi dari awal.';lkMode='create';lkFirst=null;
+      $('lktitle').textContent='Buat Pola Kunci';$('lksub').textContent='Silakan buat pola kunci kamu sendiri untuk mengunci akses aplikasi ini.';
+      setTimeout(lkReset,500);return;
+    }
+    await lkSave(lkHash(lkPts));lkClose();return;
+  }
+  if(lkMode==='verify'){
+    if(lkHash(lkPts)!==lkStored){
+      $('lkerr').textContent='Pola salah, coba lagi.';if(navigator.vibrate)navigator.vibrate(80);
+      setTimeout(lkReset,500);return;
+    }
+    lkClose();
+  }
+}
+function lkClose(){$('lockov').classList.remove('show')}
+async function initLock(){
+  buildLkGrid();lkAttach();
+  $('lockov').classList.add('show');
+  $('lkerr').textContent='Memeriksa…';
+  const stored=await lkCheck();
+  $('lkerr').textContent='';
+  if(stored){
+    lkStored=stored;lkMode='verify';
+    $('lktitle').textContent='Masukkan Pola';$('lksub').textContent='Gambar pola kunci kamu untuk membuka aplikasi ini di perangkat ini.';
+  }else{
+    lkMode='create';lkFirst=null;
+    $('lktitle').textContent='Buat Pola Kunci';$('lksub').textContent='Silakan buat pola kunci kamu sendiri. Pola ini wajib dimasukkan lagi setiap kali membuka aplikasi di perangkat ini.';
+  }
+  lkReset();
+}
+
+/* splash flow */
+const drop=id=>setTimeout(()=>{const e=$(id);e&&e.remove()},700);
+function afterEnter(){initLock()}
+function enterApp(){$('ws').classList.add('gone');drop('ws');if(navigator.vibrate)navigator.vibrate([20,50,20]);toast('Welcome, technician! 🚀');afterEnter()}
+setTimeout(()=>{const w=$('ws');if(w&&!w.classList.contains('gone'))enterApp()},5000);
+
+/* base */
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)}
+function go(n){document.querySelectorAll('.scr').forEach(s=>s.classList.toggle('on',s.id==='s-'+n));document.querySelectorAll('.ni').forEach(b=>b.classList.toggle('on',b.dataset.n===n));scrollTo(0,0);if(n==='search')doSearch()}
+function goSec(id){go('home');setTimeout(()=>$(id).scrollIntoView({behavior:'smooth',block:'start'}),60)}
+function sheet(t,h){$('st').textContent=t;$('sb').innerHTML=h+'<button class="pb2" style="margin-top:14px" onclick="closeSheet()">Tutup</button>';$('ov').classList.add('on')}
+function closeSheet(){$('ov').classList.remove('on');clearInterval(pi)}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();if(e.key==='Enter'&&$('s-send').classList.contains('on')&&!$('ov').classList.contains('on'))calc()});
 
-const app=initializeApp({databaseURL:FIREBASE_URL});
-const auth=getAuth(app);
-const db=getDatabase(app);
-window._fb={ref,onValue,get,push,set,update,remove,db};
+/* history */
+const row=h=>`<div class="tx"><div class="ic"><i class="fa-solid ${h.ic}"></i></div><div><b>${esc(h.t)}</b><small>${esc(h.s)}</small></div><em>${esc(h.v)}<small>${h.time}</small></em></div>`;
+function renderHist(){$('rl').innerHTML=hist.length?hist.slice(0,3).map(row).join(''):'<div class="empty">Belum ada aktivitas. Coba hitung subnet atau jalankan ping.</div>';$('hl').innerHTML=hist.length?hist.map(row).join(''):'<div class="empty">Riwayat kosong.</div>'}
+function log(t,s,ic,v){hist.unshift({t,s,ic,v,time:new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})});hist=hist.slice(0,50);try{localStorage.setItem('tkjh',JSON.stringify(hist))}catch(e){}renderHist()}
+function clearHist(){hist=[];try{localStorage.removeItem('tkjh')}catch(e){}renderHist();toast('Riwayat dihapus')}
 
-/* ===== logo probe (sama seperti index.html) ===== */
+/* lists */
+const rowL=(x,ty,i,ar=1)=>`<div class="tx" onclick="info(SETS.${ty}[${i}],'${ty}')"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><div><b>${x[0]}</b><small>${x[2]}</small></div>${x[3]?'<span class="tag" style="margin-right:4px"><i class="fa-solid fa-download"></i></span>':''}${ar?'<i class="fa-solid fa-chevron-right"></i>':''}</div>`;
+const gcard=(x,ty,i)=>`<div class="gcard g" onclick="info(SETS.${ty}[${i}],'${ty}')"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><b>${x[0]}</b><small>${x[2]}</small>${x[3]?'<span class="tag"><i class="fa-solid fa-download"></i>Unduh</span>':''}</div>`;
+const fillGrid=(id,ty,n)=>$(id).innerHTML=`<div class="gwrap">${SETS[ty].slice(0,n).map((x,i)=>gcard(x,ty,i)).join('')}</div>`;
+const fill=(id,ty,n)=>$(id).innerHTML=SETS[ty].slice(0,n).map((x,i)=>rowL(x,ty,i)).join('');
+function renderAll(){fillGrid('l-tool','Tool',4);fillGrid('l-mat','Materi',4);fill('l-fas','Fasilitas',3);fill('l-kon','Kontak',3)}
+renderAll();
+function listSheet(t,ty){sheet(t,`<div class="gwrap">${SETS[ty].map((x,i)=>gcard(x,ty,i)).join('')}</div>`)}
+function info(x,ty){let a='';
+if(x[0]==='Email')a=`<a href="mailto:${x[2]}" class="pb dllink" style="margin-top:2px"><i class="fa-solid fa-paper-plane"></i>Kirim email</a>`;
+if(x[0].startsWith('Telepon'))a=`<a href="https://wa.me/6281276543210" target="_blank" rel="noopener" class="pb dllink" style="margin-top:2px"><i class="fa-brands fa-whatsapp"></i>Buka WhatsApp</a>`;
+if(x[3])a=`<a href="${x[3]}" target="_blank" rel="noopener" class="pb dllink" style="margin-top:2px"><i class="fa-solid fa-download"></i>Buka halaman unduh resmi</a>`;
+const body=x[4]||x[2];
+sheet(x[0],`<div class="tx" style="border:0;cursor:default;padding-top:0"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><div><b>${x[0]}</b><small>${ty}</small></div></div><div class="desc">${body}</div>${a}`);log(x[0],ty,x[1],'Dibuka')}
+function doSearch(){const q=$('q').value.toLowerCase().trim(),r=[];
+Object.entries(SETS).forEach(([ty,arr])=>arr.forEach((x,i)=>{if(!q||(x[0]+x[2]+ty).toLowerCase().includes(q))r.push(rowL(x,ty,i,0).replace('</div></div>',`</div><em>${ty}</em></div>`))}));
+$('sr').innerHTML=r.length?r.join(''):'<div class="empty">Tidak ada hasil. Coba kata kunci lain.</div>'}
+
+/* subnet */
+let ip='192.168.1.1',cidr=24;
+$('pad').innerHTML=['1','2','3','4','5','6','7','8','9','.','0','⌫'].map(k=>`<button class="k g" onclick="key('${k}')">${k}</button>`).join('');
+$('presets').innerHTML=['192.168.1.1','10.0.0.1','172.16.0.1','192.168.100.10'].map(p=>`<button class="chip g" onclick="ip='${p}';showIp()"><i class="fa-solid fa-network-wired"></i>${p}</button>`).join('');
+const showIp=()=>$('amt').textContent=ip||'0';
+function key(k){if(k==='⌫')ip=ip.slice(0,-1);else if(ip.length<15&&!(k==='.'&&(!ip||ip.endsWith('.')||ip.split('.').length>=4)))ip+=k;showIp()}
+const mask=c=>{const b='1'.repeat(c).padEnd(32,'0');return[0,8,16,24].map(i=>parseInt(b.substr(i,8),2)).join('.')};
+function setCidr(v){cidr=+v;const h=Math.pow(2,32-cidr),u=h>2?h-2:h;$('lim-v').textContent='/'+cidr;$('sub-pill').textContent=`/${cidr} · ${u.toLocaleString('id-ID')} host`;$('sub-mask').textContent=mask(cidr)}
+function resetSub(){ip='192.168.1.1';$('cidr').value=24;setCidr(24);showIp();toast('Direset ke 192.168.1.1/24')}
+function calc(){
+  const p=ip.split('.').map(Number);
+  if(p.length!==4||ip.endsWith('.')||p.some(n=>isNaN(n)||n<0||n>255))return toast('⚠️ IP tidak valid. Contoh: 192.168.1.1');
+  const bin=p.map(n=>n.toString(2).padStart(8,'0')).join(''),o=b=>[0,8,16,24].map(i=>parseInt(b.substr(i,8),2)).join('.');
+  const nb=bin.slice(0,cidr).padEnd(32,'0'),bb=bin.slice(0,cidr).padEnd(32,'1'),h=Math.pow(2,32-cidr),u=h>2?h-2:h;
+  const first=o(nb.slice(0,31)+(h>2?'1':'0')),last=o(bb.slice(0,31)+(h>2?'0':'1')),w=mask(cidr).split('.').map(x=>255-x).join('.');
+  const kv=(a,b)=>`<div class="kv"><span>${a}</span><b>${b}</b></div>`;
+  sheet('Hasil '+ip+'/'+cidr,kv('Netmask',mask(cidr))+kv('Wildcard',w)+kv('Network',o(nb))+kv('Host pertama',first)+kv('Host terakhir',last)+kv('Broadcast',o(bb))+kv('Total IP',h.toLocaleString('id-ID'))+kv('Host valid',u.toLocaleString('id-ID')));
+  log('Subnet '+ip+'/'+cidr,'Network '+o(nb),'fa-calculator','/'+cidr);if(navigator.vibrate)navigator.vibrate(20)}
+let ht;const hb=$('hold'),hf=$('hf');
+hb.addEventListener('pointerdown',e=>{e.preventDefault();hf.style.transition='transform .8s linear';hf.style.transform='scaleX(1)';ht=setTimeout(()=>{stopHold();calc()},800)});
+function stopHold(){clearTimeout(ht);hf.style.transition='transform .2s';hf.style.transform='scaleX(0)'}
+['pointerup','pointerleave','pointercancel'].forEach(ev=>hb.addEventListener(ev,stopHold));
+hb.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();calc()}});
+
+/* cable & ping */
+function openCable(){sheet('Panduan Kabel UTP',`<div class="cab"><p><b>Straight-Through</b><br>1 Putih-Oranye<br>2 Oranye<br>3 Putih-Hijau<br>4 Biru<br>5 Putih-Biru<br>6 Hijau<br>7 Putih-Cokelat<br>8 Cokelat</p><p><b>Crossover</b><br><b>Ujung 1:</b> P-Hijau, Hijau, P-Oranye, Biru, P-Biru, Oranye, P-Cokelat, Cokelat<br><br><b>Ujung 2:</b> P-Oranye, Oranye, P-Hijau, Biru, P-Biru, Hijau, P-Cokelat, Cokelat</p></div>`);log('Panduan Kabel UTP','Straight & crossover','fa-ethernet','Dibuka')}
+function openPing(){sheet('Simulator Ping',`<input class="in" id="pt" value="192.168.2.1" placeholder="IP / domain target"><button class="pb" onclick="runPing()"><i class="fa-solid fa-play"></i>Run Ping</button><div class="term" id="pc">Ready to transmit packets...</div>`)}
+function runPing(){const t=esc($('pt').value.trim()||'192.168.2.1'),c=$('pc');clearInterval(pi);c.innerHTML=`<span class="i">Pinging ${t} with 32 bytes of data:</span>\n`;let n=0;toast('Memulai ping ke '+t+'...');pi=setInterval(()=>{n++;c.innerHTML+=`<span class="o">Reply from ${t}: bytes=32 time=${(Math.random()*2+.3).toFixed(1)}ms TTL=64</span>\n`;c.scrollTop=c.scrollHeight;if(n>=4){clearInterval(pi);c.innerHTML+=`\n<b>Ping statistics: Sent = 4, Received = 4, Lost = 0 (0% loss)</b>`;log('Ping '+t,'4 paket diterima','fa-satellite-dish','0% loss')}},500)}
+
+/* console: 12 API */
+/* Catatan: NASA memakai DEMO_KEY (limit 30/jam, 50/hari per IP). Untuk pemakaian rame-rame di lab,
+   daftar API key gratis sendiri di https://api.nasa.gov lalu ganti DEMO_KEY di bawah. */
+const J=async u=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);try{const r=await fetch(u,{signal:c.signal});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}finally{clearTimeout(t)}},fm=n=>Number(n).toLocaleString('id-ID');
+const APIS=[
+['Bitcoin','fa-brands fa-bitcoin','Crypto',async()=>{const d=(await J('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,idr&include_24hr_change=true')).bitcoin;return{'BTC/USD':'$'+fm(d.usd),'BTC/IDR':'Rp '+fm(d.idr),'24h':d.usd_24h_change.toFixed(2)+'%'}}],
+['Cuaca','fa-solid fa-cloud-sun','Tembilahan',async()=>{const d=(await J('https://api.open-meteo.com/v1/forecast?latitude=-0.5&longitude=103.0&current_weather=true')).current_weather;return{lokasi:'Tembilahan',suhu:d.temperature+'°C',angin:d.windspeed+' km/h',kode:d.weathercode}}],
+['ISS','fa-solid fa-satellite','Posisi',async()=>{const d=await J('https://api.open-notify.org/iss-now.json');return{lat:d.iss_position.latitude,lon:d.iss_position.longitude,waktu:new Date(d.timestamp*1000).toLocaleString('id-ID')}}],
+['Kurs USD','fa-solid fa-dollar-sign','Rate',async()=>{const d=(await J('https://open.er-api.com/v6/latest/USD')).rates;return{USD_IDR:'Rp '+fm(d.IDR),USD_EUR:'€'+d.EUR.toFixed(4),USD_SGD:'S$'+d.SGD.toFixed(4)}}],
+['Negara','fa-solid fa-flag','Indonesia',async()=>{const d=(await J('https://restcountries.com/v3.1/name/indonesia'))[0];return{nama:d.name.common,ibukota:d.capital[0],populasi:fm(d.population),region:d.region}}],
+['NASA','fa-solid fa-rocket','APOD',async()=>{const d=await J('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');return{judul:d.title,tanggal:d.date,media:d.media_type,author:d.copyright||'NASA'}}],
+['Wikipedia','fa-brands fa-wikipedia-w','Artikel',async()=>{const d=await J('https://en.wikipedia.org/api/rest_v1/page/summary/Router');return{judul:d.title,ringkasan:d.extract.slice(0,150)+'...'}}],
+['GitHub','fa-brands fa-github','User',async()=>{const d=await J('https://api.github.com/users/torvalds');return{user:d.login,nama:d.name,repos:d.public_repos,followers:d.followers}}],
+['npm','fa-brands fa-npm','Package',async()=>{const d=await J('https://registry.npmjs.org/mikrotik');return{package:d.name,latest:d['dist-tags'].latest,license:d.license||'-'}}],
+['SpaceX','fa-solid fa-rocket','Launch',async()=>{const d=await J('https://api.spacexdata.com/v5/launches/next');return{misi:d.name,tanggal:new Date(d.date_utc).toLocaleString('id-ID'),flight:d.flight_number}}],
+['Dog CEO','fa-solid fa-dog','Foto',async()=>{const d=await J('https://dog.ceo/api/breeds/image/random');return{status:d.status,url:d.message}}],
+['Matahari','fa-solid fa-sun','Sunrise',async()=>{const d=(await J('https://api.sunrise-sunset.org/json?lat=-0.5&lng=103.0&formatted=0')).results,f=x=>new Date(x).toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta'});return{sunrise:f(d.sunrise),sunset:f(d.sunset)}}]];
+function openConsole(){sheet('Lab Console',`<p style="font-size:11px;color:var(--mut);margin:-6px 0 12px">12 API Gratis • No Key — ketuk untuk fetch data real-time.</p><div class="term" id="ct" style="display:none;margin:0 0 12px"></div><div class="apis">${APIS.map((a,i)=>`<button class="ai" id="ai${i}" onclick="runApi(${i})"><i class="${a[1]}"></i>${a[0]}<small style="font-weight:500;color:var(--mut);font-size:9px">${a[2]}</small></button>`).join('')}</div>`)}
+let apiBusy=false;
+async function runApi(i){if(apiBusy)return;apiBusy=true;const a=APIS[i],c=$('ct');document.querySelectorAll('.ai').forEach(b=>b.classList.remove('on'));$('ai'+i).classList.add('on');c.style.display='block';c.innerHTML='';c.scrollIntoView({block:'nearest'});
+const add=async(h,d=90)=>{await new Promise(r=>setTimeout(r,d));c.innerHTML+=h+'\n';c.scrollTop=c.scrollHeight};
+if(!navigator.onLine){await add('<span class="e">[ERR]</span> Tidak ada koneksi internet.');toast('Kamu sedang offline');apiBusy=false;return}
+await add(`<span class="a">❯</span> curl ${a[0].toLowerCase()}`,0);await add('<span class="i">[INFO]</span> Menghubungi server...');const t=performance.now();
+try{const d=await a[3]();await add(`<span class="o">[OK]</span> 200 — ${(performance.now()-t).toFixed(0)}ms`);for(const[k,v]of Object.entries(d))await add(`├─ <span class="i">${k}</span>: ${esc(v)}`,50);log('Console: '+a[0],'Data berhasil diambil','fa-terminal','OK')}
+catch(e){const msg=a[0]==='NASA'&&/429|HTTP 429/.test(e.message||'')?'Kena limit DEMO_KEY (30/jam). Coba lagi nanti atau ganti API key.':(e.name==='AbortError'?'Waktu tunggu habis (timeout 8 detik).':'Gagal memuat data. Server mungkin sedang down atau koneksi bermasalah.');await add(`<span class="e">[ERR]</span> ${esc(msg)}`);toast('Gagal memuat data: '+a[0])}apiBusy=false}
+
+/* creator */
+async function openCreator(){sheet('wilka@creator:~$ ./introduce.sh','<div class="term" id="cr" style="max-height:none"></div>');const c=$('cr'),L=[[0,'<span class="a">❯</span> ./introduce.sh'],[200,'<span class="i">[INFO]</span> loading creator...'],[200,'──────────────'],[200,'<span class="a">$</span> creator → <b>Wilka</b>'],[300,'<span class="a">$</span> role → Web Developer'],[300,'──────────────'],[300,'Hai, saya <b>Wilka</b> 👋'],[400,'Yang membuat & membangun website ini.'],[400,'Semoga kalian bisa menggunakan tools ini dengan bijak ya 🙏'],[300,'──────────────'],[300,'<span class="o">[OK]</span> profile loaded'],[250,'<span class="a">$</span> Next: <span class="i">thank you ❤️</span><span class="cur"></span>']];
+for(const[d,h]of L){if(!$('cr'))return;await new Promise(r=>setTimeout(r,d));if(!$('cr'))return;c.innerHTML+=h+'\n'}}
+
+/* apk & pwa */
+function openApk(){sheet('Unduh Aplikasi Android',`<div class="tx" style="border:0;cursor:default"><div class="ic" style="background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff"><i class="fa-brands fa-android"></i></div><div><b>TKJ SMKN 2 Tembilahan</b><small>Versi 2.0.0 • File APK</small></div></div>
+<ol class="stp"><li>Ketuk tombol Unduh APK di bawah.</li><li>Buka file yang terunduh.</li><li>Jika diminta, izinkan "Install dari sumber tidak dikenal".</li><li>Ketuk Install, lalu buka aplikasinya.</li></ol>
+<button class="pb" onclick="dlApk()"><i class="fa-solid fa-download"></i>Unduh APK</button>`)}
+async function dlApk(){try{const r=await fetch(APK,{method:'HEAD'});if(!r.ok)return toast('File '+APK+' belum diunggah ke server')}catch(e){}
+const a=document.createElement('a');a.href=APK;a.download='TKJ-SMKN2.apk';document.body.appendChild(a);a.click();a.remove();toast('Mengunduh APK...');log('Unduh APK','TKJ-SMKN2 v2.0.0','fa-download','Mulai')}
+function installApp(){if(deferred){deferred.prompt();deferred.userChoice.then(r=>{if(r.outcome==='accepted')toast('Aplikasi berhasil di-install!');deferred=null})}else toast('Gunakan menu browser → "Add to Home Screen"')}
+function copyNo(){const n=$('cno').textContent;(navigator.clipboard?navigator.clipboard.writeText(n):Promise.reject()).then(()=>toast('Nomor kartu disalin'),()=>toast('Nomor kartu: '+n))}
+
+/* ===== logo: dicari sekali, path disimpan agar buka berikutnya instan ===== */
+let sd;const LK='tkj_logo_',LG={};
+const lgGet=n=>{try{return localStorage.getItem(LK+n)}catch(e){}},lgSet=(n,u)=>{try{u?localStorage.setItem(LK+n,u):localStorage.removeItem(LK+n)}catch(e){}};
 const probe=u=>new Promise(r=>{const i=new Image();i.onload=()=>r(u);i.onerror=()=>r(null);i.src=u});
 const cap=n=>n[0].toUpperCase()+n.slice(1);
 const search=async n=>{const t=async(b,x)=>(await Promise.all(b.flatMap(k=>x.map(e=>probe(k+'.'+e))))).find(Boolean)||null;
  return await t([n],['png','jpeg','jpg','webp','svg'])||await t([cap(n),n.toUpperCase()],['png','jpeg','jpg','webp','svg','PNG','JPG'])};
-const noLogo=im=>{const i=document.createElement('i');i.className='fa-solid fa-network-wired ph';im.replaceWith(i)};
-document.querySelectorAll('img[data-logo]').forEach(async im=>{
-  const u=await search(im.dataset.logo);
-  if(u){im.onload=()=>im.classList.add('ok');im.src=u}else noLogo(im);
-});
-(async()=>{const u=await search('tkj').catch(()=>null);if(u)$('fav').href=u})();
+const findLogo=n=>LG[n]||(LG[n]=search(n).then(u=>{lgSet(n,u);return u}));
+const noLogo=im=>{console.warn('Logo tidak ditemukan:',im.dataset.logo);const ph=im.dataset.ph;if(ph){const i=document.createElement('i');i.className='fa-solid '+ph+' ph';im.replaceWith(i)}else im.remove()};
+const setLogo=(im,u)=>{im.decoding='async';im.onload=()=>im.classList.add('ok');im.src=u;if(im.complete&&im.naturalWidth)im.classList.add('ok')};
+document.querySelectorAll('img[data-logo]').forEach(im=>{const n=im.dataset.logo,c=lgGet(n);
+ if(c){im.onerror=()=>{im.onerror=null;lgSet(n,null);delete LG[n];findLogo(n).then(u=>u?setLogo(im,u):noLogo(im))};setLogo(im,c)}
+ else findLogo(n).then(u=>u?setLogo(im,u):noLogo(im))});
 
-/* ===== auth ===== */
-window.doLogin=async function(){
-  $('lerr').textContent='Menyambungkan…';
-  const btn=document.querySelector('#login .pb');if(btn)btn.disabled=true;
-  const email=$('em').value.trim(),pass=$('pw').value;
-  if(!email||!pass){$('lerr').textContent='Isi email dan password.';if(btn)btn.disabled=false;return}
+/* ===== manifest dinamis: pasang logo TKJ sebagai ikon PWA begitu ketemu ===== */
+function buildManifest(iconUrl){
+  const manifest={
+    name:'TKJ SMKN 2 Tembilahan',short_name:'TKJ SMKN2',start_url:'.',display:'standalone',
+    background_color:'#eaf3fe',theme_color:'#5b9bef',orientation:'portrait',
+    icons:iconUrl?[
+      {src:iconUrl,sizes:'192x192',type:'image/png',purpose:'any'},
+      {src:iconUrl,sizes:'512x512',type:'image/png',purpose:'any'},
+      {src:iconUrl,sizes:'512x512',type:'image/png',purpose:'maskable'}
+    ]:[]
+  };
   try{
-    await signInWithEmailAndPassword(auth,email,pass);
-    $('lerr').textContent='';
-  }catch(e){
-    const map={'auth/invalid-credential':'Email atau password salah.','auth/invalid-email':'Format email tidak valid.','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/user-not-found':'Akun tidak ditemukan.','auth/wrong-password':'Password salah.','auth/network-request-failed':'Gagal terhubung ke server Firebase. Cek koneksi internet.'};
-    $('lerr').textContent=map[e.code]||('Gagal login: '+(e.code||e.message));
-  }finally{
-    if(btn)btn.disabled=false;
-  }
-};
-window.doLogout=function(){signOut(auth)};
-
-onAuthStateChanged(auth,user=>{
-  if(user){
-    $('login').style.display='none';
-    $('dash').classList.add('on');
-    initDashboard();
-  }else{
-    $('dash').classList.remove('on');
-    $('login').style.display='flex';
-  }
-});
-
-/* ===== nav ===== */
-const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat'};
-window.goPane=function(p){
-  document.querySelectorAll('.pane').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
-  document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
-  $('paneTitle').textContent=titles[p]||p;
-  $('sidebar').classList.remove('on');
-};
-
-/* ===== field config per kategori ===== */
-const FIELDS={
-  tools:[['name','Nama','Contoh: Wireshark'],['icon','Ikon (Font Awesome class)','fa-fish'],['desc','Deskripsi singkat','Menangkap & menganalisis paket data'],['link','Link unduh (opsional)','https://...'],['detail','Detail lengkap (opsional)','Penjelasan panjang untuk halaman detail…',1]],
-  materi:[['name','Judul Materi','Subnetting & VLSM'],['icon','Ikon (Font Awesome class)','fa-calculator'],['desc','Deskripsi singkat','Membagi jaringan sesuai kebutuhan host'],['link','Link referensi (opsional)','https://...'],['detail','Detail lengkap (opsional)','Penjelasan panjang…',1]],
-  fasilitas:[['name','Nama Fasilitas','Lab Komputer & PC'],['icon','Ikon (Font Awesome class)','fa-desktop'],['desc','Deskripsi singkat','PC high-spec & jaringan dasar']],
-  kontak:[['name','Label','Email'],['icon','Ikon (Font Awesome class)','fa-envelope'],['desc','Isi/Nilai','tkj@smkn2tembilahan.sch.id']]
-};
-const ICON_HINT='Cari nama ikon di fontawesome.com/search (versi Free), contoh: fa-wifi, fa-server, fa-shield-halved.';
-
-/* ===== generic CRUD list ===== */
-function listen(path,renderFn){
-  onValue(ref(db,path),snap=>renderFn(snap.val()||{}),()=>renderFn({}));
+    const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+    $('manifestLink').href=URL.createObjectURL(blob);
+  }catch(e){}
 }
-function toSortedEntries(obj){
-  return Object.entries(obj).sort((a,b)=>(a[1].order||0)-(b[1].order||0));
-}
-function itemRow(key,cat,d){
-  return `<div class="itemcard g"><div class="ic"><i class="fa-solid ${esc(d.icon||'fa-circle')}"></i></div>
-  <div class="tx"><b>${esc(d.name)}</b><small>${esc(d.desc||'')}</small></div>
-  <div class="acts">
-    <button class="iconbtn" onclick="openItemModal('${cat}','${key}')"><i class="fa-solid fa-pen"></i></button>
-    <button class="iconbtn del" onclick="delItem('${cat}','${key}')"><i class="fa-solid fa-trash"></i></button>
-  </div></div>`;
-}
-function renderList(cat,data){
-  const el=$('list-'+cat);
-  const entries=toSortedEntries(data);
-  el.innerHTML=entries.length?entries.map(([k,d])=>itemRow(k,cat,d)).join(''):'<div class="empty2">Belum ada data. Klik Tambah untuk mulai.</div>';
-  const stEl=$('st-'+cat);if(stEl)stEl.textContent=entries.length;
-}
+(lgGet('tkj')?Promise.resolve(lgGet('tkj')):findLogo('tkj')).then(u=>buildManifest(u));
 
-let currentItem={cat:null,key:null};
-window.openItemModal=async function(cat,key){
-  currentItem={cat,key};
-  let d={};
-  if(key){const snap=await get(ref(db,'content/'+cat+'/'+key));d=snap.exists()?snap.val():{}}
-  const fields=FIELDS[cat];
-  const rows=fields.map(([fk,label,ph,area])=>`
-    <div class="fld"><label>${label}</label>${area?`<textarea id="mf-${fk}" rows="4" placeholder="${esc(ph)}">${esc(d[fk]||'')}</textarea>`:`<input id="mf-${fk}" placeholder="${esc(ph)}" value="${esc(d[fk]||'')}">`}</div>`).join('');
-  $('modalBox').innerHTML=`<h3>${key?'Edit':'Tambah'} ${titles[cat]||cat}</h3>${rows}
-    <p style="font-size:10.5px;color:var(--mut);margin-top:2px">${ICON_HINT}</p>
-    <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" onclick="saveItem()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
-  $('modal-ov').classList.add('on');
-};
-window.closeModal=function(){$('modal-ov').classList.remove('on')};
-window.saveItem=async function(){
-  const{cat,key}=currentItem;const fields=FIELDS[cat];
-  const data={};fields.forEach(([fk])=>data[fk]=$('mf-'+fk).value.trim());
-  if(!data.name){toast('Nama wajib diisi');return}
+/* ===== banner carousel: default cari banner1..banner5 di server, atau dari Admin Dashboard ===== */
+let bannerInterval=null;
+function renderBanner(list){
+ if(!list||!list.length)return;
+ clearInterval(bannerInterval);
+ const wrap=$('bnr-wrap'),track=$('bnr'),dots=$('bdots');
+ track.innerHTML=list.map((u,i)=>`<img class="sl" data-i="${i}" alt="Banner ${i+1}" loading="${i?'lazy':'eager'}">`).join('');
+ dots.innerHTML=list.map((_,i)=>`<span class="${i?'':'on'}" data-i="${i}"></span>`).join('');
+ [...track.children].forEach((im,i)=>{im.onload=()=>im.classList.add('ok');im.src=list[i]});
+ wrap.classList.remove('hide');
+ const N2=list.length;let idx=0;
+ const go=i=>{idx=(i+N2)%N2;track.scrollTo({left:track.clientWidth*idx,behavior:'smooth'});mark(idx)};
+ const mark=i=>dots.querySelectorAll('span').forEach((d,j)=>d.classList.toggle('on',j===i));
+ dots.onclick=e=>{const i=+e.target?.dataset?.i;if(!isNaN(i))go(i)};
+ let sT;track.onscroll=()=>{clearTimeout(sT);sT=setTimeout(()=>{idx=Math.round(track.scrollLeft/track.clientWidth);mark(idx)},80)};
+ if(N2>1)bannerInterval=setInterval(()=>{if(document.hidden)return;go(idx+1)},4200);
+}
+async function initBannerLocal(){
+ const N=5,found=[];
+ await Promise.all(Array.from({length:N},(_,i)=>i+1).map(async n=>{
+  const names=[`banner${n}`,`baner${n}`,`Banner${n}`,`Baner${n}`],ext=['jpeg','jpg','png','webp'];
+  for(const b of names)for(const e of ext){const u=await probe(`${b}.${e}`);if(u){found[n-1]=u;return}}
+ }));
+ renderBanner(found.filter(Boolean));
+}
+initBannerLocal();
+
+{const t0=lgGet('tkj');if(t0){$('fav').href=t0;$('ati').href=t0}else findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}})}
+
+/* ===== user online realtime ===== */
+let fbState='Menyambung…';
+const setStatus=t=>{fbState=t;const el=$('on-st');if(el)el.textContent=t};
+const setDot=on=>{const d=document.querySelector('.onl .live');if(d)d.classList.toggle('off',!on)};
+const setOnline=n=>{$('on-n').textContent=n;const el=$('on-n2');if(el)el.textContent=n;try{localStorage.setItem('tkj_on',n)}catch(e){}};
+try{const c=+localStorage.getItem('tkj_on');if(c>0)$('on-n').textContent=c}catch(e){}
+function openOnline(){const kv=(a,b,id='')=>`<div class="kv"><span>${a}</span><b id="${id}">${b}</b></div>`;
+ sheet('User Online',kv('Online sekarang',$('on-n').textContent,'on-n2')+kv('Mode',FIREBASE_URL?'Realtime · semua perangkat':'Lokal · tab di perangkat ini')+kv('Status',fbState,'on-st')+`<p style="font-size:11px;color:var(--mut);line-height:1.7;margin-top:10px">${FIREBASE_URL?'Setiap HP atau laptop dihitung 1 (beberapa tab di perangkat yang sama tetap 1). Angka berubah otomatis tanpa refresh, dan berkurang begitu web ditutup atau ditinggalkan lebih dari 20 detik.':'Untuk menghitung semua HP dan laptop, isi <b>FIREBASE_URL</b> di bagian atas script.'}</p>`)}
+
+function startLocal(){
+ const seen={[ME]:Date.now()},bc='BroadcastChannel' in window?new BroadcastChannel('tkj-online'):null;
+ const cnt=()=>{const now=Date.now();seen[ME]=now;for(const k in seen)if(now-seen[k]>12000)delete seen[k];setOnline(Object.keys(seen).length)};
+ const tick=()=>{if(bc)bc.postMessage(ME);cnt()};
+ if(bc){bc.onmessage=e=>{const d=String(e.data);if(d.startsWith('bye:'))delete seen[d.slice(4)];else{if(!(d in seen))bc.postMessage(ME);seen[d]=Date.now()}cnt()};addEventListener('pagehide',()=>bc.postMessage('bye:'+ME))}
+ setStatus('Lokal');setDot(true);tick();setInterval(tick,4000);
+}
+async function startFB(){
+ try{
+  const F=await getDb();if(!F)throw 0;
+  const D=F.d,db=F.db;
+  const me=D.ref(db,`presence/${DEV}/${TAB}`);
+  let conn=false,active=!document.hidden,hideT;
+  const denied=()=>{setStatus('Ditolak · cek Rules Firebase lalu Publish');setDot(false)};
+  const register=()=>{if(conn&&active)D.onDisconnect(me).remove().then(()=>D.set(me,true)).catch(denied)};
+  D.onValue(D.ref(db,'.info/connected'),s=>{conn=s.val()===true;setDot(conn);setStatus(conn?'Terhubung · realtime':'Menyambung…');register()});
+  D.onValue(D.ref(db,'presence'),s=>{const v=s.val()||{};let n=0;
+   for(const k in v){const d=v[k];if(d&&typeof d==='object')for(const t in d)if(d[t]===true){n++;break}}
+   setOnline(Math.max(n,1))},denied);
+  document.addEventListener('visibilitychange',()=>{clearTimeout(hideT);
+   if(document.hidden)hideT=setTimeout(()=>{active=false;D.remove(me).catch(()=>{})},20000);
+   else if(!active){active=true;register()}});
+  addEventListener('pagehide',()=>{D.remove(me).catch(()=>{})});
+  addEventListener('pageshow',e=>{if(e.persisted){active=true;register()}});
+ }catch(e){setStatus('SDK gagal dimuat · mode lokal');startLocal()}
+}
+/* ===== konten dari Admin Dashboard (admin.html): Tools/Materi/Fasilitas/Kontak/Banner/APK ===== */
+const toList=obj=>Object.values(obj||{}).sort((a,b)=>(a.order||0)-(b.order||0));
+async function loadRemoteContent(){
+  const F=await getDb();if(!F)return;
   try{
-    if(key){
-      await update(ref(db,'content/'+cat+'/'+key),data);
-    }else{
-      const snap=await get(ref(db,'content/'+cat));
-      const entries=snap.exists()?Object.values(snap.val()):[];
-      const maxOrder=entries.reduce((m,e)=>Math.max(m,e.order||0),-1);
-      data.order=maxOrder+1;
-      await push(ref(db,'content/'+cat),data);
-    }
-    toast('Tersimpan ✓');closeModal();
-  }catch(e){toast('Gagal menyimpan: cek Firebase Rules (lihat komentar di index.html)')}
-};
-window.delItem=async function(cat,key){
-  if(!confirm('Hapus item ini?'))return;
-  try{await remove(ref(db,'content/'+cat+'/'+key));toast('Dihapus')}
-  catch(e){toast('Gagal menghapus: cek Firebase Rules')}
-};
-
-/* ===== banner ===== */
-function bannerRow(key,d){
-  return `<div class="itemcard g" style="align-items:flex-start">
-    <img class="bimg" style="width:90px;aspect-ratio:1;flex:none" src="${esc(d.url)}" onerror="this.style.display='none'">
-    <div class="tx"><small style="white-space:normal;word-break:break-all">${esc(d.url)}</small></div>
-    <div class="acts"><button class="iconbtn del" onclick="delBanner('${key}')"><i class="fa-solid fa-trash"></i></button></div>
-  </div>`;
+    const snap=await F.d.get(F.d.ref(F.db,'content'));
+    if(!snap.exists())return;
+    const c=snap.val();
+    const asArr=o=>[o.name,o.icon,o.desc,o.link||null,o.detail||null];
+    const asArr3=o=>[o.name,o.icon,o.desc];
+    if(c.tools){const l=toList(c.tools);if(l.length)SETS.Tool=l.map(asArr)}
+    if(c.materi){const l=toList(c.materi);if(l.length)SETS.Materi=l.map(asArr)}
+    if(c.fasilitas){const l=toList(c.fasilitas);if(l.length)SETS.Fasilitas=l.map(asArr3)}
+    if(c.kontak){const l=toList(c.kontak);if(l.length)SETS.Kontak=l.map(asArr3)}
+    renderAll();
+    if(c.apk&&c.apk.url){APK=c.apk.url;const vt=$('verTxt');if(vt)vt.textContent='v'+(c.apk.version||'2.0')+' • PWA Ready • Offline Support'}
+    if(c.banners){const l=toList(c.banners).map(o=>o.url).filter(Boolean);if(l.length)renderBanner(l)}
+  }catch(e){/* Rules Firebase belum mengizinkan baca 'content', app tetap pakai data bawaan */}
 }
-window.openBannerModal=function(){
-  $('modalBox').innerHTML=`<h3>Tambah Banner</h3>
-    <div class="fld"><label>URL gambar</label><input id="mf-url" placeholder="https://.../banner.jpg"></div>
-    <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" onclick="saveBanner()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
-  $('modal-ov').classList.add('on');
-};
-window.saveBanner=async function(){
-  const url=$('mf-url').value.trim();
-  if(!url){toast('URL wajib diisi');return}
-  try{
-    const snap=await get(ref(db,'content/banners'));
-    const entries=snap.exists()?Object.values(snap.val()):[];
-    const maxOrder=entries.reduce((m,e)=>Math.max(m,e.order||0),-1);
-    await push(ref(db,'content/banners'),{url,order:maxOrder+1});
-    toast('Banner ditambahkan ✓');closeModal();
-  }catch(e){toast('Gagal menyimpan: cek Firebase Rules')}
-};
-window.delBanner=async function(key){
-  if(!confirm('Hapus banner ini?'))return;
-  try{await remove(ref(db,'content/banners/'+key));toast('Dihapus')}catch(e){toast('Gagal menghapus')}
-};
+FIREBASE_URL?startFB().then(loadRemoteContent):startLocal();
 
-/* ===== apk ===== */
-async function loadApk(){
-  const snap=await get(ref(db,'content/apk'));
-  if(snap.exists()){const d=snap.val();$('apkUrl').value=d.url||'';$('apkVer').value=d.version||''}
-}
-window.saveApk=async function(){
-  const url=$('apkUrl').value.trim(),version=$('apkVer').value.trim();
-  try{await set(ref(db,'content/apk'),{url,version});toast('Tersimpan ✓')}
-  catch(e){toast('Gagal menyimpan: cek Firebase Rules')}
-};
-
-/* ===== kunci pengguna ===== */
-function lockRow(dev,d){
-  const t=d.t?new Date(d.t).toLocaleString('id-ID'):'-';
-  return `<div class="itemcard g"><div class="ic"><i class="fa-solid fa-mobile-screen"></i></div>
-  <div class="tx"><b>${esc(dev.slice(0,10))}…</b><small>Dibuat: ${t}</small></div>
-  <div class="acts"><button class="iconbtn del" onclick="delLock('${dev}')"><i class="fa-solid fa-lock-open"></i></button></div></div>`;
-}
-window.delLock=async function(dev){
-  if(!confirm('Hapus pola kunci perangkat ini? Perangkat akan diminta membuat pola baru.'))return;
-  try{await remove(ref(db,'locks/'+dev));toast('Pola dihapus')}catch(e){toast('Gagal menghapus')}
-};
-
-/* ===== ringkasan: online realtime ===== */
-function listenPresence(){
-  onValue(ref(db,'presence'),snap=>{
-    const v=snap.val()||{};let n=0;
-    for(const k in v){const d=v[k];if(d&&typeof d==='object')for(const t in d)if(d[t]===true){n++;break}}
-    $('st-online').textContent=n;
-  });
-  onValue(ref(db,'.info/connected'),snap=>{
-    $('fbStatusTxt').textContent=snap.val()===true?'Terhubung ke Firebase — data realtime aktif.':'Menyambung ke Firebase…';
+/* ===== service worker: dukungan offline dasar ===== */
+if('serviceWorker' in navigator){
+  addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{/* sw.js belum diunggah ke server, lewati diam-diam */});
   });
 }
 
-/* ===== init ===== */
-let inited=false;
-function initDashboard(){
-  if(inited)return;inited=true;
-  listen('content/tools',d=>renderList('tools',d));
-  listen('content/materi',d=>renderList('materi',d));
-  listen('content/fasilitas',d=>renderList('fasilitas',d));
-  listen('content/kontak',d=>renderList('kontak',d));
-  listen('content/banners',d=>{
-    const el=$('list-banner');const entries=toSortedEntries(d);
-    el.innerHTML=entries.length?entries.map(([k,x])=>bannerRow(k,x)).join(''):'<div class="empty2">Belum ada banner custom. App memakai banner1.jpeg dst dari server.</div>';
-  });
-  listen('locks',d=>{
-    const el=$('list-kunci');const entries=Object.entries(d||{});
-    $('st-locks').textContent=entries.length;
-    el.innerHTML=entries.length?entries.map(([k,x])=>lockRow(k,x)).join(''):'<div class="empty2">Belum ada perangkat yang membuat pola kunci.</div>';
-  });
-  loadApk();
-  listenPresence();
-}
-
-document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target.id==='modal-ov')closeModal()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+setCidr(24);renderHist();
 </script>
 </body>
 </html>
