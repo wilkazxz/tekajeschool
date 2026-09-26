@@ -34,6 +34,7 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
 .fld input,.fld textarea{width:100%;padding:11px 13px;border-radius:12px;background:#fff;border:1px solid #c5daf5;color:var(--ink);font-size:14px;outline:none}
 .fld input:focus,.fld textarea:focus{border-color:var(--ac)}
 .pb{width:100%;padding:13px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(91,155,239,.3);display:flex;align-items:center;justify-content:center;gap:8px}
+.pb:disabled{opacity:.55;cursor:default;box-shadow:none}
 .pb2{width:100%;padding:11px;border-radius:12px;background:#fff;border:1.5px solid #bcd8fa;color:#2f6fd0;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .gbtn{width:100%;padding:11px 16px;border-radius:8px;background:#fff;border:1px solid #dadce0;color:#3c4043;font-family:Roboto,Urbanist,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 1px 2px rgba(60,64,67,.12);transition:background .15s,box-shadow .15s}
 .gbtn:hover{background:#f8f9fa;box-shadow:0 1px 3px rgba(60,64,67,.22)}
@@ -98,6 +99,45 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 .card{border-radius:18px;padding:18px;margin-bottom:14px}
 .bimg{width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:12px;background:var(--soft);margin-top:8px}
 
+/* ===== banner: upgraded grid + source tabs + dropzone ===== */
+.bnhint{font-size:11.5px;color:var(--mut);margin-bottom:14px;line-height:1.6;background:#fff;border:1px solid #d5e5fa;border-radius:12px;padding:10px 12px}
+.bngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.bncard{border-radius:18px;overflow:hidden;position:relative}
+.bncard .bnimgwrap{position:relative;width:100%;aspect-ratio:16/9;background:var(--soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3C/svg%3E") center/40px no-repeat}
+.bncard .bnimgwrap img{width:100%;height:100%;object-fit:cover;display:block}
+.bncard .bnimgwrap .bnfallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:var(--ac);font-size:26px}
+.bncard .bnimgwrap.broke img{display:none}
+.bncard .bnimgwrap.broke .bnfallback{display:flex}
+.bnorder{position:absolute;top:8px;left:8px;background:rgba(29,53,87,.65);color:#fff;font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:20px;backdrop-filter:blur(3px)}
+.bnactions{position:absolute;top:8px;right:8px;display:flex;gap:6px}
+.bnactions button{width:28px;height:28px;border-radius:8px;border:0;background:rgba(255,255,255,.92);color:var(--ink);cursor:pointer;display:grid;place-items:center;font-size:11px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.bnactions button.del{color:var(--danger)}
+.bnactions button:disabled{opacity:.35;cursor:default}
+.bnfoot{padding:9px 11px;font-size:10.5px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bnfoot b{color:var(--ink);font-weight:700}
+
+.srctabs{display:flex;gap:6px;background:#eaf2fd;border-radius:12px;padding:4px;margin-bottom:14px}
+.srctab{flex:1;padding:9px 10px;border:0;border-radius:9px;background:transparent;color:var(--mut);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.srctab.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(91,155,239,.18)}
+.srcpane{display:none}.srcpane.on{display:block}
+.dropzone{border:2px dashed #b7d3f8;border-radius:16px;padding:22px 14px;text-align:center;cursor:pointer;transition:.15s;background:#f6faff}
+.dropzone:hover,.dropzone.drag{border-color:var(--ac);background:#eef6ff}
+.dropzone i{font-size:24px;color:var(--ac);margin-bottom:8px;display:block}
+.dropzone b{font-size:12.5px;display:block;margin-bottom:2px}
+.dropzone small{font-size:11px;color:var(--mut)}
+.upreview{margin-top:12px;display:none;align-items:center;gap:10px;background:#fff;border:1px solid #d5e5fa;border-radius:12px;padding:8px}
+.upreview.on{display:flex}
+.upreview img{width:56px;height:38px;object-fit:cover;border-radius:8px;flex:none;background:var(--soft)}
+.upreview .ut{flex:1;min-width:0}
+.upreview .ut b{font-size:11.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upreview .ut small{font-size:10px;color:var(--mut)}
+.upreview button{border:0;background:none;color:var(--danger);cursor:pointer;font-size:13px;flex:none}
+.progwrap{margin-top:10px;height:6px;border-radius:6px;background:#dfe9fb;overflow:hidden;display:none}
+.progwrap.on{display:block}
+.progbar{height:100%;width:0;background:linear-gradient(90deg,var(--ac2),var(--ac));transition:width .15s}
+.progtxt{font-size:10.5px;color:var(--mut);margin-top:5px;display:none}
+.progtxt.on{display:block}
+
 #toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-20px);background:#fff;border:1px solid #c5daf5;color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:700;font-size:12px;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center;box-shadow:var(--sh)}
 #toast.on{opacity:1;transform:translateX(-50%)}
 
@@ -107,18 +147,25 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
   .hbtn{display:grid;place-items:center}
   main{padding:16px 14px 60px}
   .stats{grid-template-columns:repeat(2,1fr)}
+  .bngrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 }
 @media(prefers-color-scheme:dark){
   :root{--ink:#e7eef9;--mut:#8ea3c2;--ac:#5b9bef;--ac2:#4577b8;--soft:#1c2c47;--bd:rgba(255,255,255,.08);--sh:0 8px 24px rgba(0,0,0,.35)}
   body{background:#0f1626}
   body:before{background:radial-gradient(circle at 0 0,#1c2c47,transparent 45%),radial-gradient(circle at 100% 100%,#16233b,transparent 50%),linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
-  .g,.card,.itemcard,.stat,.logorow,.modal,.lcard{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  .g,.card,.itemcard,.stat,.logorow,.modal,.lcard,.bncard{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
   .sidebar{background:rgba(18,26,42,.92)}
-  .fld input,.fld textarea,.iconbtn,.hbtn,.lnote{background:#182238;border-color:#22314f;color:var(--ink)}
+  .fld input,.fld textarea,.iconbtn,.hbtn,.lnote,.bnhint,.upreview{background:#182238;border-color:#22314f;color:var(--ink)}
   #toast{background:#182238;border-color:#22314f;color:var(--ink)}
   .gbtn{background:#2d2f31;border-color:#3c4043;color:#e8eaed}
   .gbtn:hover{background:#35373a}
   .gbtn:active{background:#3c3f42}
+  .srctabs{background:#152036}
+  .srctab.on{background:#1c2c47;color:var(--ink)}
+  .dropzone{background:#131e33;border-color:#25355a}
+  .dropzone:hover,.dropzone.drag{background:#182238;border-color:var(--ac)}
+  .progwrap{background:#1c2c47}
+  .bnactions button{background:rgba(24,34,56,.92);color:var(--ink)}
 }
 </style>
 </head>
@@ -207,9 +254,9 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 
     <!-- BANNER -->
     <section class="pane" id="p-banner">
-      <div class="sech"><h2>Banner Beranda</h2><button class="addb" onclick="openBannerModal(null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
-      <p style="font-size:11.5px;color:var(--mut);margin-bottom:12px">Masukkan URL gambar (hasil upload ke Google Drive/ImgBB/dll dengan link publik). Kosongkan semua supaya app kembali memakai banner1.jpeg dst dari server.</p>
-      <div id="list-banner"></div>
+      <div class="sech"><h2>Banner Beranda</h2><button class="addb" onclick="openBannerModal()"><i class="fa-solid fa-plus"></i>Tambah</button></div>
+      <div class="bnhint"><i class="fa-solid fa-circle-info"></i> Tambah banner lewat <b>upload file</b> langsung (otomatis naik ke Firebase Storage) atau tempel <b>URL gambar</b> yang sudah online. Kosongkan semua supaya app kembali memakai banner1.jpeg dst dari server.</div>
+      <div id="list-banner" class="bngrid"></div>
     </section>
 
     <!-- APK -->
@@ -279,6 +326,7 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 /* Cuma akun dengan email ini yang dianggap admin (lapis kedua, selain akunnya sendiri cuma 1 di Firebase). */
 const ADMIN_EMAIL='wilkaaffah@gmail.com';
 import { getDatabase, ref, onValue, get, push, set, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
 
 /* Config lengkap dari Firebase Console → Project Settings → Your apps.
    Auth (login admin) butuh semua field ini, bukan cuma databaseURL. */
@@ -299,6 +347,7 @@ let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on'
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getDatabase(app);
+const storage=getStorage(app);
 window._fb={ref,onValue,get,push,set,update,remove,db};
 
 /* ===== logo probe (sama seperti index.html) ===== */
@@ -423,34 +472,159 @@ window.delItem=async function(cat,key){
   catch(e){toast('Gagal menghapus: cek Firebase Rules')}
 };
 
-/* ===== banner ===== */
-function bannerRow(key,d){
-  return `<div class="itemcard g" style="align-items:flex-start">
-    <img class="bimg" style="width:90px;aspect-ratio:1;flex:none" src="${esc(d.url)}" onerror="this.style.display='none'">
-    <div class="tx"><small style="white-space:normal;word-break:break-all">${esc(d.url)}</small></div>
-    <div class="acts"><button class="iconbtn del" onclick="delBanner('${key}')"><i class="fa-solid fa-trash"></i></button></div>
+/* ===== banner (grid + upload file ke Firebase Storage + URL manual) ===== */
+let bnPickedFile=null;
+let bnUploadTask=null;
+
+function bannerCard(key,d,idx,total){
+  const src=esc(d.url||'');
+  return `<div class="bncard g">
+    <div class="bnimgwrap" id="bnimg-${key}">
+      <img src="${src}" loading="lazy" onerror="document.getElementById('bnimg-${key}').classList.add('broke')">
+      <div class="bnfallback"><i class="fa-solid fa-image-slash"></i></div>
+      <span class="bnorder">#${idx+1}</span>
+      <div class="bnactions">
+        <button title="Naik" ${idx===0?'disabled':''} onclick="moveBanner('${key}',-1)"><i class="fa-solid fa-arrow-up"></i></button>
+        <button title="Turun" ${idx===total-1?'disabled':''} onclick="moveBanner('${key}',1)"><i class="fa-solid fa-arrow-down"></i></button>
+        <button class="del" title="Hapus" onclick="delBanner('${key}')"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>
+    <div class="bnfoot"><b>${d.storagePath?'Upload':'URL'}</b> · ${src.slice(0,42)}${src.length>42?'…':''}</div>
   </div>`;
 }
+
 window.openBannerModal=function(){
   $('modalBox').innerHTML=`<h3>Tambah Banner</h3>
-    <div class="fld"><label>URL gambar</label><input id="mf-url" placeholder="https://.../banner.jpg"></div>
-    <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" onclick="saveBanner()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
+    <div class="srctabs">
+      <button class="srctab on" id="tab-upload" onclick="bnSwitchTab('upload')"><i class="fa-solid fa-upload"></i> Upload File</button>
+      <button class="srctab" id="tab-url" onclick="bnSwitchTab('url')"><i class="fa-solid fa-link"></i> URL Gambar</button>
+    </div>
+
+    <div class="srcpane on" id="pane-upload">
+      <div class="dropzone" id="bnDrop" onclick="document.getElementById('bnFile').click()">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <b>Klik atau seret gambar ke sini</b>
+        <small>JPG, PNG, atau WEBP · maks 5MB</small>
+        <input type="file" id="bnFile" accept="image/*" style="display:none" onchange="bnPickFile(event.target.files[0])">
+      </div>
+      <div class="upreview" id="bnPreview">
+        <img id="bnPreviewImg">
+        <div class="ut"><b id="bnPreviewName"></b><small id="bnPreviewSize"></small></div>
+        <button onclick="bnClearFile()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="progwrap" id="bnProgWrap"><div class="progbar" id="bnProgBar"></div></div>
+      <div class="progtxt" id="bnProgTxt"></div>
+    </div>
+
+    <div class="srcpane" id="pane-url">
+      <div class="fld"><label>URL gambar</label><input id="mf-url" placeholder="https://.../banner.jpg"></div>
+      <p style="font-size:10.5px;color:var(--mut)">Pakai link gambar publik (Google Drive share-link, ImgBB, dsb).</p>
+    </div>
+
+    <div class="err" id="bn-err" style="margin-top:8px"></div>
+    <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" id="bnSaveBtn" onclick="saveBanner()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
   $('modal-ov').classList.add('on');
+  bnPickedFile=null;
+  const dz=$('bnDrop');
+  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
+  ['dragleave','dragend','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
+  dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)bnPickFile(f)});
 };
+
+window.bnSwitchTab=function(which){
+  document.querySelectorAll('.srctab').forEach(b=>b.classList.toggle('on',b.id==='tab-'+which));
+  document.querySelectorAll('.srcpane').forEach(p=>p.classList.toggle('on',p.id==='pane-'+which));
+  $('bn-err').textContent='';
+};
+
+function fmtSize(b){return b<1024*1024?(b/1024).toFixed(0)+' KB':(b/1024/1024).toFixed(1)+' MB'}
+
+window.bnPickFile=function(f){
+  if(!f)return;
+  $('bn-err').textContent='';
+  if(!f.type.startsWith('image/')){$('bn-err').textContent='File harus berupa gambar.';return}
+  if(f.size>5*1024*1024){$('bn-err').textContent='Ukuran gambar maksimal 5MB.';return}
+  bnPickedFile=f;
+  const url=URL.createObjectURL(f);
+  $('bnPreviewImg').src=url;
+  $('bnPreviewName').textContent=f.name;
+  $('bnPreviewSize').textContent=fmtSize(f.size);
+  $('bnPreview').classList.add('on');
+};
+window.bnClearFile=function(){
+  bnPickedFile=null;
+  $('bnFile').value='';
+  $('bnPreview').classList.remove('on');
+};
+
 window.saveBanner=async function(){
-  const url=$('mf-url').value.trim();
-  if(!url){toast('URL wajib diisi');return}
+  const usingUpload=$('tab-upload').classList.contains('on');
+  $('bn-err').textContent='';
+  const btn=$('bnSaveBtn');
+
   try{
     const snap=await get(ref(db,'content/banners'));
     const entries=snap.exists()?Object.values(snap.val()):[];
     const maxOrder=entries.reduce((m,e)=>Math.max(m,e.order||0),-1);
-    await push(ref(db,'content/banners'),{url,order:maxOrder+1});
-    toast('Banner ditambahkan ✓');closeModal();
-  }catch(e){toast('Gagal menyimpan: cek Firebase Rules')}
+
+    if(usingUpload){
+      if(!bnPickedFile){$('bn-err').textContent='Pilih gambar dulu.';return}
+      btn.disabled=true;
+      const ext=(bnPickedFile.name.split('.').pop()||'jpg').toLowerCase();
+      const path=`banners/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
+      const fileRef=sRef(storage,path);
+      $('bnProgWrap').classList.add('on');$('bnProgTxt').classList.add('on');
+      bnUploadTask=uploadBytesResumable(fileRef,bnPickedFile);
+      await new Promise((resolve,reject)=>{
+        bnUploadTask.on('state_changed',snap2=>{
+          const pct=Math.round((snap2.bytesTransferred/snap2.totalBytes)*100);
+          $('bnProgBar').style.width=pct+'%';
+          $('bnProgTxt').textContent='Mengupload… '+pct+'%';
+        },reject,resolve);
+      });
+      const url=await getDownloadURL(fileRef);
+      await push(ref(db,'content/banners'),{url,storagePath:path,order:maxOrder+1});
+      toast('Banner ter-upload ✓');closeModal();
+    }else{
+      const url=$('mf-url').value.trim();
+      if(!url){$('bn-err').textContent='URL wajib diisi.';return}
+      btn.disabled=true;
+      await push(ref(db,'content/banners'),{url,order:maxOrder+1});
+      toast('Banner ditambahkan ✓');closeModal();
+    }
+  }catch(e){
+    $('bn-err').textContent='Gagal menyimpan: '+(e.message||'cek Firebase Rules / Storage Rules');
+    if(btn)btn.disabled=false;
+  }
 };
+
 window.delBanner=async function(key){
   if(!confirm('Hapus banner ini?'))return;
-  try{await remove(ref(db,'content/banners/'+key));toast('Dihapus')}catch(e){toast('Gagal menghapus')}
+  try{
+    const snap=await get(ref(db,'content/banners/'+key));
+    const d=snap.exists()?snap.val():null;
+    await remove(ref(db,'content/banners/'+key));
+    if(d&&d.storagePath){
+      deleteObject(sRef(storage,d.storagePath)).catch(()=>{}); // abaikan kalau file storage sudah tidak ada
+    }
+    toast('Dihapus');
+  }catch(e){toast('Gagal menghapus: cek Firebase Rules')}
+};
+
+window.moveBanner=async function(key,dir){
+  try{
+    const snap=await get(ref(db,'content/banners'));
+    if(!snap.exists())return;
+    const entries=toSortedEntries(snap.val());
+    const i=entries.findIndex(([k])=>k===key);
+    const j=i+dir;
+    if(i<0||j<0||j>=entries.length)return;
+    const a=entries[i],b=entries[j];
+    const updates={};
+    updates['content/banners/'+a[0]+'/order']=b[1].order??j;
+    updates['content/banners/'+b[0]+'/order']=a[1].order??i;
+    await update(ref(db),updates);
+  }catch(e){toast('Gagal mengurutkan')}
 };
 
 /* ===== apk ===== */
@@ -498,7 +672,7 @@ function initDashboard(){
   listen('content/kontak',d=>renderList('kontak',d));
   listen('content/banners',d=>{
     const el=$('list-banner');const entries=toSortedEntries(d);
-    el.innerHTML=entries.length?entries.map(([k,x])=>bannerRow(k,x)).join(''):'<div class="empty2">Belum ada banner custom. App memakai banner1.jpeg dst dari server.</div>';
+    el.innerHTML=entries.length?entries.map(([k,x],i)=>bannerCard(k,x,i,entries.length)).join(''):'<div class="empty2" style="grid-column:1/-1">Belum ada banner custom. App memakai banner1.jpeg dst dari server.</div>';
   });
   listen('locks',d=>{
     const el=$('list-kunci');const entries=Object.entries(d||{});
