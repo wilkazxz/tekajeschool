@@ -405,13 +405,12 @@ let APK='tkj.apk';
    Database ini diakses langsung dari browser sehingga URL-nya publik. Supaya orang lain tidak bisa
    membaca hash pola kunci, merusak data presence, atau mengubah konten (Tools/Materi/dst) lewat
    Admin Dashboard, aktifkan DUA metode Sign-in di Firebase Console (Authentication → Sign-in method):
-   "Anonymous" (dipakai app ini) dan "Email/Password" (dipakai admin.html). Lalu buat SATU akun admin
-   di Authentication → Users → Add user. Set Rules seperti ini:
+   "Anonymous" (dipakai app ini) dan "Google" (dipakai admin.html). Set Rules seperti ini:
    {
      "rules": {
        "content": {
          ".read": true,
-         ".write": "auth != null && auth.token.firebase.sign_in_provider === 'password'"
+         ".write": "auth != null && auth.token.email === 'wilkaaffah@gmail.com'"
        },
        "locks": {
          "$dev": { ".read": "auth != null", ".write": "auth != null" }
@@ -422,7 +421,9 @@ let APK='tkj.apk';
      }
    }
    Rules di atas memastikan: siapa pun (termasuk pengunjung anonim app ini) boleh MEMBACA konten,
-   tapi hanya akun yang login pakai Email/Password lewat admin.html yang boleh MENULIS/mengubahnya.
+   tapi hanya akun Google dengan email persis "wilkaaffah@gmail.com" yang boleh MENULIS/mengubahnya
+   lewat admin.html (email ini juga dikunci di kode admin.html sebagai lapis kedua). Kalau suatu saat
+   admin diganti orang lain, ubah email di DUA tempat: Rules ini, dan variabel ADMIN_EMAIL di admin.html.
    Kode di bawah sudah mencoba sign-in anonymous otomatis lewat startFB()/getDb(); kalau Rules di atas
    belum diaktifkan, aplikasi tetap jalan dalam mode lokal (fallback), dan admin.html tidak akan bisa
    menyimpan perubahan sampai kamu mengaktifkannya. */
