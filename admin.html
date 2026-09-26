@@ -255,8 +255,7 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
       <div class="card g" id="ibb-card">
         <b style="font-size:13px"><i class="fa-solid fa-file-image"></i> Ubah Foto Jadi Link (opsional)</b>
         <p style="font-size:11px;color:var(--mut);margin:6px 0 10px;line-height:1.6">Punya foto di HP/komputer tapi belum ada link-nya? Upload di sini (pakai layanan gratis <b>ImgBB</b>), nanti otomatis jadi link gambar. Setelah muncul, ketuk <b>Salin Link</b>, lalu tempel di kolom "URL gambar" saat menekan tombol Tambah di atas.</p>
-        <div class="fld"><label>API Key ImgBB (gratis, ambil sekali)</label><input id="ibb-key" type="password" placeholder="tempel API key dari api.imgbb.com" autocomplete="off"></div>
-        <p style="font-size:10.5px;color:var(--mut);margin:-4px 0 10px;line-height:1.6">Belum punya key? Buka <a href="https://api.imgbb.com/" target="_blank" rel="noopener" style="color:var(--ac);font-weight:700">api.imgbb.com</a> → login pakai Google → copy "API Key" → tempel di kolom di atas. Key cuma disimpan di browser ini.</p>
+        <div id="ibb-keywrap"></div>
         <label class="pb2" style="cursor:pointer">
           <i class="fa-solid fa-upload"></i> Pilih Foto dari Perangkat
           <input type="file" id="ibb-file" accept="image/*" style="display:none" onchange="ibbUpload(event)">
@@ -606,25 +605,71 @@ window.moveBanner=async function(key,dir){
   }catch(e){toast('Gagal mengurutkan')}
 };
 
-/* ===== ubah foto jadi link (ImgBB, gratis) — upload dari HP/komputer, hasilnya link URL ===== */
-(function ibbRestoreKey(){
-  try{const k=localStorage.getItem('tkj_ibb_key');if(k)$('ibb-key').value=k}catch(e){}
-})();
+/* ===== ubah foto jadi link (ImgBB, gratis) — upload dari HP/komputer, hasilnya link URL =====
+   API Key cuma diminta SEKALI: setelah disimpan, kotak input hilang diganti status "tersimpan",
+   dan gak akan minta lagi kecuali kamu sendiri yang ketuk "Ganti/Reset". */
+function ibbGetKey(){try{return localStorage.getItem('tkj_ibb_key')||null}catch(e){return null}}
+function ibbRenderKeyUI(){
+  const wrap=$('ibb-keywrap');if(!wrap)return;
+  const k=ibbGetKey();
+  if(k){
+    wrap.innerHTML=`<div class="itemcard g" style="margin-bottom:12px">
+      <div class="ic"><i class="fa-solid fa-key"></i></div>
+      <div class="tx"><b>API Key ImgBB tersimpan ✓</b><small>Berakhiran •••${esc(k.slice(-4))} — langsung dipakai tiap upload, gak perlu isi ulang</small></div>
+      <div class="acts"><button class="iconbtn" title="Ganti / reset API Key" onclick="ibbResetKey()"><i class="fa-solid fa-pen"></i></button></div>
+    </div>`;
+  }else{
+    wrap.innerHTML=`<div class="fld"><label>API Key ImgBB (gratis, cukup sekali isi)</label><input id="ibb-key" type="password" placeholder="tempel API key dari api.imgbb.com" autocomplete="off"></div>
+    <p style="font-size:10.5px;color:var(--mut);margin:-4px 0 10px;line-height:1.6">Belum punya key? Buka <a href="https://api.imgbb.com/" target="_blank" rel="noopener" style="color:var(--ac);font-weight:700">api.imgbb.com</a> → login pakai Google → copy "API Key" → tempel di atas → ketuk Simpan. Key cuma disimpan di browser ini, jangan tempel API key kamu ke tempat lain / bagikan ke orang lain.</p>
+    <button class="pb2" onclick="ibbSaveKey()"><i class="fa-solid fa-floppy-disk"></i> Simpan API Key</button>`;
+  }
+}
+window.ibbSaveKey=function(){
+  const el=$('ibb-key');const k=el?el.value.trim():'';
+  if(!k){toast('Isi API Key dulu');return}
+  try{localStorage.setItem('tkj_ibb_key',k)}catch(e){toast('Gagal menyimpan di browser ini');return}
+  toast('API Key tersimpan ✓ — gak akan diminta lagi');
+  ibbRenderKeyUI();
+};
+window.ibbResetKey=function(){
+  if(!confirm('Ganti/reset API Key ImgBB? Kamu perlu tempel key baru sebelum upload foto lagi.'))return;
+  try{localStorage.removeItem('tkj_ibb_key')}catch(e){}
+  ibbRenderKeyUI();
+  toast('API Key direset');
+};
+ibbRenderKeyUI();
+
+/* Kompres & perkecil foto dulu sebelum diunggah — ini yang bikin upload jauh lebih cepat,
+   soalnya foto asli dari HP biasanya 3-8 MB, setelah dikecilkan jadi ratusan KB saja.
+   GIF dilewati (tidak dikompres) supaya animasinya tidak rusak. */
+async function ibbCompress(file,maxDim=1600,quality=.8){
+  if(/gif/i.test(file.type))return file;
+  try{
+    const img=await new Promise((res,rej)=>{
+      const url=URL.createObjectURL(file),im=new Image();
+      im.onload=()=>{URL.revokeObjectURL(url);res(im)};
+      im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('gagal baca gambar'))};
+      im.src=url;
+    });
+    let w=img.naturalWidth,h=img.naturalHeight;
+    if(!w||!h)return file;
+    if(w>maxDim||h>maxDim){const sc=maxDim/Math.max(w,h);w=Math.round(w*sc);h=Math.round(h*sc)}
+    const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+    cv.getContext('2d').drawImage(img,0,0,w,h);
+    const blob=await new Promise(res=>cv.toBlob(res,'image/jpeg',quality));
+    return blob||file;
+  }catch(e){return file}
+}
 window.ibbUpload=async function(ev){
   const f=ev.target.files[0];if(!f)return;
   $('ibb-err').textContent='';$('ibb-result').style.display='none';
-  const key=$('ibb-key').value.trim();
-  if(!key){$('ibb-err').textContent='Isi API Key ImgBB dulu (lihat cara ambilnya di atas).';ev.target.value='';return}
-  try{localStorage.setItem('tkj_ibb_key',key)}catch(e){}
-  $('ibb-status').textContent='Mengunggah…';
+  const key=ibbGetKey();
+  if(!key){$('ibb-err').textContent='Simpan API Key ImgBB dulu di atas.';ev.target.value='';return}
+  $('ibb-status').textContent='Memperkecil foto…';
   try{
-    const b64=await new Promise((res,rej)=>{
-      const r=new FileReader();
-      r.onload=()=>res(String(r.result).split(',')[1]);
-      r.onerror=()=>rej(new Error('Gagal membaca file'));
-      r.readAsDataURL(f);
-    });
-    const fd=new FormData();fd.append('image',b64);
+    const compact=await ibbCompress(f);
+    $('ibb-status').textContent='Mengunggah…';
+    const fd=new FormData();fd.append('image',compact,(f.name||'foto').replace(/\.[a-z0-9]+$/i,'')+(/gif/i.test(f.type)?'.gif':'.jpg'));
     const resp=await fetch('https://api.imgbb.com/1/upload?key='+encodeURIComponent(key),{method:'POST',body:fd});
     const data=await resp.json().catch(()=>({}));
     if(!resp.ok||!data.success)throw new Error((data&&data.error&&data.error.message)||('HTTP '+resp.status));
