@@ -309,7 +309,7 @@ input[type=range]{accent-color:var(--ac)}
   </div>
 
   <button class="cb g" onclick="openCreator()"><i class="fa-solid fa-code"></i>Created By<i class="fa-solid fa-arrow-up"></i></button>
-  <div class="ver">v2.0.1 • PWA Ready • Offline Support</div>
+  <div class="ver" id="verTxt">v2.0.1 • PWA Ready • Offline Support</div>
 </section>
 
 <!-- SUBNET -->
@@ -397,32 +397,35 @@ Materi:[
 ['Keamanan Jaringan','fa-shield-halved','Firewall, hardening, dan deteksi ancaman',null,'Mencakup dasar keamanan jaringan: konfigurasi firewall, menutup port yang tidak perlu, autentikasi yang kuat, dan cara mendeteksi trafik mencurigakan menggunakan tool seperti Wireshark atau Nmap.']],
 Fasilitas:[['Lab Komputer & PC','fa-desktop','PC high-spec & jaringan dasar'],['Cisco & MikroTik','fa-server','Router, Switch, & Rack Server'],['Fiber Optic & Splicer','fa-wave-square','Fusion Splicer & OTDR']],
 Kontak:[['Alamat Sekolah','fa-location-dot','Jl. Pendidikan / Parit 10, Tembilahan Hulu'],['Email','fa-envelope','tkj@smkn2tembilahan.sch.id'],['Telepon / WhatsApp','fa-phone','+62 812-7654-3210']]};
-const APK='tkj.apk';
+let APK='tkj.apk';
 /* Isi dengan URL Firebase Realtime Database agar online & pola kunci tersimpan permanen di semua HP/laptop.
    Contoh: 'https://nama-project-default-rtdb.asia-southeast1.firebasedatabase.app'
 
    PENTING — Firebase Security Rules:
    Database ini diakses langsung dari browser sehingga URL-nya publik. Supaya orang lain tidak bisa
-   membaca hash pola kunci atau merusak data presence, aktifkan Anonymous Auth di Firebase Console
-   (Authentication → Sign-in method → Anonymous), lalu set Rules seperti ini:
+   membaca hash pola kunci, merusak data presence, atau mengubah konten (Tools/Materi/dst) lewat
+   Admin Dashboard, aktifkan DUA metode Sign-in di Firebase Console (Authentication → Sign-in method):
+   "Anonymous" (dipakai app ini) dan "Email/Password" (dipakai admin.html). Lalu buat SATU akun admin
+   di Authentication → Users → Add user. Set Rules seperti ini:
    {
      "rules": {
+       "content": {
+         ".read": true,
+         ".write": "auth != null && auth.token.firebase.sign_in_provider === 'password'"
+       },
        "locks": {
-         "$dev": {
-           ".read": "auth != null",
-           ".write": "auth != null"
-         }
+         "$dev": { ".read": "auth != null", ".write": "auth != null" }
        },
        "presence": {
-         "$dev": {
-           ".read": "auth != null",
-           ".write": "auth != null"
-         }
+         "$dev": { ".read": "auth != null", ".write": "auth != null" }
        }
      }
    }
+   Rules di atas memastikan: siapa pun (termasuk pengunjung anonim app ini) boleh MEMBACA konten,
+   tapi hanya akun yang login pakai Email/Password lewat admin.html yang boleh MENULIS/mengubahnya.
    Kode di bawah sudah mencoba sign-in anonymous otomatis lewat startFB()/getDb(); kalau Rules di atas
-   belum diaktifkan, aplikasi tetap jalan dalam mode lokal (fallback). */
+   belum diaktifkan, aplikasi tetap jalan dalam mode lokal (fallback), dan admin.html tidak akan bisa
+   menyimpan perubahan sampai kamu mengaktifkannya. */
 const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
 let deferred=null,hist=[],pi=null;
 try{hist=JSON.parse(localStorage.getItem('tkjh')||'[]')}catch(e){}
@@ -551,7 +554,8 @@ const rowL=(x,ty,i,ar=1)=>`<div class="tx" onclick="info(SETS.${ty}[${i}],'${ty}
 const gcard=(x,ty,i)=>`<div class="gcard g" onclick="info(SETS.${ty}[${i}],'${ty}')"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><b>${x[0]}</b><small>${x[2]}</small>${x[3]?'<span class="tag"><i class="fa-solid fa-download"></i>Unduh</span>':''}</div>`;
 const fillGrid=(id,ty,n)=>$(id).innerHTML=`<div class="gwrap">${SETS[ty].slice(0,n).map((x,i)=>gcard(x,ty,i)).join('')}</div>`;
 const fill=(id,ty,n)=>$(id).innerHTML=SETS[ty].slice(0,n).map((x,i)=>rowL(x,ty,i)).join('');
-fillGrid('l-tool','Tool',4);fillGrid('l-mat','Materi',4);fill('l-fas','Fasilitas',3);fill('l-kon','Kontak',3);
+function renderAll(){fillGrid('l-tool','Tool',4);fillGrid('l-mat','Materi',4);fill('l-fas','Fasilitas',3);fill('l-kon','Kontak',3)}
+renderAll();
 function listSheet(t,ty){sheet(t,`<div class="gwrap">${SETS[ty].map((x,i)=>gcard(x,ty,i)).join('')}</div>`)}
 function info(x,ty){let a='';
 if(x[0]==='Email')a=`<a href="mailto:${x[2]}" class="pb dllink" style="margin-top:2px"><i class="fa-solid fa-paper-plane"></i>Kirim email</a>`;
@@ -663,28 +667,32 @@ function buildManifest(iconUrl){
 }
 (lgGet('tkj')?Promise.resolve(lgGet('tkj')):findLogo('tkj')).then(u=>buildManifest(u));
 
-/* ===== banner carousel: cari banner1..banner5 otomatis, auto-slide + swipe manual ===== */
-(async function initBanner(){
- const N=5,found=[];
- await Promise.all(Array.from({length:N},(_,i)=>i+1).map(async n=>{
-  const names=[`banner${n}`,`baner${n}`,`Banner${n}`,`Baner${n}`],ext=['jpeg','jpg','png','webp'];
-  for(const b of names)for(const e of ext){const u=await probe(`${b}.${e}`);if(u){found[n-1]=u;return}}
- }));
- const list=found.filter(Boolean);
- if(!list.length)return;
+/* ===== banner carousel: default cari banner1..banner5 di server, atau dari Admin Dashboard ===== */
+let bannerInterval=null;
+function renderBanner(list){
+ if(!list||!list.length)return;
+ clearInterval(bannerInterval);
  const wrap=$('bnr-wrap'),track=$('bnr'),dots=$('bdots');
  track.innerHTML=list.map((u,i)=>`<img class="sl" data-i="${i}" alt="Banner ${i+1}" loading="${i?'lazy':'eager'}">`).join('');
  dots.innerHTML=list.map((_,i)=>`<span class="${i?'':'on'}" data-i="${i}"></span>`).join('');
  [...track.children].forEach((im,i)=>{im.onload=()=>im.classList.add('ok');im.src=list[i]});
  wrap.classList.remove('hide');
- const N2=list.length;let idx=0,userT;
+ const N2=list.length;let idx=0;
  const go=i=>{idx=(i+N2)%N2;track.scrollTo({left:track.clientWidth*idx,behavior:'smooth'});mark(idx)};
  const mark=i=>dots.querySelectorAll('span').forEach((d,j)=>d.classList.toggle('on',j===i));
- dots.addEventListener('click',e=>{const i=+e.target?.dataset?.i;if(!isNaN(i))go(i)});
- let sT;track.addEventListener('scroll',()=>{clearTimeout(sT);sT=setTimeout(()=>{idx=Math.round(track.scrollLeft/track.clientWidth);mark(idx)},80)});
- ['touchstart','pointerdown','wheel'].forEach(ev=>track.addEventListener(ev,()=>{clearTimeout(userT);userT=setTimeout(()=>{},0)},{passive:true}));
- if(N2>1)setInterval(()=>{if(document.hidden)return;go(idx+1)},4200);
-})();
+ dots.onclick=e=>{const i=+e.target?.dataset?.i;if(!isNaN(i))go(i)};
+ let sT;track.onscroll=()=>{clearTimeout(sT);sT=setTimeout(()=>{idx=Math.round(track.scrollLeft/track.clientWidth);mark(idx)},80)};
+ if(N2>1)bannerInterval=setInterval(()=>{if(document.hidden)return;go(idx+1)},4200);
+}
+async function initBannerLocal(){
+ const N=5,found=[];
+ await Promise.all(Array.from({length:N},(_,i)=>i+1).map(async n=>{
+  const names=[`banner${n}`,`baner${n}`,`Banner${n}`,`Baner${n}`],ext=['jpeg','jpg','png','webp'];
+  for(const b of names)for(const e of ext){const u=await probe(`${b}.${e}`);if(u){found[n-1]=u;return}}
+ }));
+ renderBanner(found.filter(Boolean));
+}
+initBannerLocal();
 
 {const t0=lgGet('tkj');if(t0){$('fav').href=t0;$('ati').href=t0}else findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}})}
 
@@ -723,7 +731,26 @@ async function startFB(){
   addEventListener('pageshow',e=>{if(e.persisted){active=true;register()}});
  }catch(e){setStatus('SDK gagal dimuat · mode lokal');startLocal()}
 }
-FIREBASE_URL?startFB():startLocal();
+/* ===== konten dari Admin Dashboard (admin.html): Tools/Materi/Fasilitas/Kontak/Banner/APK ===== */
+const toList=obj=>Object.values(obj||{}).sort((a,b)=>(a.order||0)-(b.order||0));
+async function loadRemoteContent(){
+  const F=await getDb();if(!F)return;
+  try{
+    const snap=await F.d.get(F.d.ref(F.db,'content'));
+    if(!snap.exists())return;
+    const c=snap.val();
+    const asArr=o=>[o.name,o.icon,o.desc,o.link||null,o.detail||null];
+    const asArr3=o=>[o.name,o.icon,o.desc];
+    if(c.tools){const l=toList(c.tools);if(l.length)SETS.Tool=l.map(asArr)}
+    if(c.materi){const l=toList(c.materi);if(l.length)SETS.Materi=l.map(asArr)}
+    if(c.fasilitas){const l=toList(c.fasilitas);if(l.length)SETS.Fasilitas=l.map(asArr3)}
+    if(c.kontak){const l=toList(c.kontak);if(l.length)SETS.Kontak=l.map(asArr3)}
+    renderAll();
+    if(c.apk&&c.apk.url){APK=c.apk.url;const vt=$('verTxt');if(vt)vt.textContent='v'+(c.apk.version||'2.0')+' • PWA Ready • Offline Support'}
+    if(c.banners){const l=toList(c.banners).map(o=>o.url).filter(Boolean);if(l.length)renderBanner(l)}
+  }catch(e){/* Rules Firebase belum mengizinkan baca 'content', app tetap pakai data bawaan */}
+}
+FIREBASE_URL?startFB().then(loadRemoteContent):startLocal();
 
 /* ===== service worker: dukungan offline dasar ===== */
 if('serviceWorker' in navigator){
