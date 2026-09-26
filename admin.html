@@ -255,7 +255,7 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <!-- BANNER -->
     <section class="pane" id="p-banner">
       <div class="sech"><h2>Banner Beranda</h2><button class="addb" onclick="openBannerModal()"><i class="fa-solid fa-plus"></i>Tambah</button></div>
-      <div class="bnhint"><i class="fa-solid fa-circle-info"></i> Tambah banner lewat <b>upload file</b> langsung (otomatis naik ke Firebase Storage) atau tempel <b>URL gambar</b> yang sudah online. Kosongkan semua supaya app kembali memakai banner1.jpeg dst dari server.</div>
+      <div class="bnhint"><i class="fa-solid fa-circle-info"></i> Tambah banner lewat <b>upload file</b> langsung (naik otomatis ke repo GitHub kamu, sesuai ekstensi aslinya) atau tempel <b>URL gambar</b> yang sudah online. Kosongkan semua supaya app kembali memakai banner1.jpeg dst dari server.</div>
       <div id="list-banner" class="bngrid"></div>
     </section>
 
@@ -326,7 +326,8 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 /* Cuma akun dengan email ini yang dianggap admin (lapis kedua, selain akunnya sendiri cuma 1 di Firebase). */
 const ADMIN_EMAIL='wilkaaffah@gmail.com';
 import { getDatabase, ref, onValue, get, push, set, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
-import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+/* Catatan: Firebase Storage TIDAK dipakai untuk upload banner karena Storage butuh paket berbayar (Blaze).
+   Sebagai gantinya, upload gambar banner dikirim langsung ke repo GitHub (pakai token & repo yang sama seperti tab "File Web"). */
 
 /* Config lengkap dari Firebase Console → Project Settings → Your apps.
    Auth (login admin) butuh semua field ini, bukan cuma databaseURL. */
@@ -347,7 +348,6 @@ let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on'
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getDatabase(app);
-const storage=getStorage(app);
 window._fb={ref,onValue,get,push,set,update,remove,db};
 
 /* ===== logo probe (sama seperti index.html) ===== */
@@ -489,7 +489,7 @@ function bannerCard(key,d,idx,total){
         <button class="del" title="Hapus" onclick="delBanner('${key}')"><i class="fa-solid fa-trash"></i></button>
       </div>
     </div>
-    <div class="bnfoot"><b>${d.storagePath?'Upload':'URL'}</b> · ${src.slice(0,42)}${src.length>42?'…':''}</div>
+    <div class="bnfoot"><b>${d.source==='github'?'GitHub':'URL'}</b> · ${src.slice(0,42)}${src.length>42?'…':''}</div>
   </div>`;
 }
 
@@ -501,10 +501,11 @@ window.openBannerModal=function(){
     </div>
 
     <div class="srcpane on" id="pane-upload">
+      <p style="font-size:10.5px;color:var(--mut);margin-bottom:10px">Upload pakai pengaturan repo &amp; token GitHub yang sama seperti tab <b>File Web</b> (Owner/Repo: <b id="bnRepoShow"></b>, Branch: <b id="bnBranchShow"></b>). Kalau token belum diisi di sesi ini, <a href="#" onclick="closeModal();goPane('github');return false" style="color:var(--ac);font-weight:700">buka tab File Web dulu</a> lalu isi Personal Access Token-nya.</p>
       <div class="dropzone" id="bnDrop" onclick="document.getElementById('bnFile').click()">
         <i class="fa-solid fa-cloud-arrow-up"></i>
         <b>Klik atau seret gambar ke sini</b>
-        <small>JPG, PNG, atau WEBP · maks 5MB</small>
+        <small>JPG, JPEG, PNG, WEBP, atau GIF · maks 1MB</small>
         <input type="file" id="bnFile" accept="image/*" style="display:none" onchange="bnPickFile(event.target.files[0])">
       </div>
       <div class="upreview" id="bnPreview">
@@ -518,13 +519,15 @@ window.openBannerModal=function(){
 
     <div class="srcpane" id="pane-url">
       <div class="fld"><label>URL gambar</label><input id="mf-url" placeholder="https://.../banner.jpg"></div>
-      <p style="font-size:10.5px;color:var(--mut)">Pakai link gambar publik (Google Drive share-link, ImgBB, dsb).</p>
+      <p style="font-size:10.5px;color:var(--mut)">Pakai link gambar publik (Google Drive share-link, hosting gambar lain, dsb).</p>
     </div>
 
     <div class="err" id="bn-err" style="margin-top:8px"></div>
     <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" id="bnSaveBtn" onclick="saveBanner()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
   $('modal-ov').classList.add('on');
   bnPickedFile=null;
+  $('bnRepoShow').textContent=$('gh-repo').value.trim()||'(belum diisi)';
+  $('bnBranchShow').textContent=$('gh-branch').value.trim()||'main';
   const dz=$('bnDrop');
   ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
   ['dragleave','dragend','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
@@ -543,7 +546,7 @@ window.bnPickFile=function(f){
   if(!f)return;
   $('bn-err').textContent='';
   if(!f.type.startsWith('image/')){$('bn-err').textContent='File harus berupa gambar.';return}
-  if(f.size>5*1024*1024){$('bn-err').textContent='Ukuran gambar maksimal 5MB.';return}
+  if(f.size>1*1024*1024){$('bn-err').textContent='Ukuran gambar maksimal 1MB (batas GitHub Contents API). Kompres dulu gambarnya kalau lebih besar.';return}
   bnPickedFile=f;
   const url=URL.createObjectURL(f);
   $('bnPreviewImg').src=url;
@@ -557,6 +560,15 @@ window.bnClearFile=function(){
   $('bnPreview').classList.remove('on');
 };
 
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>resolve(String(r.result).split(',')[1]||'');
+    r.onerror=()=>reject(new Error('Gagal membaca file gambar.'));
+    r.readAsDataURL(file);
+  });
+}
+
 window.saveBanner=async function(){
   const usingUpload=$('tab-upload').classList.contains('on');
   $('bn-err').textContent='';
@@ -569,22 +581,41 @@ window.saveBanner=async function(){
 
     if(usingUpload){
       if(!bnPickedFile){$('bn-err').textContent='Pilih gambar dulu.';return}
+      let headers;
+      try{headers=ghHeaders()}
+      catch(e){$('bn-err').textContent='Isi Personal Access Token GitHub dulu di tab "File Web", lalu balik ke sini.';return}
+      const repo=$('gh-repo').value.trim();
+      const branch=$('gh-branch').value.trim()||'main';
+      if(!repo){$('bn-err').textContent='Isi Owner/Repo GitHub dulu di tab "File Web".';return}
+
       btn.disabled=true;
-      const ext=(bnPickedFile.name.split('.').pop()||'jpg').toLowerCase();
-      const path=`banners/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
-      const fileRef=sRef(storage,path);
       $('bnProgWrap').classList.add('on');$('bnProgTxt').classList.add('on');
-      bnUploadTask=uploadBytesResumable(fileRef,bnPickedFile);
-      await new Promise((resolve,reject)=>{
-        bnUploadTask.on('state_changed',snap2=>{
-          const pct=Math.round((snap2.bytesTransferred/snap2.totalBytes)*100);
-          $('bnProgBar').style.width=pct+'%';
-          $('bnProgTxt').textContent='Mengupload… '+pct+'%';
-        },reject,resolve);
+      $('bnProgBar').style.width='30%';$('bnProgTxt').textContent='Membaca file…';
+
+      const rawExt=(bnPickedFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');
+      const ext=['jpg','jpeg','png','webp','gif'].includes(rawExt)?rawExt:'jpg';
+      const fname=`${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
+      const path=`assets/banners/${fname}`;
+      const b64=await fileToBase64(bnPickedFile);
+
+      $('bnProgBar').style.width='65%';$('bnProgTxt').textContent='Meng-upload ke GitHub…';
+      const res=await fetch(`https://api.github.com/repos/${repo}/contents/${path}`,{
+        method:'PUT',
+        headers:{...headers,'Content-Type':'application/json'},
+        body:JSON.stringify({message:'Upload banner: '+fname,content:b64,branch})
       });
-      const url=await getDownloadURL(fileRef);
-      await push(ref(db,'content/banners'),{url,storagePath:path,order:maxOrder+1});
-      toast('Banner ter-upload ✓');closeModal();
+      if(!res.ok){
+        const eb=await res.json().catch(()=>({}));
+        if(res.status===401||res.status===403)throw new Error('Token ditolak/permission kurang. Cek token & permission Contents = Read and write di tab File Web.');
+        if(res.status===404)throw new Error('Repo/branch tidak ditemukan. Cek Owner/Repo & Branch di tab File Web.');
+        if(res.status===422&&/too large|large file/i.test(eb.message||''))throw new Error('File terlalu besar untuk GitHub Contents API. Pakai gambar di bawah 1MB.');
+        throw new Error(eb.message||('HTTP '+res.status));
+      }
+      const data=await res.json();
+      $('bnProgBar').style.width='100%';
+      const rawUrl=`https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+      await push(ref(db,'content/banners'),{url:rawUrl,source:'github',ghPath:path,ghSha:data.content.sha,order:maxOrder+1});
+      toast('Banner ter-upload ke GitHub ✓');closeModal();
     }else{
       const url=$('mf-url').value.trim();
       if(!url){$('bn-err').textContent='URL wajib diisi.';return}
@@ -593,19 +624,30 @@ window.saveBanner=async function(){
       toast('Banner ditambahkan ✓');closeModal();
     }
   }catch(e){
-    $('bn-err').textContent='Gagal menyimpan: '+(e.message||'cek Firebase Rules / Storage Rules');
+    console.error('Banner upload error:',e);
+    $('bn-err').textContent=e.message||'Gagal menyimpan banner.';
+    $('bnProgTxt').textContent='';
     if(btn)btn.disabled=false;
   }
 };
 
 window.delBanner=async function(key){
-  if(!confirm('Hapus banner ini?'))return;
+  if(!confirm('Hapus banner ini? (File di GitHub, kalau ada, juga akan dihapus jika token masih terisi)'))return;
   try{
     const snap=await get(ref(db,'content/banners/'+key));
     const d=snap.exists()?snap.val():null;
     await remove(ref(db,'content/banners/'+key));
-    if(d&&d.storagePath){
-      deleteObject(sRef(storage,d.storagePath)).catch(()=>{}); // abaikan kalau file storage sudah tidak ada
+    if(d&&d.source==='github'&&d.ghPath&&d.ghSha){
+      try{
+        const headers=ghHeaders();
+        const repo=$('gh-repo').value.trim();
+        const branch=$('gh-branch').value.trim()||'main';
+        await fetch(`https://api.github.com/repos/${repo}/contents/${d.ghPath}`,{
+          method:'DELETE',
+          headers:{...headers,'Content-Type':'application/json'},
+          body:JSON.stringify({message:'Hapus banner: '+d.ghPath,sha:d.ghSha,branch})
+        });
+      }catch(e){/* token mungkin belum diisi di sesi ini — data di database tetap terhapus */}
     }
     toast('Dihapus');
   }catch(e){toast('Gagal menghapus: cek Firebase Rules')}
