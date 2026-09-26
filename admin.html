@@ -101,6 +101,12 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 .mrow{display:flex;gap:10px;margin-top:10px}
 .mrow .pb2{flex:1}
 
+/* icon picker */
+.icgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:4px}
+.icbtn{aspect-ratio:1;border-radius:12px;border:1.5px solid #c5daf5;background:#fff;color:#2f6fd0;display:grid;place-items:center;font-size:15px;cursor:pointer}
+.icbtn.sel{background:linear-gradient(135deg,var(--ac2),var(--ac));border-color:var(--ac);color:#fff}
+@media(max-width:420px){.icgrid{grid-template-columns:repeat(5,1fr)}}
+
 /* apk/banner forms */
 .card{border-radius:18px;padding:18px;margin-bottom:14px}
 .bimg{width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:12px;background:var(--soft);margin-top:8px}
@@ -154,6 +160,7 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
   .gbtn:active{background:#3c3f42}
   .bnactions button{background:rgba(24,34,56,.92);color:var(--ink)}
   .patw b{background:#22314f}
+  .icbtn{background:#182238;border-color:#22314f;color:var(--ink)}
 }
 </style>
 </head>
@@ -244,6 +251,25 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <section class="pane" id="p-banner">
       <div class="sech"><h2>Banner Beranda</h2><button class="addb" onclick="openBannerModal()"><i class="fa-solid fa-plus"></i>Tambah</button></div>
       <div class="bnhint"><i class="fa-solid fa-circle-info"></i> Tambah banner lewat <b>upload file</b> langsung (naik otomatis ke repo GitHub kamu, sesuai ekstensi aslinya) atau tempel <b>URL gambar</b> yang sudah online. Kosongkan semua supaya app kembali memakai banner1.jpeg dst dari server.</div>
+
+      <div class="card g" id="ibb-card">
+        <b style="font-size:13px"><i class="fa-solid fa-file-image"></i> Ubah Foto Jadi Link (opsional)</b>
+        <p style="font-size:11px;color:var(--mut);margin:6px 0 10px;line-height:1.6">Punya foto di HP/komputer tapi belum ada link-nya? Upload di sini (pakai layanan gratis <b>ImgBB</b>), nanti otomatis jadi link gambar. Setelah muncul, ketuk <b>Salin Link</b>, lalu tempel di kolom "URL gambar" saat menekan tombol Tambah di atas.</p>
+        <div class="fld"><label>API Key ImgBB (gratis, ambil sekali)</label><input id="ibb-key" type="password" placeholder="tempel API key dari api.imgbb.com" autocomplete="off"></div>
+        <p style="font-size:10.5px;color:var(--mut);margin:-4px 0 10px;line-height:1.6">Belum punya key? Buka <a href="https://api.imgbb.com/" target="_blank" rel="noopener" style="color:var(--ac);font-weight:700">api.imgbb.com</a> → login pakai Google → copy "API Key" → tempel di kolom di atas. Key cuma disimpan di browser ini.</p>
+        <label class="pb2" style="cursor:pointer">
+          <i class="fa-solid fa-upload"></i> Pilih Foto dari Perangkat
+          <input type="file" id="ibb-file" accept="image/*" style="display:none" onchange="ibbUpload(event)">
+        </label>
+        <div class="err" id="ibb-err"></div>
+        <div id="ibb-result" style="display:none;margin-top:12px">
+          <img id="ibb-preview" style="width:100%;border-radius:12px;margin-bottom:8px" alt="">
+          <div class="fld"><label>Link gambar</label><input id="ibb-url" readonly></div>
+          <button class="pb" onclick="ibbCopy()"><i class="fa-solid fa-copy"></i> Salin Link</button>
+        </div>
+        <p style="font-size:10.5px;color:var(--mut);margin-top:8px" id="ibb-status"></p>
+      </div>
+
       <div id="list-banner" class="bngrid"></div>
     </section>
 
@@ -424,14 +450,30 @@ window.openMoreSheet=function(){
   $('modal-ov').classList.add('on');
 };
 
+/* ===== ikon: dipilih dari daftar siap pakai, gak perlu ketik nama class Font Awesome ===== */
+const ICONS=[
+  ['fa-toolbox','Tools'],['fa-book','Buku'],['fa-building','Gedung'],['fa-envelope','Email'],['fa-phone','Telepon'],['fa-location-dot','Lokasi'],
+  ['fa-calculator','Kalkulator'],['fa-route','Rute'],['fa-sitemap','Sitemap'],['fa-shield-halved','Keamanan'],['fa-network-wired','Jaringan'],['fa-server','Server'],
+  ['fa-terminal','Terminal'],['fa-desktop','Komputer'],['fa-laptop','Laptop'],['fa-ethernet','Kabel'],['fa-satellite-dish','Sinyal'],['fa-wifi','WiFi'],
+  ['fa-diagram-project','Diagram'],['fa-cube','Virtualisasi'],['fa-magnifying-glass','Cari'],['fa-chart-line','Grafik'],['fa-folder-tree','File'],['fa-wave-square','Fiber'],
+  ['fa-globe','Web'],['fa-lock','Kunci'],['fa-mobile-screen','HP'],['fa-download','Unduh'],['fa-database','Database'],['fa-code','Kode'],['fa-graduation-cap','Edukasi'],
+  ['fa-users','Siswa'],['fa-star','Favorit'],['fa-circle-info','Info'],['fa-plug','Colokan'],['fa-fish','Wireshark']
+];
+function iconPickerHtml(sel){
+  return `<div class="icgrid">${ICONS.map(([ic,lbl])=>`<button type="button" class="icbtn${sel===ic?' sel':''}" data-ic="${ic}" title="${lbl}" onclick="pickIcon('${ic}')"><i class="fa-solid ${ic}"></i></button>`).join('')}</div>`;
+}
+window.pickIcon=function(ic){
+  const f=$('mf-icon');if(f)f.value=ic;
+  document.querySelectorAll('.icgrid .icbtn').forEach(b=>b.classList.toggle('sel',b.dataset.ic===ic));
+};
+
 /* ===== field config per kategori ===== */
 const FIELDS={
-  tools:[['name','Nama','Contoh: Wireshark'],['icon','Ikon (Font Awesome class)','fa-fish'],['desc','Deskripsi singkat','Menangkap & menganalisis paket data'],['link','Link unduh (opsional)','https://...'],['detail','Detail lengkap (opsional)','Penjelasan panjang untuk halaman detail…',1]],
-  materi:[['name','Judul Materi','Subnetting & VLSM'],['icon','Ikon (Font Awesome class)','fa-calculator'],['desc','Deskripsi singkat','Membagi jaringan sesuai kebutuhan host'],['link','Link referensi (opsional)','https://...'],['detail','Detail lengkap (opsional)','Penjelasan panjang…',1]],
-  fasilitas:[['name','Nama Fasilitas','Lab Komputer & PC'],['icon','Ikon (Font Awesome class)','fa-desktop'],['desc','Deskripsi singkat','PC high-spec & jaringan dasar']],
-  kontak:[['name','Label','Email'],['icon','Ikon (Font Awesome class)','fa-envelope'],['desc','Isi/Nilai','tkj@smkn2tembilahan.sch.id']]
+  tools:[['name','Nama','Contoh: Wireshark'],['icon','Ikon'],['desc','Deskripsi singkat','Menangkap & menganalisis paket data'],['link','Link unduh (opsional)','https://...'],['detail','Detail lengkap (opsional)','Penjelasan panjang untuk halaman detail…',1]],
+  materi:[['name','Judul Materi','Subnetting & VLSM'],['icon','Ikon'],['desc','Deskripsi singkat','Membagi jaringan sesuai kebutuhan host'],['link','Link referensi (opsional)','https://...'],['detail','Detail lengkap (opsional)','Penjelasan panjang…',1]],
+  fasilitas:[['name','Nama Fasilitas','Lab Komputer & PC'],['icon','Ikon'],['desc','Deskripsi singkat','PC high-spec & jaringan dasar']],
+  kontak:[['name','Label','Email'],['icon','Ikon'],['desc','Isi/Nilai','tkj@smkn2tembilahan.sch.id']]
 };
-const ICON_HINT='Cari nama ikon di fontawesome.com/search (versi Free), contoh: fa-wifi, fa-server, fa-shield-halved.';
 
 /* ===== generic CRUD list ===== */
 function listen(path,renderFn){
@@ -461,10 +503,14 @@ window.openItemModal=async function(cat,key){
   let d={};
   if(key){const snap=await get(ref(db,'content/'+cat+'/'+key));d=snap.exists()?snap.val():{}}
   const fields=FIELDS[cat];
-  const rows=fields.map(([fk,label,ph,area])=>`
-    <div class="fld"><label>${label}</label>${area?`<textarea id="mf-${fk}" rows="4" placeholder="${esc(ph)}">${esc(d[fk]||'')}</textarea>`:`<input id="mf-${fk}" placeholder="${esc(ph)}" value="${esc(d[fk]||'')}">`}</div>`).join('');
+  const rows=fields.map(([fk,label,ph,area])=>{
+    if(fk==='icon'){
+      const sel=d.icon||ICONS[0][0];
+      return `<div class="fld"><label>${label}</label><input type="hidden" id="mf-icon" value="${esc(sel)}">${iconPickerHtml(sel)}</div>`;
+    }
+    return `<div class="fld"><label>${label}</label>${area?`<textarea id="mf-${fk}" rows="4" placeholder="${esc(ph)}">${esc(d[fk]||'')}</textarea>`:`<input id="mf-${fk}" placeholder="${esc(ph)}" value="${esc(d[fk]||'')}">`}</div>`;
+  }).join('');
   $('modalBox').innerHTML=`<h3>${key?'Edit':'Tambah'} ${titles[cat]||cat}</h3>${rows}
-    <p style="font-size:10.5px;color:var(--mut);margin-top:2px">${ICON_HINT}</p>
     <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" onclick="saveItem()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
   $('modal-ov').classList.add('on');
 };
@@ -473,6 +519,7 @@ window.saveItem=async function(){
   const{cat,key}=currentItem;const fields=FIELDS[cat];
   const data={};fields.forEach(([fk])=>data[fk]=$('mf-'+fk).value.trim());
   if(!data.name){toast('Nama wajib diisi');return}
+  if(!data.icon)data.icon=ICONS[0][0];
   try{
     if(key){
       await update(ref(db,'content/'+cat+'/'+key),data);
@@ -513,7 +560,7 @@ function bannerCard(key,d,idx,total){
 window.openBannerModal=function(){
   $('modalBox').innerHTML=`<h3>Tambah Banner</h3>
     <div class="fld"><label>URL gambar</label><input id="mf-url" placeholder="https://.../banner.jpg"></div>
-    <p style="font-size:10.5px;color:var(--mut);line-height:1.6">Belum punya link gambar? Upload dulu ke <a href="https://postimages.org" target="_blank" rel="noopener" style="color:var(--ac);font-weight:700">postimages.org</a> (gratis, tanpa akun) → pilih foto → copy link <b>"Direct link"</b> → tempel di atas.</p>
+    <p style="font-size:10.5px;color:var(--mut);line-height:1.6">Belum punya link gambar? Pakai kotak <b>"Ubah Foto Jadi Link"</b> di halaman Banner (di luar form ini) untuk upload foto dan dapat link-nya, lalu tempel di sini.</p>
     <div class="err" id="bn-err" style="margin-top:8px"></div>
     <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" id="bnSaveBtn" onclick="saveBanner()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
   $('modal-ov').classList.add('on');
@@ -557,6 +604,45 @@ window.moveBanner=async function(key,dir){
     updates['content/banners/'+b[0]+'/order']=a[1].order??i;
     await update(ref(db),updates);
   }catch(e){toast('Gagal mengurutkan')}
+};
+
+/* ===== ubah foto jadi link (ImgBB, gratis) — upload dari HP/komputer, hasilnya link URL ===== */
+(function ibbRestoreKey(){
+  try{const k=localStorage.getItem('tkj_ibb_key');if(k)$('ibb-key').value=k}catch(e){}
+})();
+window.ibbUpload=async function(ev){
+  const f=ev.target.files[0];if(!f)return;
+  $('ibb-err').textContent='';$('ibb-result').style.display='none';
+  const key=$('ibb-key').value.trim();
+  if(!key){$('ibb-err').textContent='Isi API Key ImgBB dulu (lihat cara ambilnya di atas).';ev.target.value='';return}
+  try{localStorage.setItem('tkj_ibb_key',key)}catch(e){}
+  $('ibb-status').textContent='Mengunggah…';
+  try{
+    const b64=await new Promise((res,rej)=>{
+      const r=new FileReader();
+      r.onload=()=>res(String(r.result).split(',')[1]);
+      r.onerror=()=>rej(new Error('Gagal membaca file'));
+      r.readAsDataURL(f);
+    });
+    const fd=new FormData();fd.append('image',b64);
+    const resp=await fetch('https://api.imgbb.com/1/upload?key='+encodeURIComponent(key),{method:'POST',body:fd});
+    const data=await resp.json().catch(()=>({}));
+    if(!resp.ok||!data.success)throw new Error((data&&data.error&&data.error.message)||('HTTP '+resp.status));
+    const url=data.data.display_url||data.data.url;
+    $('ibb-preview').src=url;$('ibb-url').value=url;$('ibb-result').style.display='block';
+    $('ibb-status').textContent='Berhasil diunggah ✓ — tinggal salin link-nya.';
+    toast('Foto berhasil jadi link ✓');
+  }catch(e){
+    $('ibb-err').textContent='Gagal upload: '+(e.message||'cek API Key / koneksi internet');
+    $('ibb-status').textContent='';
+  }finally{ev.target.value=''}
+};
+window.ibbCopy=function(){
+  const u=$('ibb-url').value;if(!u)return;
+  (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(
+    ()=>toast('Link disalin ✓ — tempel di kolom URL banner'),
+    ()=>toast('Link: '+u)
+  );
 };
 
 /* ===== apk ===== */
