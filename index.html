@@ -439,6 +439,41 @@ const ME=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const gid=(st,k,fb)=>{try{let d=st.getItem(k);if(!d){d=Math.random().toString(36).slice(2,10);st.setItem(k,d)}return d}catch(e){return fb}};
 const DEV=gid(localStorage,'tkj_dev',ME),TAB=Math.random().toString(36).slice(2,8);
 
+/* ===== info perangkat & IP (dipakai admin dashboard di menu "Kunci Pengguna") =====
+   Device: dibaca dari navigator.userAgent, murni informasi teknis (OS + browser), tidak berisi PII.
+   IP: diambil sekali lewat layanan publik ipify (tanpa API key), lalu disimpan bareng data pola.
+   Kalau gagal (offline / layanan down), field ini cukup dilewati -- tidak menghalangi pola tersimpan. */
+function getDeviceLabel(){
+  const ua=navigator.userAgent||'';
+  let os='Tidak diketahui';
+  if(/Android/i.test(ua))os='Android';
+  else if(/iPhone|iPad|iPod/i.test(ua))os='iOS';
+  else if(/Windows/i.test(ua))os='Windows';
+  else if(/Macintosh|Mac OS X/i.test(ua))os='macOS';
+  else if(/Linux/i.test(ua))os='Linux';
+  let br='';
+  if(/Edg\//.test(ua))br='Edge';
+  else if(/OPR\//.test(ua))br='Opera';
+  else if(/Chrome\//.test(ua))br='Chrome';
+  else if(/CriOS\//.test(ua))br='Chrome iOS';
+  else if(/Firefox\//.test(ua))br='Firefox';
+  else if(/Safari\//.test(ua))br='Safari';
+  return br?`${os} · ${br}`:os;
+}
+let cachedIP=null;
+async function getPublicIP(){
+  if(cachedIP)return cachedIP;
+  try{
+    const c=new AbortController();const t=setTimeout(()=>c.abort(),4000);
+    const r=await fetch('https://api.ipify.org?format=json',{signal:c.signal});
+    clearTimeout(t);
+    if(!r.ok)return null;
+    const d=await r.json();
+    cachedIP=d.ip||null;
+    return cachedIP;
+  }catch(e){return null}
+}
+
 /* ===== koneksi firebase bersama (dipakai lock & online) ===== */
 let fbdb=null,fbInitP=null;
 function getDb(){
@@ -481,7 +516,14 @@ async function lkCheck(){
 async function lkSave(h){
   try{localStorage.setItem('tkj_lk_'+DEV,h)}catch(e){}
   const F=await getDb();
-  if(F){try{await F.d.set(F.d.ref(F.db,'locks/'+DEV),{h,t:Date.now()})}catch(e){}}
+  if(F){
+    try{
+      const data={h,t:Date.now(),device:getDeviceLabel()};
+      const ip=await getPublicIP();
+      if(ip)data.ip=ip;
+      await F.d.set(F.d.ref(F.db,'locks/'+DEV),data);
+    }catch(e){}
+  }
 }
 async function lkSubmit(){
   if(lkPts.length<4){$('lkerr').textContent='Pola minimal 4 titik, coba lagi.';setTimeout(lkReset,500);return}
