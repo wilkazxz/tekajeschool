@@ -402,10 +402,15 @@ let APK='tkj.apk';
    Contoh: 'https://nama-project-default-rtdb.asia-southeast1.firebasedatabase.app'
 
    PENTING — Firebase Security Rules:
-   Database ini diakses langsung dari browser sehingga URL-nya publik. Supaya orang lain tidak bisa
-   membaca hash pola kunci, merusak data presence, atau mengubah konten (Tools/Materi/dst) lewat
-   Admin Dashboard, aktifkan DUA metode Sign-in di Firebase Console (Authentication → Sign-in method):
-   "Anonymous" (dipakai app ini) dan "Google" (dipakai admin.html). Set Rules seperti ini:
+   Database ini diakses langsung dari browser sehingga URL-nya publik. Cuma node "content"
+   (Tools/Materi/Fasilitas/Kontak/Banner/APK) yang perlu dikunci, karena itu satu-satunya data yang
+   berarti kalau diubah orang iseng. "presence" (hitungan online) dan "locks" (pola kunci HP siswa)
+   dibiarkan terbuka — risikonya kecil dan ini menghindari ketergantungan ke Anonymous Auth yang
+   gampang lupa diaktifkan dan bikin fitur online tiba-tiba "mati".
+
+   Di Firebase Console → Authentication → Sign-in method: cukup aktifkan "Email/Password" saja
+   (dipakai admin.html). Lalu buat SATU akun admin di Authentication → Users → Add user
+   (email: wilkaaffah@gmail.com + password bebas). Set Rules di Realtime Database → Rules persis ini:
    {
      "rules": {
        "content": {
@@ -413,20 +418,17 @@ let APK='tkj.apk';
          ".write": "auth != null && auth.token.email === 'wilkaaffah@gmail.com'"
        },
        "locks": {
-         "$dev": { ".read": "auth != null", ".write": "auth != null" }
+         ".read": true,
+         ".write": true
        },
        "presence": {
-         "$dev": { ".read": "auth != null", ".write": "auth != null" }
+         ".read": true,
+         ".write": true
        }
      }
    }
-   Rules di atas memastikan: siapa pun (termasuk pengunjung anonim app ini) boleh MEMBACA konten,
-   tapi hanya akun Google dengan email persis "wilkaaffah@gmail.com" yang boleh MENULIS/mengubahnya
-   lewat admin.html (email ini juga dikunci di kode admin.html sebagai lapis kedua). Kalau suatu saat
-   admin diganti orang lain, ubah email di DUA tempat: Rules ini, dan variabel ADMIN_EMAIL di admin.html.
-   Kode di bawah sudah mencoba sign-in anonymous otomatis lewat startFB()/getDb(); kalau Rules di atas
-   belum diaktifkan, aplikasi tetap jalan dalam mode lokal (fallback), dan admin.html tidak akan bisa
-   menyimpan perubahan sampai kamu mengaktifkannya. */
+   Kalau nanti admin diganti orang lain, ubah email di DUA tempat: Rules ini, dan variabel
+   ADMIN_EMAIL di admin.html. */
 const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
 let deferred=null,hist=[],pi=null;
 try{hist=JSON.parse(localStorage.getItem('tkjh')||'[]')}catch(e){}
@@ -446,17 +448,9 @@ function getDb(){
   fbInitP=(async()=>{
     try{
       const V='https://www.gstatic.com/firebasejs/10.12.2/';
-      const[A,D,Au]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js'),import(V+'firebase-auth.js').catch(()=>null)]);
+      const[A,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js')]);
       const app=A.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')});
-      let uid=null;
-      if(Au){
-        try{
-          const auth=Au.getAuth(app);
-          const cred=await Au.signInAnonymously(auth);
-          uid=cred.user.uid;
-        }catch(e){/* Anonymous Auth belum diaktifkan di Firebase Console; lanjut tanpa auth */}
-      }
-      fbdb={d:D,db:D.getDatabase(app),uid};
+      fbdb={d:D,db:D.getDatabase(app)};
       return fbdb;
     }catch(e){return null}
   })();
