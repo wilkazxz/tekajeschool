@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="TKJ SMKN 2">
 <title>TKJ SMKN 2 Tembilahan</title>
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22TKJ%20SMKN%202%20Tembilahan%22%2C%22short_name%22%3A%22TKJ%20SMKN2%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23eaf3fe%22%2C%22theme_color%22%3A%22%235b9bef%22%2C%22orientation%22%3A%22portrait%22%7D">
+<link rel="manifest" id="manifestLink" href="data:application/manifest+json,%7B%22name%22%3A%22TKJ%20SMKN%202%20Tembilahan%22%2C%22short_name%22%3A%22TKJ%20SMKN2%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23eaf3fe%22%2C%22theme_color%22%3A%22%235b9bef%22%2C%22orientation%22%3A%22portrait%22%7D">
 <link rel="icon" id="fav" href="data:,">
 <link rel="apple-touch-icon" id="ati" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -142,6 +142,7 @@ input[type=range]{width:100%;accent-color:var(--ac)}
 .lkdot i{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #bcd8fa;display:block;transition:.15s}
 .lkdot.on i{background:var(--ac);border-color:var(--ac);transform:scale(1.15);box-shadow:0 0 0 8px rgba(91,155,239,.18)}
 .lkerr{color:#d2566b;font-size:12px;font-weight:700;margin-top:16px;min-height:16px}
+.lknote{font-size:10px;color:var(--mut);max-width:280px;line-height:1.6;margin-top:14px}
 
 /* ===== smooth + logo ===== */
 body{background:#eaf3fe;-webkit-font-smoothing:antialiased}
@@ -194,6 +195,33 @@ body:before{transform:translateZ(0)}
 .gcard .tag{align-self:flex-start;font-size:9px;font-weight:800;color:#2f6fd0;background:var(--soft);padding:3px 8px;border-radius:7px;display:flex;align-items:center;gap:4px}
 .dllink{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
 .desc{font-size:12px;line-height:1.7;color:#3d5a80;background:#fff;border:1px solid #d5e5fa;border-radius:14px;padding:12px;margin:4px 0 12px}
+
+/* ===== dark mode ===== */
+@media(prefers-color-scheme:dark){
+:root{--ink:#e7eef9;--mut:#8ea3c2;--ac:#5b9bef;--ac2:#4577b8;--soft:#1c2c47;--gl:rgba(24,33,54,.6);--bd:rgba(255,255,255,.08);--sh:0 8px 24px rgba(0,0,0,.35)}
+body{background:#0f1626}
+body:before{background:radial-gradient(circle at 0 0,#1c2c47,transparent 45%),radial-gradient(circle at 100% 100%,#16233b,transparent 50%),linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
+.g{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
+#nav{background:rgba(18,26,42,.92)}
+#sh{background:rgba(15,22,36,.96);border-top-color:rgba(255,255,255,.06)}
+.hero{background:linear-gradient(135deg,rgba(40,60,95,.9),rgba(28,44,72,.9))}
+.hero:before{background:rgba(255,255,255,.06)}
+.lb,.hero p,.hrow div{color:#9db8e0}
+.av{background:#182238;border-color:#22314f}
+.in,.term,.cab p,.desc{background:#182238;border-color:#22314f;color:var(--ink)}
+.k,.pb2{background:#182238;color:var(--ink)}
+.pb2{border-color:#2c3e5f}
+.k{border:1px solid #22314f}
+.ai{background:var(--gl);border-color:var(--bd)}
+.ai.on{background:#22314f}
+#toast{background:#182238;border-color:#22314f;color:var(--ink)}
+#ws{background:#0f1626}
+#lockov{background:linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
+.lkdot i{background:#182238;border-color:#2c3e5f}
+.onl{background:rgba(24,33,54,.85)}
+.chip{color:var(--ink)}
+input[type=range]{accent-color:var(--ac)}
+}
 </style>
 </head>
 <body>
@@ -220,6 +248,7 @@ body:before{transform:translateZ(0)}
     <div class="lkgrid" id="lkgrid"></div>
   </div>
   <div class="lkerr" id="lkerr"></div>
+  <p class="lknote">Catatan: pola ini hanya untuk personalisasi tampilan di perangkat ini, bukan enkripsi. Jangan gunakan untuk mengunci data yang sifatnya rahasia/sensitif.</p>
 </div>
 
 <div id="toast"></div>
@@ -280,7 +309,7 @@ body:before{transform:translateZ(0)}
   </div>
 
   <button class="cb g" onclick="openCreator()"><i class="fa-solid fa-code"></i>Created By<i class="fa-solid fa-arrow-up"></i></button>
-  <div class="ver">v2.0.0 • PWA Ready</div>
+  <div class="ver">v2.0.1 • PWA Ready • Offline Support</div>
 </section>
 
 <!-- SUBNET -->
@@ -370,7 +399,30 @@ Fasilitas:[['Lab Komputer & PC','fa-desktop','PC high-spec & jaringan dasar'],['
 Kontak:[['Alamat Sekolah','fa-location-dot','Jl. Pendidikan / Parit 10, Tembilahan Hulu'],['Email','fa-envelope','tkj@smkn2tembilahan.sch.id'],['Telepon / WhatsApp','fa-phone','+62 812-7654-3210']]};
 const APK='tkj.apk';
 /* Isi dengan URL Firebase Realtime Database agar online & pola kunci tersimpan permanen di semua HP/laptop.
-   Contoh: 'https://nama-project-default-rtdb.asia-southeast1.firebasedatabase.app' */
+   Contoh: 'https://nama-project-default-rtdb.asia-southeast1.firebasedatabase.app'
+
+   PENTING — Firebase Security Rules:
+   Database ini diakses langsung dari browser sehingga URL-nya publik. Supaya orang lain tidak bisa
+   membaca hash pola kunci atau merusak data presence, aktifkan Anonymous Auth di Firebase Console
+   (Authentication → Sign-in method → Anonymous), lalu set Rules seperti ini:
+   {
+     "rules": {
+       "locks": {
+         "$dev": {
+           ".read": "auth != null",
+           ".write": "auth != null"
+         }
+       },
+       "presence": {
+         "$dev": {
+           ".read": "auth != null",
+           ".write": "auth != null"
+         }
+       }
+     }
+   }
+   Kode di bawah sudah mencoba sign-in anonymous otomatis lewat startFB()/getDb(); kalau Rules di atas
+   belum diaktifkan, aplikasi tetap jalan dalam mode lokal (fallback). */
 const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
 let deferred=null,hist=[],pi=null;
 try{hist=JSON.parse(localStorage.getItem('tkjh')||'[]')}catch(e){}
@@ -390,8 +442,17 @@ function getDb(){
   fbInitP=(async()=>{
     try{
       const V='https://www.gstatic.com/firebasejs/10.12.2/';
-      const[A,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js')]);
-      fbdb={d:D,db:D.getDatabase(A.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')}))};
+      const[A,D,Au]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js'),import(V+'firebase-auth.js').catch(()=>null)]);
+      const app=A.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')});
+      let uid=null;
+      if(Au){
+        try{
+          const auth=Au.getAuth(app);
+          const cred=await Au.signInAnonymously(auth);
+          uid=cred.user.uid;
+        }catch(e){/* Anonymous Auth belum diaktifkan di Firebase Console; lanjut tanpa auth */}
+      }
+      fbdb={d:D,db:D.getDatabase(app),uid};
       return fbdb;
     }catch(e){return null}
   })();
@@ -532,7 +593,9 @@ function openPing(){sheet('Simulator Ping',`<input class="in" id="pt" value="192
 function runPing(){const t=esc($('pt').value.trim()||'192.168.2.1'),c=$('pc');clearInterval(pi);c.innerHTML=`<span class="i">Pinging ${t} with 32 bytes of data:</span>\n`;let n=0;toast('Memulai ping ke '+t+'...');pi=setInterval(()=>{n++;c.innerHTML+=`<span class="o">Reply from ${t}: bytes=32 time=${(Math.random()*2+.3).toFixed(1)}ms TTL=64</span>\n`;c.scrollTop=c.scrollHeight;if(n>=4){clearInterval(pi);c.innerHTML+=`\n<b>Ping statistics: Sent = 4, Received = 4, Lost = 0 (0% loss)</b>`;log('Ping '+t,'4 paket diterima','fa-satellite-dish','0% loss')}},500)}
 
 /* console: 12 API */
-const J=async u=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);try{return await(await fetch(u,{signal:c.signal})).json()}finally{clearTimeout(t)}},fm=n=>Number(n).toLocaleString('id-ID');
+/* Catatan: NASA memakai DEMO_KEY (limit 30/jam, 50/hari per IP). Untuk pemakaian rame-rame di lab,
+   daftar API key gratis sendiri di https://api.nasa.gov lalu ganti DEMO_KEY di bawah. */
+const J=async u=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);try{const r=await fetch(u,{signal:c.signal});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}finally{clearTimeout(t)}},fm=n=>Number(n).toLocaleString('id-ID');
 const APIS=[
 ['Bitcoin','fa-brands fa-bitcoin','Crypto',async()=>{const d=(await J('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,idr&include_24hr_change=true')).bitcoin;return{'BTC/USD':'$'+fm(d.usd),'BTC/IDR':'Rp '+fm(d.idr),'24h':d.usd_24h_change.toFixed(2)+'%'}}],
 ['Cuaca','fa-solid fa-cloud-sun','Tembilahan',async()=>{const d=(await J('https://api.open-meteo.com/v1/forecast?latitude=-0.5&longitude=103.0&current_weather=true')).current_weather;return{lokasi:'Tembilahan',suhu:d.temperature+'°C',angin:d.windspeed+' km/h',kode:d.weathercode}}],
@@ -550,9 +613,10 @@ function openConsole(){sheet('Lab Console',`<p style="font-size:11px;color:var(-
 let apiBusy=false;
 async function runApi(i){if(apiBusy)return;apiBusy=true;const a=APIS[i],c=$('ct');document.querySelectorAll('.ai').forEach(b=>b.classList.remove('on'));$('ai'+i).classList.add('on');c.style.display='block';c.innerHTML='';c.scrollIntoView({block:'nearest'});
 const add=async(h,d=90)=>{await new Promise(r=>setTimeout(r,d));c.innerHTML+=h+'\n';c.scrollTop=c.scrollHeight};
+if(!navigator.onLine){await add('<span class="e">[ERR]</span> Tidak ada koneksi internet.');toast('Kamu sedang offline');apiBusy=false;return}
 await add(`<span class="a">❯</span> curl ${a[0].toLowerCase()}`,0);await add('<span class="i">[INFO]</span> Menghubungi server...');const t=performance.now();
 try{const d=await a[3]();await add(`<span class="o">[OK]</span> 200 — ${(performance.now()-t).toFixed(0)}ms`);for(const[k,v]of Object.entries(d))await add(`├─ <span class="i">${k}</span>: ${esc(v)}`,50);log('Console: '+a[0],'Data berhasil diambil','fa-terminal','OK')}
-catch(e){await add('<span class="e">[ERR]</span> Gagal memuat data. Periksa koneksi internet.');toast('Gagal memuat data')}apiBusy=false}
+catch(e){const msg=a[0]==='NASA'&&/429|HTTP 429/.test(e.message||'')?'Kena limit DEMO_KEY (30/jam). Coba lagi nanti atau ganti API key.':(e.name==='AbortError'?'Waktu tunggu habis (timeout 8 detik).':'Gagal memuat data. Server mungkin sedang down atau koneksi bermasalah.');await add(`<span class="e">[ERR]</span> ${esc(msg)}`);toast('Gagal memuat data: '+a[0])}apiBusy=false}
 
 /* creator */
 async function openCreator(){sheet('wilka@creator:~$ ./introduce.sh','<div class="term" id="cr" style="max-height:none"></div>');const c=$('cr'),L=[[0,'<span class="a">❯</span> ./introduce.sh'],[200,'<span class="i">[INFO]</span> loading creator...'],[200,'──────────────'],[200,'<span class="a">$</span> creator → <b>Wilka</b>'],[300,'<span class="a">$</span> role → Web Developer'],[300,'──────────────'],[300,'Hai, saya <b>Wilka</b> 👋'],[400,'Yang membuat & membangun website ini.'],[400,'Semoga kalian bisa menggunakan tools ini dengan bijak ya 🙏'],[300,'──────────────'],[300,'<span class="o">[OK]</span> profile loaded'],[250,'<span class="a">$</span> Next: <span class="i">thank you ❤️</span><span class="cur"></span>']];
@@ -580,6 +644,24 @@ const setLogo=(im,u)=>{im.decoding='async';im.onload=()=>im.classList.add('ok');
 document.querySelectorAll('img[data-logo]').forEach(im=>{const n=im.dataset.logo,c=lgGet(n);
  if(c){im.onerror=()=>{im.onerror=null;lgSet(n,null);delete LG[n];findLogo(n).then(u=>u?setLogo(im,u):noLogo(im))};setLogo(im,c)}
  else findLogo(n).then(u=>u?setLogo(im,u):noLogo(im))});
+
+/* ===== manifest dinamis: pasang logo TKJ sebagai ikon PWA begitu ketemu ===== */
+function buildManifest(iconUrl){
+  const manifest={
+    name:'TKJ SMKN 2 Tembilahan',short_name:'TKJ SMKN2',start_url:'.',display:'standalone',
+    background_color:'#eaf3fe',theme_color:'#5b9bef',orientation:'portrait',
+    icons:iconUrl?[
+      {src:iconUrl,sizes:'192x192',type:'image/png',purpose:'any'},
+      {src:iconUrl,sizes:'512x512',type:'image/png',purpose:'any'},
+      {src:iconUrl,sizes:'512x512',type:'image/png',purpose:'maskable'}
+    ]:[]
+  };
+  try{
+    const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+    $('manifestLink').href=URL.createObjectURL(blob);
+  }catch(e){}
+}
+(lgGet('tkj')?Promise.resolve(lgGet('tkj')):findLogo('tkj')).then(u=>buildManifest(u));
 
 /* ===== banner carousel: cari banner1..banner5 otomatis, auto-slide + swipe manual ===== */
 (async function initBanner(){
@@ -642,6 +724,13 @@ async function startFB(){
  }catch(e){setStatus('SDK gagal dimuat · mode lokal');startLocal()}
 }
 FIREBASE_URL?startFB():startLocal();
+
+/* ===== service worker: dukungan offline dasar ===== */
+if('serviceWorker' in navigator){
+  addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{/* sw.js belum diunggah ke server, lewati diam-diam */});
+  });
+}
 
 setCidr(24);renderHist();
 </script>
