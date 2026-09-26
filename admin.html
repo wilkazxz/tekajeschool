@@ -125,13 +125,21 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 #toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-20px);background:#fff;border:1px solid #c5daf5;color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:700;font-size:12px;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center;box-shadow:var(--sh)}
 #toast.on{opacity:1;transform:translateX(-50%)}
 
+/* ===== bottom nav ala APK, cuma tampil di layar HP ===== */
+.adminnav{display:none}
 @media(max-width:880px){
-  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;transform:translateX(-105%);transition:transform .25s;box-shadow:0 0 30px rgba(0,0,0,.15)}
-  .sidebar.on{transform:translateX(0)}
-  .hbtn{display:grid;place-items:center}
-  main{padding:16px 14px 60px}
+  .sidebar{display:none}
+  .hbtn{display:none!important}
+  main{padding:16px 14px calc(96px + env(safe-area-inset-bottom))}
   .stats{grid-template-columns:repeat(2,1fr)}
   .bngrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .adminnav{display:flex;position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 20px);max-width:430px;height:62px;border-radius:26px;justify-content:space-around;align-items:center;z-index:70;background:rgba(255,255,255,.94);box-shadow:var(--sh)}
+  .adminnav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;font-weight:700;color:#9ab6da;cursor:pointer;width:54px}
+  .adminnav button.on{color:#2f6fd0}
+  .adminnav button i{font-size:16px}
+}
+@media(max-width:880px) and (prefers-color-scheme:dark){
+  .adminnav{background:rgba(18,26,42,.94)}
 }
 @media(prefers-color-scheme:dark){
   :root{--ink:#e7eef9;--mut:#8ea3c2;--ac:#5b9bef;--ac2:#4577b8;--soft:#1c2c47;--bd:rgba(255,255,255,.08);--sh:0 8px 24px rgba(0,0,0,.35)}
@@ -299,8 +307,17 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
   </main>
 </div>
 
-<!-- MODAL: item editor (tools/materi/fasilitas/kontak) -->
+<!-- MODAL: item editor (tools/materi/fasilitas/kontak) & sheet "Lainnya" di HP -->
 <div id="modal-ov"><div class="modal g" id="modalBox"></div></div>
+
+<!-- BOTTOM NAV: cuma tampil di layar HP, biar gak perlu mode desktop buat pindah tab -->
+<nav class="adminnav g" id="adminnav">
+  <button class="on" data-p="ringkasan" onclick="goPane('ringkasan')"><i class="fa-solid fa-gauge"></i>Ringkasan</button>
+  <button data-p="tools" onclick="goPane('tools')"><i class="fa-solid fa-toolbox"></i>Tools</button>
+  <button data-p="materi" onclick="goPane('materi')"><i class="fa-solid fa-book"></i>Materi</button>
+  <button data-p="kunci" onclick="goPane('kunci')"><i class="fa-solid fa-lock"></i>Kunci</button>
+  <button id="adminMoreBtn" onclick="openMoreSheet()"><i class="fa-solid fa-ellipsis"></i>Lainnya</button>
+</nav>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -380,11 +397,31 @@ onAuthStateChanged(auth,user=>{
 
 /* ===== nav ===== */
 const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat',github:'File Web (GitHub)'};
+const ADMINNAV_MORE=['fasilitas','kontak','banner','apk','github'];
 window.goPane=function(p){
   document.querySelectorAll('.pane').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
   document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  document.querySelectorAll('.adminnav button[data-p]').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  const moreBtn=$('adminMoreBtn');if(moreBtn)moreBtn.classList.toggle('on',ADMINNAV_MORE.includes(p));
   $('paneTitle').textContent=titles[p]||p;
   $('sidebar').classList.remove('on');
+};
+
+/* Sheet "Lainnya" khusus tampilan HP: nampung tab yang gak muat di bottom nav
+   (Fasilitas, Kontak, Banner, APK, File Web) + tombol Keluar. Pakai modal yang sama
+   dengan editor item, tapi isinya daftar navigasi biasa. */
+window.openMoreSheet=function(){
+  const items=[
+    ['fasilitas','fa-solid fa-building','Fasilitas Lab'],
+    ['kontak','fa-solid fa-envelope','Kontak'],
+    ['banner','fa-solid fa-images','Banner Beranda'],
+    ['apk','fa-brands fa-android','Aplikasi Android'],
+    ['github','fa-brands fa-github','File Web (GitHub)']
+  ];
+  const rows=items.map(([p,ic,label])=>`<div class="itemcard g" style="cursor:pointer" onclick="goPane('${p}');closeModal()"><div class="ic"><i class="${ic}"></i></div><div class="tx"><b>${label}</b></div><i class="fa-solid fa-chevron-right" style="color:#a9c8ef"></i></div>`).join('');
+  const logout=`<div class="itemcard g" style="cursor:pointer" onclick="closeModal();doLogout()"><div class="ic" style="color:var(--danger)"><i class="fa-solid fa-arrow-right-from-bracket"></i></div><div class="tx"><b style="color:var(--danger)">Keluar</b></div></div>`;
+  $('modalBox').innerHTML=`<h3>Lainnya</h3>${rows}${logout}<button class="pb2" style="margin-top:14px" onclick="closeModal()">Tutup</button>`;
+  $('modal-ov').classList.add('on');
 };
 
 /* ===== field config per kategori ===== */
