@@ -153,6 +153,7 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <button class="nav-i" data-p="banner" onclick="goPane('banner')"><i class="fa-solid fa-images"></i>Banner</button>
     <button class="nav-i" data-p="apk" onclick="goPane('apk')"><i class="fa-brands fa-android"></i>APK</button>
     <button class="nav-i" data-p="kunci" onclick="goPane('kunci')"><i class="fa-solid fa-lock"></i>Kunci Pengguna</button>
+    <button class="nav-i" data-p="github" onclick="goPane('github')"><i class="fa-brands fa-github"></i>File Web</button>
     <div class="nav-sp"></div>
     <button class="logout" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Keluar</button>
   </aside>
@@ -227,6 +228,44 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
       <div class="sech"><h2>Pola Kunci Perangkat</h2></div>
       <p style="font-size:11.5px;color:var(--mut);margin-bottom:12px">Daftar perangkat yang sudah membuat pola kunci. Hapus salah satu supaya perangkat itu diminta membuat pola baru saat dibuka lagi (misal siswa lupa polanya).</p>
       <div id="list-kunci"></div>
+    </section>
+
+    <!-- GITHUB FILE -->
+    <section class="pane" id="p-github">
+      <div class="sech"><h2>File Web (GitHub)</h2></div>
+      <div class="card g">
+        <b style="font-size:13px">Pengaturan Repo</b>
+        <div class="fld" style="margin-top:10px"><label>Owner/Repo</label><input id="gh-repo" placeholder="wilkazxz/tekajeschool" value="wilkazxz/tekajeschool"></div>
+        <div class="fld"><label>Branch</label><input id="gh-branch" placeholder="main" value="main"></div>
+        <div class="fld"><label>Path file</label><input id="gh-path" placeholder="index.html" value="index.html"></div>
+        <div class="fld"><label>Personal Access Token (GitHub)</label><input id="gh-pat" type="password" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off"></div>
+        <div class="lnote" style="margin-top:0">
+          Token ini <b>tidak pernah disimpan permanen</b> — cuma dipegang browser selama tab ini terbuka, hilang begitu di-refresh/ditutup. Cara buat token (sekali saja, lalu simpan sendiri di tempat aman):
+          <ol style="margin:6px 0 0 16px;padding:0">
+            <li>GitHub → foto profil → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</li>
+            <li>Repository access: pilih "Only select repositories" → pilih <b>tekajeschool</b></li>
+            <li>Permissions → Repository permissions → Contents → set ke <b>Read and write</b></li>
+            <li>Generate token, copy, tempel di kolom atas</li>
+          </ol>
+        </div>
+        <button class="pb2" style="margin-top:10px" onclick="ghSaveSettings()"><i class="fa-solid fa-floppy-disk"></i> Simpan pengaturan repo (bukan token)</button>
+      </div>
+
+      <div class="card g">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="pb" style="width:auto;padding:11px 18px" onclick="ghLoadFile()"><i class="fa-solid fa-cloud-arrow-down"></i> Muat File Saat Ini</button>
+          <label class="pb2" style="width:auto;padding:11px 18px;cursor:pointer">
+            <i class="fa-solid fa-upload"></i> Upload dari Komputer
+            <input type="file" id="gh-upload" accept=".html,.htm" style="display:none" onchange="ghUploadPicked(event)">
+          </label>
+        </div>
+        <div class="fld" style="margin-top:14px"><label>Isi file (bisa diedit langsung)</label>
+          <textarea id="gh-content" rows="16" style="font-family:'Fira Code',monospace;font-size:11.5px" placeholder="Klik 'Muat File Saat Ini' dulu, atau upload file dari komputer…"></textarea>
+        </div>
+        <div class="err" id="gh-err"></div>
+        <button class="pb" onclick="ghSaveFile()"><i class="fa-solid fa-code-commit"></i> Simpan &amp; Upload ke GitHub</button>
+        <p style="font-size:10.5px;color:var(--mut);margin-top:8px" id="gh-status"></p>
+      </div>
     </section>
   </main>
 </div>
@@ -315,7 +354,7 @@ onAuthStateChanged(auth,user=>{
 });
 
 /* ===== nav ===== */
-const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat'};
+const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat',github:'File Web (GitHub)'};
 window.goPane=function(p){
   document.querySelectorAll('.pane').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
   document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
@@ -479,6 +518,102 @@ function initDashboard(){
 
 document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target.id==='modal-ov')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* ===== File Web (GitHub) ===== */
+// Pengaturan repo (owner/repo, branch, path) boleh disimpan lokal — tidak rahasia.
+// Personal Access Token TIDAK PERNAH disimpan ke localStorage/Firebase, hanya di memori tab ini.
+let ghSha=null,ghToken='';
+(function ghRestoreSettings(){
+  try{
+    const s=JSON.parse(localStorage.getItem('tkj_gh_settings')||'{}');
+    if(s.repo)$('gh-repo').value=s.repo;
+    if(s.branch)$('gh-branch').value=s.branch;
+    if(s.path)$('gh-path').value=s.path;
+  }catch(e){}
+})();
+window.ghSaveSettings=function(){
+  try{
+    localStorage.setItem('tkj_gh_settings',JSON.stringify({repo:$('gh-repo').value.trim(),branch:$('gh-branch').value.trim(),path:$('gh-path').value.trim()}));
+    toast('Pengaturan repo disimpan (token tidak ikut disimpan)');
+  }catch(e){toast('Gagal menyimpan pengaturan')}
+};
+function ghHeaders(){
+  ghToken=$('gh-pat').value.trim();
+  if(!ghToken)throw new Error('NO_TOKEN');
+  return {Authorization:'Bearer '+ghToken,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+}
+function b64EncodeUnicode(str){
+  const bytes=new TextEncoder().encode(str);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin);
+}
+function b64DecodeUnicode(b64){
+  const bin=atob(b64.replace(/\n/g,''));const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+function ghApiUrl(){
+  const repo=$('gh-repo').value.trim(),path=$('gh-path').value.trim();
+  return `https://api.github.com/repos/${repo}/contents/${path}`;
+}
+window.ghLoadFile=async function(){
+  $('gh-err').textContent='';$('gh-status').textContent='Memuat…';
+  try{
+    const headers=ghHeaders();
+    const branch=$('gh-branch').value.trim()||'main';
+    const res=await fetch(ghApiUrl()+'?ref='+encodeURIComponent(branch),{headers});
+    if(!res.ok){
+      if(res.status===404)throw new Error('File atau repo tidak ditemukan. Cek Owner/Repo, Branch, dan Path.');
+      if(res.status===401||res.status===403)throw new Error('Token ditolak. Cek token & pastikan permission Contents = Read and write.');
+      throw new Error('HTTP '+res.status);
+    }
+    const data=await res.json();
+    ghSha=data.sha;
+    $('gh-content').value=b64DecodeUnicode(data.content);
+    $('gh-status').textContent='Dimuat dari GitHub • sha: '+data.sha.slice(0,10)+'…';
+    toast('File berhasil dimuat');
+  }catch(e){
+    $('gh-err').textContent=e.message==='NO_TOKEN'?'Isi Personal Access Token dulu.':e.message;
+    $('gh-status').textContent='';
+  }
+};
+window.ghUploadPicked=function(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=()=>{$('gh-content').value=reader.result;ghSha=null;$('gh-status').textContent='File lokal dimuat: '+f.name+' (belum di-commit, klik Simpan & Upload)';toast('File lokal siap, klik "Simpan & Upload ke GitHub"')};
+  reader.readAsText(f,'utf-8');
+};
+window.ghSaveFile=async function(){
+  $('gh-err').textContent='';
+  const content=$('gh-content').value;
+  if(!content.trim()){$('gh-err').textContent='Isi file masih kosong. Muat atau upload file dulu.';return}
+  if(!confirm('Yakin commit & upload perubahan ke GitHub? Ini langsung mengubah situs live.'))return;
+  $('gh-status').textContent='Meng-upload…';
+  try{
+    const headers=ghHeaders();
+    const branch=$('gh-branch').value.trim()||'main';
+    // Kalau belum ada sha (misal setelah upload file lokal atau baru buka), ambil sha terbaru dulu supaya tidak bentrok.
+    if(!ghSha){
+      const cur=await fetch(ghApiUrl()+'?ref='+encodeURIComponent(branch),{headers});
+      if(cur.ok){ghSha=(await cur.json()).sha}
+    }
+    const body={message:'Update via Admin Dashboard • '+new Date().toLocaleString('id-ID'),content:b64EncodeUnicode(content),branch};
+    if(ghSha)body.sha=ghSha;
+    const res=await fetch(ghApiUrl(),{method:'PUT',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!res.ok){
+      const errBody=await res.json().catch(()=>({}));
+      if(res.status===409)throw new Error('File sudah berubah di GitHub sejak terakhir dimuat. Klik "Muat File Saat Ini" lagi lalu ulangi editmu.');
+      if(res.status===401||res.status===403)throw new Error('Token ditolak/permission kurang. Cek token & permission Contents = Read and write.');
+      throw new Error(errBody.message||('HTTP '+res.status));
+    }
+    const data=await res.json();
+    ghSha=data.content.sha;
+    $('gh-status').textContent='Berhasil ter-upload ke GitHub • '+new Date().toLocaleTimeString('id-ID')+'. GitHub Pages akan build ulang otomatis (biasanya 30–60 detik).';
+    toast('Berhasil di-upload ke GitHub ✓');
+  }catch(e){
+    $('gh-err').textContent=e.message==='NO_TOKEN'?'Isi Personal Access Token dulu.':e.message;
+    $('gh-status').textContent='';
+  }
+};
+
 </script>
 </body>
 </html>
