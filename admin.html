@@ -280,14 +280,23 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 const ADMIN_EMAIL='wilkaaffah@gmail.com';
 import { getDatabase, ref, onValue, get, push, set, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-/* Samakan persis dengan FIREBASE_URL di index.html */
-const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
+/* Config lengkap dari Firebase Console → Project Settings → Your apps.
+   Auth (login admin) butuh semua field ini, bukan cuma databaseURL. */
+const firebaseConfig={
+  apiKey:"AIzaSyCL-KRiZQkGvFqJDbshY1-ab9g-HIjguq8",
+  authDomain:"wilka-5e33d.firebaseapp.com",
+  databaseURL:"https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"wilka-5e33d",
+  storageBucket:"wilka-5e33d.firebasestorage.app",
+  messagingSenderId:"269739240644",
+  appId:"1:269739240644:web:693e7944eb595cdcfded91"
+};
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)}
 
-const app=initializeApp({databaseURL:FIREBASE_URL});
+const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getDatabase(app);
 window._fb={ref,onValue,get,push,set,update,remove,db};
