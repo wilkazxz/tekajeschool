@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin • TKJ SMKN 2 Tembilahan</title>
+<link rel="icon" id="fav" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Urbanist:wght@500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<style>
+:root{--ink:#1d3557;--mut:#6b84a3;--ac:#5b9bef;--ac2:#8ec0fa;--soft:#dcebfd;--bd:rgba(255,255,255,.9);--sh:0 8px 24px rgba(91,155,239,.13);--danger:#e0587a;--ok:#2e9e6b;--side:230px}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:Urbanist,sans-serif;color:var(--ink);min-height:100vh;background:#eaf3fe}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 0 0,#b9d8fb,transparent 45%),radial-gradient(circle at 100% 100%,#cfe3fd,transparent 50%),linear-gradient(160deg,#e4f0ff,#f5f9ff 50%,#e1edff)}
+button{font-family:inherit;touch-action:manipulation;transition:transform .1s ease}
+button:active{transform:scale(.97)}
+input,textarea,select{font-family:inherit}
+.g{background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,255,255,.66));border:1px solid var(--bd);box-shadow:var(--sh)}
+.ph{display:grid;place-items:center;color:var(--ac);font-size:22px}
+img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
+
+/* ===== login ===== */
+#login{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.lcard{width:100%;max-width:360px;border-radius:26px;padding:28px 26px;text-align:center}
+.lcard .lg{height:52px;width:auto;max-width:100px;object-fit:contain;margin:0 auto 14px;display:block}
+.lcard h1{font-size:19px;font-weight:800;margin-bottom:4px}
+.lcard p{font-size:12px;color:var(--mut);margin-bottom:18px;line-height:1.6}
+.fld{text-align:left;margin-bottom:12px}
+.fld label{font-size:11px;font-weight:700;color:var(--mut);display:block;margin-bottom:5px}
+.fld input,.fld textarea{width:100%;padding:11px 13px;border-radius:12px;background:#fff;border:1px solid #c5daf5;color:var(--ink);font-size:14px;outline:none}
+.fld input:focus,.fld textarea:focus{border-color:var(--ac)}
+.pb{width:100%;padding:13px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(91,155,239,.3);display:flex;align-items:center;justify-content:center;gap:8px}
+.pb2{width:100%;padding:11px;border-radius:12px;background:#fff;border:1.5px solid #bcd8fa;color:#2f6fd0;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.err{color:var(--danger);font-size:12px;font-weight:700;min-height:16px;margin:6px 0}
+.lnote{font-size:10.5px;color:var(--mut);line-height:1.7;margin-top:16px;text-align:left;background:#fff;border:1px solid #d5e5fa;border-radius:12px;padding:10px}
+
+/* ===== dashboard shell ===== */
+#dash{display:none;position:relative;z-index:1;min-height:100vh}
+#dash.on{display:flex}
+.sidebar{width:var(--side);flex:none;min-height:100vh;padding:20px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;background:rgba(255,255,255,.85);border-right:1px solid var(--bd)}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px 18px}
+.brand img{height:34px;width:auto;max-width:52px;object-fit:contain}
+.brand b{font-size:13px;line-height:1.2;display:block}.brand small{font-size:9.5px;color:var(--mut)}
+.nav-i{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;border:0;background:none;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;text-align:left;width:100%}
+.nav-i i{width:18px;color:#7fa5d8;font-size:14px}
+.nav-i.on{background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff}
+.nav-i.on i{color:#fff}
+.nav-sp{flex:1}
+.logout{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;border:0;background:none;color:var(--danger);font-size:13px;font-weight:700;cursor:pointer}
+main{flex:1;min-width:0;padding:22px 26px 60px}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.topbar h1{font-size:19px;font-weight:800;flex:1}
+.hbtn{display:none;width:38px;height:38px;border-radius:11px;border:1px solid var(--bd);background:#fff;color:var(--ink);align-items:center;justify-content:center;cursor:pointer}
+.pane{display:none}.pane.on{display:block;animation:in .2s}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+
+/* ringkasan */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat{border-radius:18px;padding:16px}
+.stat i{color:#2f6fd0;font-size:16px;margin-bottom:8px;display:block}
+.stat b{font-size:24px;display:block}.stat small{font-size:11px;color:var(--mut)}
+.logorow{display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;margin-bottom:16px}
+.logorow img{height:48px;width:auto;max-width:80px;object-fit:contain}
+.logorow div{flex:1}.logorow b{font-size:13px;display:block}.logorow small{font-size:11px;color:var(--mut)}
+
+/* generic section header + button */
+.sech{display:flex;align-items:center;justify-content:between;gap:10px;margin-bottom:14px}
+.sech h2{font-size:15px;font-weight:800;flex:1}
+.addb{padding:9px 15px;border:0;border-radius:11px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px}
+
+/* list card items */
+.itemcard{border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.itemcard .ic{width:40px;height:40px;border-radius:12px;background:var(--soft);display:grid;place-items:center;color:#2f6fd0;flex:none}
+.itemcard div.tx{flex:1;min-width:0}.itemcard b{font-size:13px;display:block}.itemcard small{font-size:11px;color:var(--mut);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.itemcard .acts{display:flex;gap:6px;flex:none}
+.iconbtn{width:32px;height:32px;border-radius:9px;border:1px solid var(--bd);background:#fff;color:var(--ink);cursor:pointer;display:grid;place-items:center;font-size:12px}
+.iconbtn.del{color:var(--danger)}
+.empty2{text-align:center;color:var(--mut);font-size:12px;padding:26px 0}
+
+/* modal */
+#modal-ov{position:fixed;inset:0;background:rgba(29,53,87,.32);display:none;align-items:center;justify-content:center;z-index:80;padding:20px}
+#modal-ov.on{display:flex}
+.modal{width:100%;max-width:420px;border-radius:22px;padding:20px;max-height:88vh;overflow:auto}
+.modal h3{font-size:15px;font-weight:800;margin-bottom:14px}
+.mrow{display:flex;gap:10px;margin-top:10px}
+.mrow .pb2{flex:1}
+
+/* apk/banner forms */
+.card{border-radius:18px;padding:18px;margin-bottom:14px}
+.bimg{width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:12px;background:var(--soft);margin-top:8px}
+
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-20px);background:#fff;border:1px solid #c5daf5;color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:700;font-size:12px;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center;box-shadow:var(--sh)}
+#toast.on{opacity:1;transform:translateX(-50%)}
+
+@media(max-width:880px){
+  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;transform:translateX(-105%);transition:transform .25s;box-shadow:0 0 30px rgba(0,0,0,.15)}
+  .sidebar.on{transform:translateX(0)}
+  .hbtn{display:grid;place-items:center}
+  main{padding:16px 14px 60px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-color-scheme:dark){
+  :root{--ink:#e7eef9;--mut:#8ea3c2;--ac:#5b9bef;--ac2:#4577b8;--soft:#1c2c47;--bd:rgba(255,255,255,.08);--sh:0 8px 24px rgba(0,0,0,.35)}
+  body{background:#0f1626}
+  body:before{background:radial-gradient(circle at 0 0,#1c2c47,transparent 45%),radial-gradient(circle at 100% 100%,#16233b,transparent 50%),linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
+  .g,.card,.itemcard,.stat,.logorow,.modal,.lcard{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  .sidebar{background:rgba(18,26,42,.92)}
+  .fld input,.fld textarea,.iconbtn,.hbtn,.lnote{background:#182238;border-color:#22314f;color:var(--ink)}
+  #toast{background:#182238;border-color:#22314f;color:var(--ink)}
+}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="lcard g">
+    <img class="lg" id="loginLogo" data-logo="tkj" alt="TKJ">
+    <h1>Admin Dashboard</h1>
+    <p>TKJ SMKN 2 Tembilahan</p>
+    <div class="fld"><label>Email</label><input type="email" id="em" placeholder="admin@sekolah.sch.id" autocomplete="username"></div>
+    <div class="fld"><label>Password</label><input type="password" id="pw" placeholder="••••••••" autocomplete="current-password"></div>
+    <div class="err" id="lerr"></div>
+    <button class="pb" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
+    <div class="lnote">Belum punya akun admin? Buat sekali di <b>Firebase Console → Authentication → Users → Add user</b> (email &amp; password), lalu login di sini. Dashboard ini tidak bisa dipakai tanpa akun tersebut — ini yang membuat panel admin aman dari pengunjung biasa.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash">
+  <aside class="sidebar g" id="sidebar">
+    <div class="brand"><img data-logo="tkj" alt="TKJ"><div><b>TKJ SMKN 2</b><small>Admin Panel</small></div></div>
+    <button class="nav-i on" data-p="ringkasan" onclick="goPane('ringkasan')"><i class="fa-solid fa-gauge"></i>Ringkasan</button>
+    <button class="nav-i" data-p="tools" onclick="goPane('tools')"><i class="fa-solid fa-toolbox"></i>Tools</button>
+    <button class="nav-i" data-p="materi" onclick="goPane('materi')"><i class="fa-solid fa-book"></i>Materi</button>
+    <button class="nav-i" data-p="fasilitas" onclick="goPane('fasilitas')"><i class="fa-solid fa-building"></i>Fasilitas</button>
+    <button class="nav-i" data-p="kontak" onclick="goPane('kontak')"><i class="fa-solid fa-envelope"></i>Kontak</button>
+    <button class="nav-i" data-p="banner" onclick="goPane('banner')"><i class="fa-solid fa-images"></i>Banner</button>
+    <button class="nav-i" data-p="apk" onclick="goPane('apk')"><i class="fa-brands fa-android"></i>APK</button>
+    <button class="nav-i" data-p="kunci" onclick="goPane('kunci')"><i class="fa-solid fa-lock"></i>Kunci Pengguna</button>
+    <div class="nav-sp"></div>
+    <button class="logout" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Keluar</button>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <button class="hbtn g" onclick="$('sidebar').classList.toggle('on')"><i class="fa-solid fa-bars"></i></button>
+      <h1 id="paneTitle">Ringkasan</h1>
+    </div>
+
+    <!-- RINGKASAN -->
+    <section class="pane on" id="p-ringkasan">
+      <div class="logorow g">
+        <img data-logo="smkn" alt="SMKN"><img data-logo="tkj" alt="TKJ">
+        <div><b>SMKN 2 Tembilahan — Jurusan TKJ</b><small>Data di bawah tersambung realtime lewat Firebase. Perubahan di sini langsung tampil di aplikasi siswa.</small></div>
+      </div>
+      <div class="stats">
+        <div class="stat g"><i class="fa-solid fa-circle-nodes"></i><b id="st-online">–</b><small>Online sekarang</small></div>
+        <div class="stat g"><i class="fa-solid fa-toolbox"></i><b id="st-tools">–</b><small>Tools</small></div>
+        <div class="stat g"><i class="fa-solid fa-book"></i><b id="st-materi">–</b><small>Materi</small></div>
+        <div class="stat g"><i class="fa-solid fa-lock"></i><b id="st-locks">–</b><small>Perangkat terkunci</small></div>
+      </div>
+      <div class="card g">
+        <b style="font-size:13px">Status koneksi</b>
+        <p style="font-size:12px;color:var(--mut);margin-top:6px" id="fbStatusTxt">Menyambung ke Firebase…</p>
+      </div>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="pane" id="p-tools">
+      <div class="sech"><h2>Tools Wajib</h2><button class="addb" onclick="openItemModal('tools',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
+      <div id="list-tools"></div>
+    </section>
+
+    <!-- MATERI -->
+    <section class="pane" id="p-materi">
+      <div class="sech"><h2>Materi</h2><button class="addb" onclick="openItemModal('materi',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
+      <div id="list-materi"></div>
+    </section>
+
+    <!-- FASILITAS -->
+    <section class="pane" id="p-fasilitas">
+      <div class="sech"><h2>Fasilitas Lab</h2><button class="addb" onclick="openItemModal('fasilitas',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
+      <div id="list-fasilitas"></div>
+    </section>
+
+    <!-- KONTAK -->
+    <section class="pane" id="p-kontak">
+      <div class="sech"><h2>Kontak</h2><button class="addb" onclick="openItemModal('kontak',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
+      <div id="list-kontak"></div>
+    </section>
+
+    <!-- BANNER -->
+    <section class="pane" id="p-banner">
+      <div class="sech"><h2>Banner Beranda</h2><button class="addb" onclick="openBannerModal(null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
+      <p style="font-size:11.5px;color:var(--mut);margin-bottom:12px">Masukkan URL gambar (hasil upload ke Google Drive/ImgBB/dll dengan link publik). Kosongkan semua supaya app kembali memakai banner1.jpeg dst dari server.</p>
+      <div id="list-banner"></div>
+    </section>
+
+    <!-- APK -->
+    <section class="pane" id="p-apk">
+      <div class="sech"><h2>Aplikasi Android (APK)</h2></div>
+      <div class="card g">
+        <div class="fld"><label>URL file APK</label><input id="apkUrl" placeholder="tkj.apk atau https://.../TKJ.apk"></div>
+        <div class="fld"><label>Versi</label><input id="apkVer" placeholder="2.0.1"></div>
+        <button class="pb" onclick="saveApk()"><i class="fa-solid fa-floppy-disk"></i>Simpan</button>
+      </div>
+    </section>
+
+    <!-- KUNCI -->
+    <section class="pane" id="p-kunci">
+      <div class="sech"><h2>Pola Kunci Perangkat</h2></div>
+      <p style="font-size:11.5px;color:var(--mut);margin-bottom:12px">Daftar perangkat yang sudah membuat pola kunci. Hapus salah satu supaya perangkat itu diminta membuat pola baru saat dibuka lagi (misal siswa lupa polanya).</p>
+      <div id="list-kunci"></div>
+    </section>
+  </main>
+</div>
+
+<!-- MODAL: item editor (tools/materi/fasilitas/kontak) -->
+<div id="modal-ov"><div class="modal g" id="modalBox"></div></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getDatabase, ref, onValue, get, push, set, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+/* Samakan persis dengan FIREBASE_URL di index.html */
+const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)}
+
+const app=initializeApp({databaseURL:FIREBASE_URL});
+const auth=getAuth(app);
+const db=getDatabase(app);
+window._fb={ref,onValue,get,push,set,update,remove,db};
+
+/* ===== logo probe (sama seperti index.html) ===== */
+const probe=u=>new Promise(r=>{const i=new Image();i.onload=()=>r(u);i.onerror=()=>r(null);i.src=u});
+const cap=n=>n[0].toUpperCase()+n.slice(1);
+const search=async n=>{const t=async(b,x)=>(await Promise.all(b.flatMap(k=>x.map(e=>probe(k+'.'+e))))).find(Boolean)||null;
+ return await t([n],['png','jpeg','jpg','webp','svg'])||await t([cap(n),n.toUpperCase()],['png','jpeg','jpg','webp','svg','PNG','JPG'])};
+const noLogo=im=>{const i=document.createElement('i');i.className='fa-solid fa-network-wired ph';im.replaceWith(i)};
+document.querySelectorAll('img[data-logo]').forEach(async im=>{
+  const u=await search(im.dataset.logo);
+  if(u){im.onload=()=>im.classList.add('ok');im.src=u}else noLogo(im);
+});
+{const u=await search('tkj').catch(()=>null);if(u)$('fav').href=u}
+
+/* ===== auth ===== */
+window.doLogin=async function(){
+  $('lerr').textContent='';
+  const email=$('em').value.trim(),pass=$('pw').value;
+  if(!email||!pass){$('lerr').textContent='Isi email dan password.';return}
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+  }catch(e){
+    const map={'auth/invalid-credential':'Email atau password salah.','auth/invalid-email':'Format email tidak valid.','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/user-not-found':'Akun tidak ditemukan.','auth/wrong-password':'Password salah.'};
+    $('lerr').textContent=map[e.code]||('Gagal login: '+e.code);
+  }
+};
+window.doLogout=function(){signOut(auth)};
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    $('login').style.display='none';
+    $('dash').classList.add('on');
+    initDashboard();
+  }else{
+    $('dash').classList.remove('on');
+    $('login').style.display='flex';
+  }
+});
+
+/* ===== nav ===== */
+const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat'};
+window.goPane=function(p){
+  document.querySelectorAll('.pane').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
+  document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  $('paneTitle').textContent=titles[p]||p;
+  $('sidebar').classList.remove('on');
+};
+
+/* ===== field config per kategori ===== */
+const FIELDS={
+  tools:[['name','Nama','Contoh: Wireshark'],['icon','Ikon (Font Awesome class)','fa-fish'],['desc','Deskripsi singkat','Menangkap & menganalisis paket data'],['link','Link unduh (opsional)','https://...'],['detail','Detail lengkap (opsional)','Penjelasan panjang untuk halaman detail…',1]],
+  materi:[['name','Judul Materi','Subnetting & VLSM'],['icon','Ikon (Font Awesome class)','fa-calculator'],['desc','Deskripsi singkat','Membagi jaringan sesuai kebutuhan host'],['link','Link referensi (opsional)','https://...'],['detail','Detail lengkap (opsional)','Penjelasan panjang…',1]],
+  fasilitas:[['name','Nama Fasilitas','Lab Komputer & PC'],['icon','Ikon (Font Awesome class)','fa-desktop'],['desc','Deskripsi singkat','PC high-spec & jaringan dasar']],
+  kontak:[['name','Label','Email'],['icon','Ikon (Font Awesome class)','fa-envelope'],['desc','Isi/Nilai','tkj@smkn2tembilahan.sch.id']]
+};
+const ICON_HINT='Cari nama ikon di fontawesome.com/search (versi Free), contoh: fa-wifi, fa-server, fa-shield-halved.';
+
+/* ===== generic CRUD list ===== */
+function listen(path,renderFn){
+  onValue(ref(db,path),snap=>renderFn(snap.val()||{}),()=>renderFn({}));
+}
+function toSortedEntries(obj){
+  return Object.entries(obj).sort((a,b)=>(a[1].order||0)-(b[1].order||0));
+}
+function itemRow(key,cat,d){
+  return `<div class="itemcard g"><div class="ic"><i class="fa-solid ${esc(d.icon||'fa-circle')}"></i></div>
+  <div class="tx"><b>${esc(d.name)}</b><small>${esc(d.desc||'')}</small></div>
+  <div class="acts">
+    <button class="iconbtn" onclick="openItemModal('${cat}','${key}')"><i class="fa-solid fa-pen"></i></button>
+    <button class="iconbtn del" onclick="delItem('${cat}','${key}')"><i class="fa-solid fa-trash"></i></button>
+  </div></div>`;
+}
+function renderList(cat,data){
+  const el=$('list-'+cat);
+  const entries=toSortedEntries(data);
+  el.innerHTML=entries.length?entries.map(([k,d])=>itemRow(k,cat,d)).join(''):'<div class="empty2">Belum ada data. Klik Tambah untuk mulai.</div>';
+  const stEl=$('st-'+cat);if(stEl)stEl.textContent=entries.length;
+}
+
+let currentItem={cat:null,key:null};
+window.openItemModal=async function(cat,key){
+  currentItem={cat,key};
+  let d={};
+  if(key){const snap=await get(ref(db,'content/'+cat+'/'+key));d=snap.exists()?snap.val():{}}
+  const fields=FIELDS[cat];
+  const rows=fields.map(([fk,label,ph,area])=>`
+    <div class="fld"><label>${label}</label>${area?`<textarea id="mf-${fk}" rows="4" placeholder="${esc(ph)}">${esc(d[fk]||'')}</textarea>`:`<input id="mf-${fk}" placeholder="${esc(ph)}" value="${esc(d[fk]||'')}">`}</div>`).join('');
+  $('modalBox').innerHTML=`<h3>${key?'Edit':'Tambah'} ${titles[cat]||cat}</h3>${rows}
+    <p style="font-size:10.5px;color:var(--mut);margin-top:2px">${ICON_HINT}</p>
+    <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" onclick="saveItem()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
+  $('modal-ov').classList.add('on');
+};
+window.closeModal=function(){$('modal-ov').classList.remove('on')};
+window.saveItem=async function(){
+  const{cat,key}=currentItem;const fields=FIELDS[cat];
+  const data={};fields.forEach(([fk])=>data[fk]=$('mf-'+fk).value.trim());
+  if(!data.name){toast('Nama wajib diisi');return}
+  try{
+    if(key){
+      await update(ref(db,'content/'+cat+'/'+key),data);
+    }else{
+      const snap=await get(ref(db,'content/'+cat));
+      const entries=snap.exists()?Object.values(snap.val()):[];
+      const maxOrder=entries.reduce((m,e)=>Math.max(m,e.order||0),-1);
+      data.order=maxOrder+1;
+      await push(ref(db,'content/'+cat),data);
+    }
+    toast('Tersimpan ✓');closeModal();
+  }catch(e){toast('Gagal menyimpan: cek Firebase Rules (lihat komentar di index.html)')}
+};
+window.delItem=async function(cat,key){
+  if(!confirm('Hapus item ini?'))return;
+  try{await remove(ref(db,'content/'+cat+'/'+key));toast('Dihapus')}
+  catch(e){toast('Gagal menghapus: cek Firebase Rules')}
+};
+
+/* ===== banner ===== */
+function bannerRow(key,d){
+  return `<div class="itemcard g" style="align-items:flex-start">
+    <img class="bimg" style="width:90px;aspect-ratio:1;flex:none" src="${esc(d.url)}" onerror="this.style.display='none'">
+    <div class="tx"><small style="white-space:normal;word-break:break-all">${esc(d.url)}</small></div>
+    <div class="acts"><button class="iconbtn del" onclick="delBanner('${key}')"><i class="fa-solid fa-trash"></i></button></div>
+  </div>`;
+}
+window.openBannerModal=function(){
+  $('modalBox').innerHTML=`<h3>Tambah Banner</h3>
+    <div class="fld"><label>URL gambar</label><input id="mf-url" placeholder="https://.../banner.jpg"></div>
+    <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" onclick="saveBanner()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
+  $('modal-ov').classList.add('on');
+};
+window.saveBanner=async function(){
+  const url=$('mf-url').value.trim();
+  if(!url){toast('URL wajib diisi');return}
+  try{
+    const snap=await get(ref(db,'content/banners'));
+    const entries=snap.exists()?Object.values(snap.val()):[];
+    const maxOrder=entries.reduce((m,e)=>Math.max(m,e.order||0),-1);
+    await push(ref(db,'content/banners'),{url,order:maxOrder+1});
+    toast('Banner ditambahkan ✓');closeModal();
+  }catch(e){toast('Gagal menyimpan: cek Firebase Rules')}
+};
+window.delBanner=async function(key){
+  if(!confirm('Hapus banner ini?'))return;
+  try{await remove(ref(db,'content/banners/'+key));toast('Dihapus')}catch(e){toast('Gagal menghapus')}
+};
+
+/* ===== apk ===== */
+async function loadApk(){
+  const snap=await get(ref(db,'content/apk'));
+  if(snap.exists()){const d=snap.val();$('apkUrl').value=d.url||'';$('apkVer').value=d.version||''}
+}
+window.saveApk=async function(){
+  const url=$('apkUrl').value.trim(),version=$('apkVer').value.trim();
+  try{await set(ref(db,'content/apk'),{url,version});toast('Tersimpan ✓')}
+  catch(e){toast('Gagal menyimpan: cek Firebase Rules')}
+};
+
+/* ===== kunci pengguna ===== */
+function lockRow(dev,d){
+  const t=d.t?new Date(d.t).toLocaleString('id-ID'):'-';
+  return `<div class="itemcard g"><div class="ic"><i class="fa-solid fa-mobile-screen"></i></div>
+  <div class="tx"><b>${esc(dev.slice(0,10))}…</b><small>Dibuat: ${t}</small></div>
+  <div class="acts"><button class="iconbtn del" onclick="delLock('${dev}')"><i class="fa-solid fa-lock-open"></i></button></div></div>`;
+}
+window.delLock=async function(dev){
+  if(!confirm('Hapus pola kunci perangkat ini? Perangkat akan diminta membuat pola baru.'))return;
+  try{await remove(ref(db,'locks/'+dev));toast('Pola dihapus')}catch(e){toast('Gagal menghapus')}
+};
+
+/* ===== ringkasan: online realtime ===== */
+function listenPresence(){
+  onValue(ref(db,'presence'),snap=>{
+    const v=snap.val()||{};let n=0;
+    for(const k in v){const d=v[k];if(d&&typeof d==='object')for(const t in d)if(d[t]===true){n++;break}}
+    $('st-online').textContent=n;
+  });
+  onValue(ref(db,'.info/connected'),snap=>{
+    $('fbStatusTxt').textContent=snap.val()===true?'Terhubung ke Firebase — data realtime aktif.':'Menyambung ke Firebase…';
+  });
+}
+
+/* ===== init ===== */
+let inited=false;
+function initDashboard(){
+  if(inited)return;inited=true;
+  listen('content/tools',d=>renderList('tools',d));
+  listen('content/materi',d=>renderList('materi',d));
+  listen('content/fasilitas',d=>renderList('fasilitas',d));
+  listen('content/kontak',d=>renderList('kontak',d));
+  listen('content/banners',d=>{
+    const el=$('list-banner');const entries=toSortedEntries(d);
+    el.innerHTML=entries.length?entries.map(([k,x])=>bannerRow(k,x)).join(''):'<div class="empty2">Belum ada banner custom. App memakai banner1.jpeg dst dari server.</div>';
+  });
+  listen('locks',d=>{
+    const el=$('list-kunci');const entries=Object.entries(d||{});
+    $('st-locks').textContent=entries.length;
+    el.innerHTML=entries.length?entries.map(([k,x])=>lockRow(k,x)).join(''):'<div class="empty2">Belum ada perangkat yang membuat pola kunci.</div>';
+  });
+  loadApk();
+  listenPresence();
+}
+
+document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target.id==='modal-ov')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+</script>
+</body>
+</html>
