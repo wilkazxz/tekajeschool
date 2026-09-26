@@ -124,11 +124,9 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <img class="lg" id="loginLogo" data-logo="tkj" alt="TKJ">
     <h1>Admin Dashboard</h1>
     <p>TKJ SMKN 2 Tembilahan</p>
-    <div class="fld"><label>Email</label><input type="email" id="em" placeholder="admin@sekolah.sch.id" autocomplete="username"></div>
-    <div class="fld"><label>Password</label><input type="password" id="pw" placeholder="••••••••" autocomplete="current-password"></div>
     <div class="err" id="lerr"></div>
-    <button class="pb" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
-    <div class="lnote">Belum punya akun admin? Buat sekali di <b>Firebase Console → Authentication → Users → Add user</b> (email &amp; password), lalu login di sini. Dashboard ini tidak bisa dipakai tanpa akun tersebut — ini yang membuat panel admin aman dari pengunjung biasa.</div>
+    <button class="pb" onclick="doLogin()"><i class="fa-brands fa-google"></i> Masuk dengan Google</button>
+    <div class="lnote">Hanya akun Google tertentu yang diizinkan masuk admin dashboard. Kalau kamu login pakai akun Google lain, sistem akan menolak otomatis.</div>
   </div>
 </div>
 
@@ -227,7 +225,10 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+/* Hanya akun Google dengan email ini yang diizinkan masuk admin dashboard. */
+const ADMIN_EMAIL='wilkaaffah@gmail.com';
 import { getDatabase, ref, onValue, get, push, set, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 /* Samakan persis dengan FIREBASE_URL di index.html */
@@ -255,16 +256,26 @@ document.querySelectorAll('img[data-logo]').forEach(async im=>{
 (async()=>{const u=await search('tkj').catch(()=>null);if(u)$('fav').href=u})();
 
 /* ===== auth ===== */
+const googleProvider=new GoogleAuthProvider();
 window.doLogin=async function(){
-  $('lerr').textContent='Menyambungkan…';
+  $('lerr').textContent='';
   const btn=document.querySelector('#login .pb');if(btn)btn.disabled=true;
-  const email=$('em').value.trim(),pass=$('pw').value;
-  if(!email||!pass){$('lerr').textContent='Isi email dan password.';if(btn)btn.disabled=false;return}
   try{
-    await signInWithEmailAndPassword(auth,email,pass);
-    $('lerr').textContent='';
+    let result;
+    try{ result=await signInWithPopup(auth,googleProvider); }
+    catch(e){
+      // Kalau popup diblokir browser, coba cara redirect sebagai cadangan.
+      if(e.code==='auth/popup-blocked'||e.code==='auth/popup-closed-by-user'){
+        await signInWithRedirect(auth,googleProvider); return;
+      }
+      throw e;
+    }
+    if(result.user.email!==ADMIN_EMAIL){
+      $('lerr').textContent='Akun Google ini ('+result.user.email+') tidak diizinkan mengakses admin.';
+      await signOut(auth);
+    }
   }catch(e){
-    const map={'auth/invalid-credential':'Email atau password salah.','auth/invalid-email':'Format email tidak valid.','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/user-not-found':'Akun tidak ditemukan.','auth/wrong-password':'Password salah.','auth/network-request-failed':'Gagal terhubung ke server Firebase. Cek koneksi internet.'};
+    const map={'auth/network-request-failed':'Gagal terhubung ke Google/Firebase. Cek koneksi internet.','auth/cancelled-popup-request':'Login dibatalkan.'};
     $('lerr').textContent=map[e.code]||('Gagal login: '+(e.code||e.message));
   }finally{
     if(btn)btn.disabled=false;
@@ -272,12 +283,21 @@ window.doLogin=async function(){
 };
 window.doLogout=function(){signOut(auth)};
 
+// Kalau tadi terpaksa pakai signInWithRedirect (popup diblokir), tangkap hasilnya di sini.
+getRedirectResult(auth).then(result=>{
+  if(result&&result.user&&result.user.email!==ADMIN_EMAIL){
+    $('lerr').textContent='Akun Google ini ('+result.user.email+') tidak diizinkan mengakses admin.';
+    signOut(auth);
+  }
+}).catch(()=>{});
+
 onAuthStateChanged(auth,user=>{
-  if(user){
+  if(user&&user.email===ADMIN_EMAIL){
     $('login').style.display='none';
     $('dash').classList.add('on');
     initDashboard();
   }else{
+    if(user)signOut(auth); // login tapi email bukan admin -> paksa keluar
     $('dash').classList.remove('on');
     $('login').style.display='flex';
   }
