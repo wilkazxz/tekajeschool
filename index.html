@@ -735,10 +735,17 @@ function buildManifest(iconUrl){
 }
 (lgGet('tkj')?Promise.resolve(lgGet('tkj')):findLogo('tkj')).then(u=>buildManifest(u));
 
-/* ===== banner carousel: default cari banner1..banner5 di server, atau dari Admin Dashboard ===== */
-let bannerInterval=null;
-function renderBanner(list){
- if(!list||!list.length)return;
+/* ===== banner carousel: prioritas banner dari Admin Dashboard (Firebase), baru fallback ke
+   banner1..banner5 bawaan server. Dipakai realtime (onValue) supaya begitu admin nambah/hapus
+   banner, tampilannya berubah otomatis tanpa perlu tutup-buka app lagi. ===== */
+let bannerInterval=null,bannerSource=null; // null | 'remote' | 'local'
+function renderBanner(list,source){
+ if(source==='local'&&bannerSource==='remote')return; // banner dari admin selalu menang atas default lokal
+ if(!list||!list.length){
+   if(source==='remote'){bannerSource='remote';clearInterval(bannerInterval);$('bnr-wrap').classList.add('hide');$('bnr').innerHTML='';$('bdots').innerHTML=''}
+   return;
+ }
+ bannerSource=source||bannerSource;
  clearInterval(bannerInterval);
  const wrap=$('bnr-wrap'),track=$('bnr'),dots=$('bdots');
  track.innerHTML=list.map((u,i)=>`<img class="sl" data-i="${i}" alt="Banner ${i+1}" loading="${i?'lazy':'eager'}">`).join('');
@@ -758,7 +765,7 @@ async function initBannerLocal(){
   const names=[`banner${n}`,`baner${n}`,`Banner${n}`,`Baner${n}`],ext=['jpeg','jpg','png','webp'];
   for(const b of names)for(const e of ext){const u=await probe(`${b}.${e}`);if(u){found[n-1]=u;return}}
  }));
- renderBanner(found.filter(Boolean));
+ renderBanner(found.filter(Boolean),'local');
 }
 initBannerLocal();
 
@@ -799,26 +806,29 @@ async function startFB(){
   addEventListener('pageshow',e=>{if(e.persisted){active=true;register()}});
  }catch(e){setStatus('SDK gagal dimuat · mode lokal');startLocal()}
 }
-/* ===== konten dari Admin Dashboard (admin.html): Tools/Materi/Fasilitas/Kontak/Banner/APK ===== */
+/* ===== konten dari Admin Dashboard (admin.html): Tools/Materi/Fasilitas/Kontak/Banner/APK =====
+   Dipantau realtime (onValue), bukan cuma sekali baca (get) — jadi begitu admin ubah/tambah data,
+   termasuk banner, langsung tampil di sini tanpa perlu tutup-buka app. */
 const toList=obj=>Object.values(obj||{}).sort((a,b)=>(a.order||0)-(b.order||0));
-async function loadRemoteContent(){
+async function watchRemoteContent(){
   const F=await getDb();if(!F)return;
-  try{
-    const snap=await F.d.get(F.d.ref(F.db,'content'));
+  const D=F.d,db=F.db;
+  const asArr=o=>[o.name,o.icon,o.desc,o.link||null,o.detail||null];
+  const asArr3=o=>[o.name,o.icon,o.desc];
+  D.onValue(D.ref(db,'content'),snap=>{
     if(!snap.exists())return;
     const c=snap.val();
-    const asArr=o=>[o.name,o.icon,o.desc,o.link||null,o.detail||null];
-    const asArr3=o=>[o.name,o.icon,o.desc];
     if(c.tools){const l=toList(c.tools);if(l.length)SETS.Tool=l.map(asArr)}
     if(c.materi){const l=toList(c.materi);if(l.length)SETS.Materi=l.map(asArr)}
     if(c.fasilitas){const l=toList(c.fasilitas);if(l.length)SETS.Fasilitas=l.map(asArr3)}
     if(c.kontak){const l=toList(c.kontak);if(l.length)SETS.Kontak=l.map(asArr3)}
     renderAll();
     if(c.apk&&c.apk.url){APK=c.apk.url;const vt=$('verTxt');if(vt)vt.textContent='v'+(c.apk.version||'2.0')+' • PWA Ready • Offline Support'}
-    if(c.banners){const l=toList(c.banners).map(o=>o.url).filter(Boolean);if(l.length)renderBanner(l)}
-  }catch(e){/* Rules Firebase belum mengizinkan baca 'content', app tetap pakai data bawaan */}
+    const l=c.banners?toList(c.banners).map(o=>o.url).filter(Boolean):[];
+    renderBanner(l,'remote');
+  },()=>{/* Rules Firebase belum mengizinkan baca 'content', app tetap pakai data bawaan */});
 }
-FIREBASE_URL?startFB().then(loadRemoteContent):startLocal();
+FIREBASE_URL?startFB().then(watchRemoteContent):startLocal();
 
 /* ===== service worker: dukungan offline dasar ===== */
 if('serviceWorker' in navigator){
