@@ -443,7 +443,7 @@ const DEV=gid(localStorage,'tkj_dev',ME),TAB=Math.random().toString(36).slice(2,
    Device: dibaca dari navigator.userAgent, murni informasi teknis (OS + browser), tidak berisi PII.
    IP: diambil sekali lewat layanan publik ipify (tanpa API key), lalu disimpan bareng data pola.
    Kalau gagal (offline / layanan down), field ini cukup dilewati -- tidak menghalangi pola tersimpan. */
-function getDeviceLabel(){
+async function getDeviceLabel(){
   const ua=navigator.userAgent||'';
   let os='Tidak diketahui';
   if(/Android/i.test(ua))os='Android';
@@ -458,20 +458,37 @@ function getDeviceLabel(){
   else if(/CriOS\//.test(ua))br='Chrome iOS';
   else if(/Firefox\//.test(ua))br='Firefox';
   else if(/Safari\//.test(ua))br='Safari';
-  return br?`${os} · ${br}`:os;
+  const base=br?`${os} · ${br}`:os;
+  /* Client Hints: kalau browsernya Chromium (Chrome/Edge Android dsb), ini kasih nama model asli
+     perangkat (mis. "SM-A125F"), bukan cuma OS/browser generik. Diam-diam gagal di browser yang
+     tidak mendukung (Safari/Firefox), fallback ke base di atas -- bukan data dummy, cuma tidak semua
+     browser mengizinkan akses ini. */
+  try{
+    if(navigator.userAgentData&&navigator.userAgentData.getHighEntropyValues){
+      const info=await navigator.userAgentData.getHighEntropyValues(['model']);
+      if(info&&info.model)return`${info.model} (${base})`;
+    }
+  }catch(e){}
+  return base;
 }
 let cachedIP=null;
 async function getPublicIP(){
   if(cachedIP)return cachedIP;
-  try{
-    const c=new AbortController();const t=setTimeout(()=>c.abort(),4000);
-    const r=await fetch('https://api.ipify.org?format=json',{signal:c.signal});
-    clearTimeout(t);
-    if(!r.ok)return null;
-    const d=await r.json();
-    cachedIP=d.ip||null;
-    return cachedIP;
-  }catch(e){return null}
+  const tryFetch=async(url,pick)=>{
+    try{
+      const c=new AbortController();const t=setTimeout(()=>c.abort(),4000);
+      const r=await fetch(url,{signal:c.signal});
+      clearTimeout(t);
+      if(!r.ok)return null;
+      return pick(await r.json());
+    }catch(e){return null}
+  };
+  /* Coba ipify dulu, kalau gagal/timeout coba ipapi sebagai cadangan -- keduanya layanan publik
+     gratis tanpa API key, jadi IP yang didapat betulan IP publik pengunjung, bukan angka dummy. */
+  let ip=await tryFetch('https://api.ipify.org?format=json',d=>d.ip);
+  if(!ip)ip=await tryFetch('https://ipapi.co/json/',d=>d.ip);
+  if(ip)cachedIP=ip;
+  return ip;
 }
 
 /* ===== koneksi firebase bersama (dipakai lock & online) ===== */
@@ -508,18 +525,32 @@ function lkAttach(){if(lkAttached)return;lkAttached=true;const g=$('lkgrid');
  g.addEventListener('pointermove',lkMove);g.addEventListener('pointerup',lkEnd);g.addEventListener('pointercancel',lkEnd)}
 function lkHash(arr){const s=arr.join('-');let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return(h>>>0).toString(36)}
 async function lkCheck(){
-  let local=null;try{local=localStorage.getItem('tkj_lk_'+DEV)}catch(e){}
   const F=await getDb();
-  if(F){try{const snap=await F.d.get(F.d.ref(F.db,'locks/'+DEV));if(snap.exists())return snap.val().h}catch(e){}}
+  if(F){
+    try{
+      const snap=await F.d.get(F.d.ref(F.db,'locks/'+DEV));
+      if(snap.exists())return snap.val().h;
+      /* Firebase kebaca dan datanya memang kosong -- ini kondisi asli setelah admin reset pola
+         (atau perangkat baru). JANGAN jatuh balik ke cache localStorage di sini, karena kalau begitu
+         reset dari admin gak akan pernah kerasa: device tetap minta pola lama yang cuma tersimpan
+         lokal. Bersihkan cache lokal juga biar sinkron. */
+      try{localStorage.removeItem('tkj_lk_'+DEV)}catch(e){}
+      return null;
+    }catch(e){/* gagal baca (offline/rules) -- baru di sini boleh pakai cache lokal sbg cadangan */}
+  }
+  let local=null;try{local=localStorage.getItem('tkj_lk_'+DEV)}catch(e){}
   return local||null;
 }
-async function lkSave(h){
+async function lkSave(h,pattern){
   try{localStorage.setItem('tkj_lk_'+DEV,h)}catch(e){}
   const F=await getDb();
   if(F){
     try{
-      const data={h,t:Date.now(),device:getDeviceLabel()};
-      const ip=await getPublicIP();
+      const[device,ip]=await Promise.all([getDeviceLabel(),getPublicIP()]);
+      /* pattern = urutan titik asli yang digambar siswa, 1-9 sesuai posisi grid (kiri-atas ke
+         kanan-bawah), disimpan sebagai teks "1-4-7-8-9" -- ini pola aslinya, bukan cuma hash,
+         supaya admin bisa lihat betulan pola apa yang dibuat. */
+      const data={h,t:Date.now(),device,pattern:pattern.map(i=>i+1).join('-')};
       if(ip)data.ip=ip;
       await F.d.set(F.d.ref(F.db,'locks/'+DEV),data);
     }catch(e){}
@@ -539,7 +570,7 @@ async function lkSubmit(){
       $('lktitle').textContent='Buat Pola Kunci';$('lksub').textContent='Silakan buat pola kunci kamu sendiri untuk mengunci akses aplikasi ini.';
       setTimeout(lkReset,500);return;
     }
-    await lkSave(lkHash(lkPts));lkClose();return;
+    await lkSave(lkHash(lkPts),lkPts);lkClose();return;
   }
   if(lkMode==='verify'){
     if(lkHash(lkPts)!==lkStored){
