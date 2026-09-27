@@ -128,6 +128,16 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 .bnfoot{padding:9px 11px;font-size:10.5px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bnfoot b{color:var(--ink);font-weight:700}
 
+/* ===== tema warna ===== */
+.themegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
+.themecard{border-radius:18px;padding:16px;cursor:pointer;text-align:left;position:relative;border:2px solid transparent}
+.themecard.on{border-color:var(--ac)}
+.themecard .swatch{display:flex;gap:6px;margin-bottom:10px}
+.themecard .dot{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.themecard b{font-size:13px;display:block}
+.themecard .chk{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;background:var(--ac);color:#fff;display:none;align-items:center;justify-content:center;font-size:11px}
+.themecard.on .chk{display:flex}
+
 #toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-20px);background:#fff;border:1px solid #c5daf5;color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:700;font-size:12px;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center;box-shadow:var(--sh)}
 #toast.on{opacity:1;transform:translateX(-50%)}
 
@@ -151,7 +161,7 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
   :root{--ink:#e7eef9;--mut:#8ea3c2;--ac:#5b9bef;--ac2:#4577b8;--soft:#1c2c47;--bd:rgba(255,255,255,.08);--sh:0 8px 24px rgba(0,0,0,.35)}
   body{background:#0f1626}
   body:before{background:radial-gradient(circle at 0 0,#1c2c47,transparent 45%),radial-gradient(circle at 100% 100%,#16233b,transparent 50%),linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
-  .g,.card,.itemcard,.stat,.logorow,.modal,.lcard,.bncard{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  .g,.card,.itemcard,.stat,.logorow,.modal,.lcard,.bncard,.themecard{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
   .sidebar{background:rgba(18,26,42,.92)}
   .fld input,.fld textarea,.iconbtn,.hbtn,.lnote,.bnhint{background:#182238;border-color:#22314f;color:var(--ink)}
   #toast{background:#182238;border-color:#22314f;color:var(--ink)}
@@ -192,6 +202,7 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <button class="nav-i" data-p="fasilitas" onclick="goPane('fasilitas')"><i class="fa-solid fa-building"></i>Fasilitas</button>
     <button class="nav-i" data-p="kontak" onclick="goPane('kontak')"><i class="fa-solid fa-envelope"></i>Kontak</button>
     <button class="nav-i" data-p="banner" onclick="goPane('banner')"><i class="fa-solid fa-images"></i>Banner</button>
+    <button class="nav-i" data-p="tema" onclick="goPane('tema')"><i class="fa-solid fa-palette"></i>Tema</button>
     <button class="nav-i" data-p="apk" onclick="goPane('apk')"><i class="fa-brands fa-android"></i>APK</button>
     <button class="nav-i" data-p="kunci" onclick="goPane('kunci')"><i class="fa-solid fa-lock"></i>Kunci Pengguna</button>
     <button class="nav-i" data-p="github" onclick="goPane('github')"><i class="fa-brands fa-github"></i>File Web</button>
@@ -270,6 +281,13 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
       </div>
 
       <div id="list-banner" class="bngrid"></div>
+    </section>
+
+    <!-- TEMA -->
+    <section class="pane" id="p-tema">
+      <div class="sech"><h2>Tema Warna</h2></div>
+      <p style="font-size:11.5px;color:var(--mut);margin-bottom:14px;line-height:1.6">Pilih tema warna untuk aplikasi siswa (index.html). Perubahan berlaku <b>realtime untuk semua pengunjung</b>, bukan cuma di perangkat kamu — begitu diketuk, semua HP yang lagi buka app langsung ganti warna tanpa perlu refresh.</p>
+      <div class="themegrid" id="list-tema"></div>
     </section>
 
     <!-- APK -->
@@ -421,8 +439,8 @@ onAuthStateChanged(auth,user=>{
 });
 
 /* ===== nav ===== */
-const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat',github:'File Web (GitHub)'};
-const ADMINNAV_MORE=['fasilitas','kontak','banner','apk','github'];
+const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',tema:'Tema Warna',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat',github:'File Web (GitHub)'};
+const ADMINNAV_MORE=['fasilitas','kontak','banner','tema','apk','github'];
 window.goPane=function(p){
   document.querySelectorAll('.pane').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
   document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
@@ -433,13 +451,14 @@ window.goPane=function(p){
 };
 
 /* Sheet "Lainnya" khusus tampilan HP: nampung tab yang gak muat di bottom nav
-   (Fasilitas, Kontak, Banner, APK, File Web) + tombol Keluar. Pakai modal yang sama
+   (Fasilitas, Kontak, Banner, Tema, APK, File Web) + tombol Keluar. Pakai modal yang sama
    dengan editor item, tapi isinya daftar navigasi biasa. */
 window.openMoreSheet=function(){
   const items=[
     ['fasilitas','fa-solid fa-building','Fasilitas Lab'],
     ['kontak','fa-solid fa-envelope','Kontak'],
     ['banner','fa-solid fa-images','Banner Beranda'],
+    ['tema','fa-solid fa-palette','Tema Warna'],
     ['apk','fa-brands fa-android','Aplikasi Android'],
     ['github','fa-brands fa-github','File Web (GitHub)']
   ];
@@ -605,90 +624,36 @@ window.moveBanner=async function(key,dir){
   }catch(e){toast('Gagal mengurutkan')}
 };
 
-/* ===== ubah foto jadi link (ImgBB, gratis) — upload dari HP/komputer, hasilnya link URL =====
-   API Key cuma diminta SEKALI: setelah disimpan, kotak input hilang diganti status "tersimpan",
-   dan gak akan minta lagi kecuali kamu sendiri yang ketuk "Ganti/Reset". */
-function ibbGetKey(){try{return localStorage.getItem('tkj_ibb_key')||null}catch(e){return null}}
-function ibbRenderKeyUI(){
-  const wrap=$('ibb-keywrap');if(!wrap)return;
-  const k=ibbGetKey();
-  if(k){
-    wrap.innerHTML=`<div class="itemcard g" style="margin-bottom:12px">
-      <div class="ic"><i class="fa-solid fa-key"></i></div>
-      <div class="tx"><b>API Key ImgBB tersimpan ✓</b><small>Berakhiran •••${esc(k.slice(-4))} — langsung dipakai tiap upload, gak perlu isi ulang</small></div>
-      <div class="acts"><button class="iconbtn" title="Ganti / reset API Key" onclick="ibbResetKey()"><i class="fa-solid fa-pen"></i></button></div>
-    </div>`;
-  }else{
-    wrap.innerHTML=`<div class="fld"><label>API Key ImgBB (gratis, cukup sekali isi)</label><input id="ibb-key" type="password" placeholder="tempel API key dari api.imgbb.com" autocomplete="off"></div>
-    <p style="font-size:10.5px;color:var(--mut);margin:-4px 0 10px;line-height:1.6">Belum punya key? Buka <a href="https://api.imgbb.com/" target="_blank" rel="noopener" style="color:var(--ac);font-weight:700">api.imgbb.com</a> → login pakai Google → copy "API Key" → tempel di atas → ketuk Simpan. Key cuma disimpan di browser ini, jangan tempel API key kamu ke tempat lain / bagikan ke orang lain.</p>
-    <button class="pb2" onclick="ibbSaveKey()"><i class="fa-solid fa-floppy-disk"></i> Simpan API Key</button>`;
-  }
+/* ===== tema warna: katalog preset sama persis dengan index.html supaya swatch di sini
+   mencerminkan tampilan aslinya. Klik = simpan id tema ke content/theme (realtime,
+   berlaku untuk semua pengunjung index.html). ===== */
+const THEME_CATALOG=[
+  ['blue','Biru','#5b9bef','#8ec0fa'],
+  ['green','Hijau','#22b573','#8fe0b9'],
+  ['purple','Ungu','#8b5cf6','#c3b1fb'],
+  ['orange','Oranye','#f0973d','#f9cf9c'],
+  ['rose','Merah Muda','#ef5f83','#f7aec1'],
+  ['teal','Teal','#14b8a6','#8fe4d9']
+];
+let activeTheme='blue';
+function renderThemeGrid(){
+  $('list-tema').innerHTML=THEME_CATALOG.map(([id,label,c1,c2])=>
+    `<div class="themecard g${id===activeTheme?' on':''}" onclick="setTheme('${id}')">
+      <div class="swatch"><span class="dot" style="background:${c1}"></span><span class="dot" style="background:${c2}"></span></div>
+      <b>${label}</b>
+      <div class="chk"><i class="fa-solid fa-check"></i></div>
+    </div>`).join('');
 }
-window.ibbSaveKey=function(){
-  const el=$('ibb-key');const k=el?el.value.trim():'';
-  if(!k){toast('Isi API Key dulu');return}
-  try{localStorage.setItem('tkj_ibb_key',k)}catch(e){toast('Gagal menyimpan di browser ini');return}
-  toast('API Key tersimpan ✓ — gak akan diminta lagi');
-  ibbRenderKeyUI();
+window.setTheme=async function(id){
+  try{await set(ref(db,'content/theme'),id);toast('Tema diterapkan ✓ — semua pengunjung ikut berubah')}
+  catch(e){toast('Gagal menyimpan tema: cek Firebase Rules')}
 };
-window.ibbResetKey=function(){
-  if(!confirm('Ganti/reset API Key ImgBB? Kamu perlu tempel key baru sebelum upload foto lagi.'))return;
-  try{localStorage.removeItem('tkj_ibb_key')}catch(e){}
-  ibbRenderKeyUI();
-  toast('API Key direset');
-};
-ibbRenderKeyUI();
-
-/* Kompres & perkecil foto dulu sebelum diunggah — ini yang bikin upload jauh lebih cepat,
-   soalnya foto asli dari HP biasanya 3-8 MB, setelah dikecilkan jadi ratusan KB saja.
-   GIF dilewati (tidak dikompres) supaya animasinya tidak rusak. */
-async function ibbCompress(file,maxDim=1600,quality=.8){
-  if(/gif/i.test(file.type))return file;
-  try{
-    const img=await new Promise((res,rej)=>{
-      const url=URL.createObjectURL(file),im=new Image();
-      im.onload=()=>{URL.revokeObjectURL(url);res(im)};
-      im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('gagal baca gambar'))};
-      im.src=url;
-    });
-    let w=img.naturalWidth,h=img.naturalHeight;
-    if(!w||!h)return file;
-    if(w>maxDim||h>maxDim){const sc=maxDim/Math.max(w,h);w=Math.round(w*sc);h=Math.round(h*sc)}
-    const cv=document.createElement('canvas');cv.width=w;cv.height=h;
-    cv.getContext('2d').drawImage(img,0,0,w,h);
-    const blob=await new Promise(res=>cv.toBlob(res,'image/jpeg',quality));
-    return blob||file;
-  }catch(e){return file}
+function listenTheme(){
+  onValue(ref(db,'content/theme'),snap=>{
+    activeTheme=snap.exists()?snap.val():'blue';
+    renderThemeGrid();
+  },()=>renderThemeGrid());
 }
-window.ibbUpload=async function(ev){
-  const f=ev.target.files[0];if(!f)return;
-  $('ibb-err').textContent='';$('ibb-result').style.display='none';
-  const key=ibbGetKey();
-  if(!key){$('ibb-err').textContent='Simpan API Key ImgBB dulu di atas.';ev.target.value='';return}
-  $('ibb-status').textContent='Memperkecil foto…';
-  try{
-    const compact=await ibbCompress(f);
-    $('ibb-status').textContent='Mengunggah…';
-    const fd=new FormData();fd.append('image',compact,(f.name||'foto').replace(/\.[a-z0-9]+$/i,'')+(/gif/i.test(f.type)?'.gif':'.jpg'));
-    const resp=await fetch('https://api.imgbb.com/1/upload?key='+encodeURIComponent(key),{method:'POST',body:fd});
-    const data=await resp.json().catch(()=>({}));
-    if(!resp.ok||!data.success)throw new Error((data&&data.error&&data.error.message)||('HTTP '+resp.status));
-    const url=data.data.display_url||data.data.url;
-    $('ibb-preview').src=url;$('ibb-url').value=url;$('ibb-result').style.display='block';
-    $('ibb-status').textContent='Berhasil diunggah ✓ — tinggal salin link-nya.';
-    toast('Foto berhasil jadi link ✓');
-  }catch(e){
-    $('ibb-err').textContent='Gagal upload: '+(e.message||'cek API Key / koneksi internet');
-    $('ibb-status').textContent='';
-  }finally{ev.target.value=''}
-};
-window.ibbCopy=function(){
-  const u=$('ibb-url').value;if(!u)return;
-  (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(
-    ()=>toast('Link disalin ✓ — tempel di kolom URL banner'),
-    ()=>toast('Link: '+u)
-  );
-};
 
 /* ===== apk ===== */
 async function loadApk(){
@@ -756,6 +721,7 @@ function initDashboard(){
   });
   loadApk();
   listenPresence();
+  listenTheme();
 }
 
 document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target.id==='modal-ov')closeModal()});
