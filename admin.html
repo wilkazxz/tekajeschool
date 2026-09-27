@@ -203,6 +203,7 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <button class="nav-i" data-p="kontak" onclick="goPane('kontak')"><i class="fa-solid fa-envelope"></i>Kontak</button>
     <button class="nav-i" data-p="banner" onclick="goPane('banner')"><i class="fa-solid fa-images"></i>Banner</button>
     <button class="nav-i" data-p="tema" onclick="goPane('tema')"><i class="fa-solid fa-palette"></i>Tema</button>
+    <button class="nav-i" data-p="tataletak" onclick="goPane('tataletak')"><i class="fa-solid fa-shapes"></i>Tata Letak</button>
     <button class="nav-i" data-p="apk" onclick="goPane('apk')"><i class="fa-brands fa-android"></i>APK</button>
     <button class="nav-i" data-p="kunci" onclick="goPane('kunci')"><i class="fa-solid fa-lock"></i>Kunci Pengguna</button>
     <button class="nav-i" data-p="github" onclick="goPane('github')"><i class="fa-brands fa-github"></i>File Web</button>
@@ -288,6 +289,13 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
       <div class="sech"><h2>Tema Warna</h2></div>
       <p style="font-size:11.5px;color:var(--mut);margin-bottom:14px;line-height:1.6">Pilih tema warna untuk aplikasi siswa (index.html). Perubahan berlaku <b>realtime untuk semua pengunjung</b>, bukan cuma di perangkat kamu — begitu diketuk, semua HP yang lagi buka app langsung ganti warna tanpa perlu refresh.</p>
       <div class="themegrid" id="list-tema"></div>
+    </section>
+
+    <!-- TATA LETAK -->
+    <section class="pane" id="p-tataletak">
+      <div class="sech"><h2>Tata Letak (Gaya Tampilan)</h2></div>
+      <p style="font-size:11.5px;color:var(--mut);margin-bottom:14px;line-height:1.6">Pilih gaya bentuk kartu &amp; tombol untuk aplikasi siswa — sudut membulat, permukaan kaca transparan, atau tampilan flat minimalis. Ini <b>bentuk</b>, bukan warna (warna diatur di menu Tema). Berlaku realtime untuk semua pengunjung.</p>
+      <div class="themegrid" id="list-tataletak"></div>
     </section>
 
     <!-- APK -->
@@ -439,8 +447,8 @@ onAuthStateChanged(auth,user=>{
 });
 
 /* ===== nav ===== */
-const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',tema:'Tema Warna',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat',github:'File Web (GitHub)'};
-const ADMINNAV_MORE=['fasilitas','kontak','banner','tema','apk','github'];
+const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',tema:'Tema Warna',tataletak:'Tata Letak',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat',github:'File Web (GitHub)'};
+const ADMINNAV_MORE=['fasilitas','kontak','banner','tema','tataletak','apk','github'];
 window.goPane=function(p){
   document.querySelectorAll('.pane').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
   document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
@@ -459,6 +467,7 @@ window.openMoreSheet=function(){
     ['kontak','fa-solid fa-envelope','Kontak'],
     ['banner','fa-solid fa-images','Banner Beranda'],
     ['tema','fa-solid fa-palette','Tema Warna'],
+    ['tataletak','fa-solid fa-shapes','Tata Letak'],
     ['apk','fa-brands fa-android','Aplikasi Android'],
     ['github','fa-brands fa-github','File Web (GitHub)']
   ];
@@ -655,6 +664,34 @@ function listenTheme(){
   },()=>renderThemeGrid());
 }
 
+/* ===== tata letak: 3 gaya bentuk (bukan warna) — Lembut (default), Kaca (frosted glass,
+   sudut membulat besar), Flat (minimalis, sudut tegas). Klik = simpan id ke content/layout. ===== */
+const LAYOUT_CATALOG=[
+  ['lembut','Lembut','Sudut membulat, kartu putih lembut (tampilan default)','26px'],
+  ['kaca','Kaca','Efek kaca buram (frosted glass) tembus pandang','26px'],
+  ['flat','Flat','Minimalis, sudut tegas, tanpa efek transparan','12px']
+];
+let activeLayout='lembut';
+function renderLayoutGrid(){
+  $('list-tataletak').innerHTML=LAYOUT_CATALOG.map(([id,label,desc,radius])=>
+    `<div class="themecard g${id===activeLayout?' on':''}" onclick="setLayout('${id}')" style="text-align:left">
+      <div style="width:100%;height:34px;border-radius:${radius};background:linear-gradient(135deg,var(--ac2),var(--ac));margin-bottom:10px"></div>
+      <b>${label}</b>
+      <small style="font-size:10.5px;color:var(--mut);display:block;margin-top:2px;line-height:1.4;white-space:normal">${desc}</small>
+      <div class="chk"><i class="fa-solid fa-check"></i></div>
+    </div>`).join('');
+}
+window.setLayout=async function(id){
+  try{await set(ref(db,'content/layout'),id);toast('Tata letak diterapkan ✓ — semua pengunjung ikut berubah')}
+  catch(e){toast('Gagal menyimpan tata letak: cek Firebase Rules')}
+};
+function listenLayout(){
+  onValue(ref(db,'content/layout'),snap=>{
+    activeLayout=snap.exists()?snap.val():'lembut';
+    renderLayoutGrid();
+  },()=>renderLayoutGrid());
+}
+
 /* ===== apk ===== */
 async function loadApk(){
   const snap=await get(ref(db,'content/apk'));
@@ -722,6 +759,7 @@ function initDashboard(){
   loadApk();
   listenPresence();
   listenTheme();
+  listenLayout();
 }
 
 document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target.id==='modal-ov')closeModal()});
