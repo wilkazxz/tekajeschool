@@ -137,6 +137,8 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 .themecard b{font-size:13px;display:block}
 .themecard .chk{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;background:var(--ac);color:#fff;display:none;align-items:center;justify-content:center;font-size:11px}
 .themecard.on .chk{display:flex}
+.themecat{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);margin:18px 0 10px}
+.themecat:first-child{margin-top:0}
 
 #toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-20px);background:#fff;border:1px solid #c5daf5;color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:700;font-size:12px;z-index:200;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center;box-shadow:var(--sh)}
 #toast.on{opacity:1;transform:translateX(-50%)}
@@ -288,13 +290,13 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <section class="pane" id="p-tema">
       <div class="sech"><h2>Tema Warna</h2></div>
       <p style="font-size:11.5px;color:var(--mut);margin-bottom:14px;line-height:1.6">Pilih tema warna untuk aplikasi siswa (index.html). Perubahan berlaku <b>realtime untuk semua pengunjung</b>, bukan cuma di perangkat kamu — begitu diketuk, semua HP yang lagi buka app langsung ganti warna tanpa perlu refresh.</p>
-      <div class="themegrid" id="list-tema"></div>
+      <div id="list-tema"></div>
     </section>
 
     <!-- TATA LETAK -->
     <section class="pane" id="p-tataletak">
-      <div class="sech"><h2>Tata Letak (Gaya Tampilan)</h2></div>
-      <p style="font-size:11.5px;color:var(--mut);margin-bottom:14px;line-height:1.6">Pilih gaya bentuk kartu &amp; tombol untuk aplikasi siswa — sudut membulat, permukaan kaca transparan, atau tampilan flat minimalis. Ini <b>bentuk</b>, bukan warna (warna diatur di menu Tema). Berlaku realtime untuk semua pengunjung.</p>
+      <div class="sech"><h2>Tata Letak (Susunan Tampilan)</h2></div>
+      <p style="font-size:11.5px;color:var(--mut);margin-bottom:14px;line-height:1.6">Ini mengubah <b>susunan halaman beranda</b> siswa: urutan section, cara tools/materi ditampilkan (grid rapat vs list), dan bentuk aksi cepat — bukan cuma bentuk sudut kartu. Berlaku realtime untuk semua pengunjung.</p>
       <div class="themegrid" id="list-tataletak"></div>
     </section>
 
@@ -635,23 +637,34 @@ window.moveBanner=async function(key,dir){
 
 /* ===== tema warna: katalog preset sama persis dengan index.html supaya swatch di sini
    mencerminkan tampilan aslinya. Klik = simpan id tema ke content/theme (realtime,
-   berlaku untuk semua pengunjung index.html). ===== */
+   berlaku untuk semua pengunjung index.html). Dikelompokkan per kategori (soft/vibrant/
+   minimal/dark) biar gampang milih gaya yang dicari. ===== */
 const THEME_CATALOG=[
-  ['blue','Biru','#5b9bef','#8ec0fa'],
-  ['green','Hijau','#22b573','#8fe0b9'],
-  ['purple','Ungu','#8b5cf6','#c3b1fb'],
-  ['orange','Oranye','#f0973d','#f9cf9c'],
-  ['rose','Merah Muda','#ef5f83','#f7aec1'],
-  ['teal','Teal','#14b8a6','#8fe4d9']
+  ['blue','Biru','#5b9bef','#8ec0fa','soft'],
+  ['green','Hijau','#22b573','#8fe0b9','soft'],
+  ['purple','Ungu','#8b5cf6','#c3b1fb','soft'],
+  ['orange','Oranye','#f0973d','#f9cf9c','soft'],
+  ['rose','Merah Muda','#ef5f83','#f7aec1','soft'],
+  ['teal','Teal','#14b8a6','#8fe4d9','soft'],
+  ['sunset','Sunset','#ff6b4a','#ff9d80','vibrant'],
+  ['electric','Electric','#5b6bf6','#3fd0ff','vibrant'],
+  ['mono','Mono Terang','#111827','#6b7280','minimal'],
+  ['midnight','Midnight Gold','#d4af5a','#5b6bab','dark'],
+  ['noir','Noir Rose','#b8536a','#6b3a4a','dark']
 ];
+const THEME_CATS=[['soft','Soft & Pastel Clean'],['vibrant','Cerah & Vibrant'],['minimal','Terang & Minimal'],['dark','Dark Elegant']];
 let activeTheme='blue';
 function renderThemeGrid(){
-  $('list-tema').innerHTML=THEME_CATALOG.map(([id,label,c1,c2])=>
-    `<div class="themecard g${id===activeTheme?' on':''}" onclick="setTheme('${id}')">
-      <div class="swatch"><span class="dot" style="background:${c1}"></span><span class="dot" style="background:${c2}"></span></div>
-      <b>${label}</b>
-      <div class="chk"><i class="fa-solid fa-check"></i></div>
-    </div>`).join('');
+  $('list-tema').innerHTML=THEME_CATS.map(([catId,catLabel])=>{
+    const items=THEME_CATALOG.filter(t=>t[4]===catId);
+    if(!items.length)return'';
+    return `<div class="themecat">${catLabel}</div><div class="themegrid">${items.map(([id,label,c1,c2])=>
+      `<div class="themecard g${id===activeTheme?' on':''}" onclick="setTheme('${id}')">
+        <div class="swatch"><span class="dot" style="background:${c1}"></span><span class="dot" style="background:${c2}"></span></div>
+        <b>${label}</b>
+        <div class="chk"><i class="fa-solid fa-check"></i></div>
+      </div>`).join('')}</div>`;
+  }).join('');
 }
 window.setTheme=async function(id){
   try{await set(ref(db,'content/theme'),id);toast('Tema diterapkan ✓ — semua pengunjung ikut berubah')}
@@ -664,20 +677,22 @@ function listenTheme(){
   },()=>renderThemeGrid());
 }
 
-/* ===== tata letak: 3 gaya bentuk (bukan warna) — Lembut (default), Kaca (frosted glass,
-   sudut membulat besar), Flat (minimalis, sudut tegas). Klik = simpan id ke content/layout. ===== */
+/* ===== tata letak: sekarang mengatur SUSUNAN halaman beranda (urutan section, mode
+   grid/list untuk tools & materi, bentuk aksi cepat), bukan cuma bentuk sudut kartu.
+   Tetap membawa gaya permukaan (rounded/flat/kaca) sebagai bagian dari identitas tiap
+   varian, tapi itu bukan lagi fokus utamanya. Klik = simpan id ke content/layout. ===== */
 const LAYOUT_CATALOG=[
-  ['lembut','Lembut','Sudut membulat, kartu putih lembut (tampilan default)','26px'],
-  ['kaca','Kaca','Efek kaca buram (frosted glass) tembus pandang','26px'],
-  ['flat','Flat','Minimalis, sudut tegas, tanpa efek transparan','12px']
+  ['standar','Standar','Urutan bawaan: hero → aksi cepat (chip) → aktivitas → tools & materi (grid) → fasilitas → kontak.','Susunan default, cocok untuk kebanyakan pengunjung.'],
+  ['dashboard','Dashboard Grid','Aksi cepat & tools/materi dipindah ke atas sebagai grid kartu padat gaya flat, aktivitas & banner turun ke bawah.','Padat & langsung ke tools, gaya kartu flat/tegas.'],
+  ['ringkas','Ringkas','Semua section (aktivitas, tools, materi, fasilitas, kontak) tampil sebagai list rapat gaya kaca transparan, hemat scroll.','List serba ringkas, gaya glass/kaca, hemat layar.']
 ];
-let activeLayout='lembut';
+let activeLayout='standar';
 function renderLayoutGrid(){
-  $('list-tataletak').innerHTML=LAYOUT_CATALOG.map(([id,label,desc,radius])=>
-    `<div class="themecard g${id===activeLayout?' on':''}" onclick="setLayout('${id}')" style="text-align:left">
-      <div style="width:100%;height:34px;border-radius:${radius};background:linear-gradient(135deg,var(--ac2),var(--ac));margin-bottom:10px"></div>
+  $('list-tataletak').innerHTML=LAYOUT_CATALOG.map(([id,label,desc,tag])=>
+    `<div class="themecard g${id===activeLayout?' on':''}" onclick="setLayout('${id}')" style="text-align:left;min-height:150px">
       <b>${label}</b>
-      <small style="font-size:10.5px;color:var(--mut);display:block;margin-top:2px;line-height:1.4;white-space:normal">${desc}</small>
+      <small style="font-size:10.5px;color:var(--mut);display:block;margin-top:6px;line-height:1.5;white-space:normal">${desc}</small>
+      <small style="font-size:9.5px;color:var(--ac);font-weight:800;display:block;margin-top:8px;white-space:normal">${tag}</small>
       <div class="chk"><i class="fa-solid fa-check"></i></div>
     </div>`).join('');
 }
@@ -687,7 +702,7 @@ window.setLayout=async function(id){
 };
 function listenLayout(){
   onValue(ref(db,'content/layout'),snap=>{
-    activeLayout=snap.exists()?snap.val():'lembut';
+    activeLayout=snap.exists()?snap.val():'standar';
     renderLayoutGrid();
   },()=>renderLayoutGrid());
 }
