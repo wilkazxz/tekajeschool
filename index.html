@@ -735,19 +735,17 @@ function buildManifest(iconUrl){
 }
 (lgGet('tkj')?Promise.resolve(lgGet('tkj')):findLogo('tkj')).then(u=>buildManifest(u));
 
-/* ===== banner carousel: prioritas banner dari Admin Dashboard (Firebase), baru fallback ke
-   banner1..banner5 bawaan server. Dipakai realtime (onValue) supaya begitu admin nambah/hapus
+/* ===== banner carousel: gabungan banner1..banner5 bawaan server (lokal) DAN banner yang
+   ditambahkan lewat Admin Dashboard (Firebase/remote). Keduanya digabung, bukan saling
+   menimpa, jadi banner yang sudah ada di server tetap tampil walau admin menambah banner
+   baru lewat URL/upload. Dipakai realtime (onValue) supaya begitu admin nambah/hapus
    banner, tampilannya berubah otomatis tanpa perlu tutup-buka app lagi. ===== */
-let bannerInterval=null,bannerSource=null; // null | 'remote' | 'local'
-function renderBanner(list,source){
- if(source==='local'&&bannerSource==='remote')return; // banner dari admin selalu menang atas default lokal
- if(!list||!list.length){
-   if(source==='remote'){bannerSource='remote';clearInterval(bannerInterval);$('bnr-wrap').classList.add('hide');$('bnr').innerHTML='';$('bdots').innerHTML=''}
-   return;
- }
- bannerSource=source||bannerSource;
+let bannerInterval=null,localBanners=[],remoteBanners=[];
+function combineBanners(){return[...localBanners,...remoteBanners]}
+function renderBanner(list){
  clearInterval(bannerInterval);
  const wrap=$('bnr-wrap'),track=$('bnr'),dots=$('bdots');
+ if(!list||!list.length){wrap.classList.add('hide');track.innerHTML='';dots.innerHTML='';return}
  track.innerHTML=list.map((u,i)=>`<img class="sl" data-i="${i}" alt="Banner ${i+1}" loading="${i?'lazy':'eager'}">`).join('');
  dots.innerHTML=list.map((_,i)=>`<span class="${i?'':'on'}" data-i="${i}"></span>`).join('');
  [...track.children].forEach((im,i)=>{im.onload=()=>im.classList.add('ok');im.src=list[i]});
@@ -765,7 +763,8 @@ async function initBannerLocal(){
   const names=[`banner${n}`,`baner${n}`,`Banner${n}`,`Baner${n}`],ext=['jpeg','jpg','png','webp'];
   for(const b of names)for(const e of ext){const u=await probe(`${b}.${e}`);if(u){found[n-1]=u;return}}
  }));
- renderBanner(found.filter(Boolean),'local');
+ localBanners=found.filter(Boolean);
+ renderBanner(combineBanners());
 }
 initBannerLocal();
 
@@ -824,8 +823,8 @@ async function watchRemoteContent(){
     if(c.kontak){const l=toList(c.kontak);if(l.length)SETS.Kontak=l.map(asArr3)}
     renderAll();
     if(c.apk&&c.apk.url){APK=c.apk.url;const vt=$('verTxt');if(vt)vt.textContent='v'+(c.apk.version||'2.0')+' • PWA Ready • Offline Support'}
-    const l=c.banners?toList(c.banners).map(o=>o.url).filter(Boolean):[];
-    renderBanner(l,'remote');
+    remoteBanners=c.banners?toList(c.banners).map(o=>o.url).filter(Boolean):[];
+    renderBanner(combineBanners());
   },()=>{/* Rules Firebase belum mengizinkan baca 'content', app tetap pakai data bawaan */});
 }
 FIREBASE_URL?startFB().then(watchRemoteContent):startLocal();
