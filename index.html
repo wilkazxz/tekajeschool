@@ -58,6 +58,9 @@ button{font-family:inherit}
 .chip{flex:none;border-radius:var(--r-md);padding:6px 12px 6px 6px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer}
 .chip i{width:34px;height:34px;border-radius:var(--r-md);background:var(--soft);display:grid;place-items:center;color:var(--acd);font-size:13px}
 .chip.add{padding:6px}.chip.add i{background:none;border:1.5px dashed var(--ac);width:36px;height:36px}
+.chip.compact{padding:5px 10px 5px 5px}
+.chip.compact i{width:26px;height:26px;font-size:11px}
+.chip.compact{font-size:11px}
 .lw{border-radius:var(--r-lg);padding:4px 14px}
 .tx{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(91,155,239,.15);cursor:pointer}
 .tx:last-child{border:0}
@@ -194,6 +197,14 @@ body:before{transform:translateZ(0)}
 .dllink{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
 .desc{font-size:12px;line-height:1.7;color:#3d5a80;background:#fff;border:1px solid #d5e5fa;border-radius:14px;padding:12px;margin:4px 0 12px}
 
+/* ===== susunan tata letak (struktur) ===== */
+body.hero-compact .hero{padding:14px}
+body.hero-compact .hero h2{font-size:19px;margin:3px 0}
+body.hero-compact .hrow img{height:46px}
+body.hero-compact .hrow b{font-size:20px}
+body.hero-compact .acts{margin-top:10px;gap:6px}
+body.hero-compact .act i{width:40px;height:40px;font-size:14px}
+
 /* ===== dark mode ===== */
 @media(prefers-color-scheme:dark){
 :root{--ink:#e7eef9;--mut:#8ea3c2;--ac:#5b9bef;--ac2:#4577b8;--soft:#1c2c47;--gl:rgba(24,33,54,.6);--bd:rgba(255,255,255,.08);--sh:0 8px 24px rgba(0,0,0,.35);--acd:#7fb3f5;--herotxt:#9db8e0;--ac-rgb:91,155,239;--ac2-rgb:69,119,184;--bg-base:#0f1626;--bg-r1:#1c2c47;--bg-r2:#16233b;--bg-l1:#0f1626;--bg-l2:#0b111d;--bg-l3:#0f1626;--surf-bg:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7))}
@@ -216,6 +227,90 @@ body:before{transform:translateZ(0)}
 input[type=range]{accent-color:var(--ac)}
 }
 </style>
+<script>
+/* ===== anti-flash tema & tata letak =====
+   Katalog warna & permukaan didefinisikan di sini (di <head>, sebelum body dirender) supaya begitu
+   halaman dibuka -- termasuk saat perangkat memakai dark mode -- warna yang benar sudah terpasang
+   SEBELUM cat pertama muncul di layar. Ini yang bikin splash/opening awal gak lagi "kedip" salah
+   warna dulu baru berubah. Data yang sama dipakai ulang oleh script utama di bawah <body> (lewat
+   window.THEMES / window.LAYOUTS), jadi tidak didefinisikan dua kali.
+   Catatan tema "terang" (mono) & "dark elegant" (midnight, noir) sengaja punya palet light===dark:
+   temanya memang didesain untuk selalu tampil terang atau selalu tampil gelap, tidak ikut
+   menyesuaikan mode sistem, karena itu maksud dari kategorinya. */
+(function(){
+ var soft={
+  blue:{ac:'#5b9bef',ac2:'#8ec0fa',soft:'#dcebfd',acd:'#2f6fd0',herotxt:'#3d6ea8',bgBase:'#eaf3fe',bgR1:'#b9d8fb',bgR2:'#cfe3fd',bgL1:'#e4f0ff',bgL2:'#f5f9ff',bgL3:'#e1edff'},
+  blueDark:{ac:'#5b9bef',ac2:'#4577b8',soft:'#1c2c47',acd:'#7fb3f5',herotxt:'#9db8e0',bgBase:'#0f1626',bgR1:'#1c2c47',bgR2:'#16233b',bgL1:'#0f1626',bgL2:'#0b111d',bgL3:'#0f1626'},
+  green:{ac:'#22b573',ac2:'#8fe0b9',soft:'#daf5e7',acd:'#159a5f',herotxt:'#1f7a52',bgBase:'#eafcf3',bgR1:'#b8f0d3',bgR2:'#cdf3df',bgL1:'#e2fbee',bgL2:'#f5fdf9',bgL3:'#e1f7ec'},
+  greenDark:{ac:'#2ecf8b',ac2:'#1f7a52',soft:'#123321',acd:'#3fe0a0',herotxt:'#8fd9b8',bgBase:'#0d1f17',bgR1:'#173d2b',bgR2:'#123024',bgL1:'#0d1f17',bgL2:'#0a1811',bgL3:'#0d1f17'},
+  purple:{ac:'#8b5cf6',ac2:'#c3b1fb',soft:'#ece3fe',acd:'#6d3ff0',herotxt:'#5a3ea8',bgBase:'#f4f0ff',bgR1:'#d9c9fb',bgR2:'#e6dcfd',bgL1:'#f1ecff',bgL2:'#f9f7ff',bgL3:'#efe9ff'},
+  purpleDark:{ac:'#a78bfa',ac2:'#5b3fa8',soft:'#241a3d',acd:'#c3aefb',herotxt:'#c3b1fb',bgBase:'#160f27',bgR1:'#2c1f4d',bgR2:'#231a3d',bgL1:'#160f27',bgL2:'#110c1e',bgL3:'#160f27'},
+  orange:{ac:'#f0973d',ac2:'#f9cf9c',soft:'#fdecd6',acd:'#d97a1a',herotxt:'#a15f21',bgBase:'#fff6ea',bgR1:'#fbdfb4',bgR2:'#fdebcf',bgL1:'#fff3e2',bgL2:'#fffaf3',bgL3:'#fff0e0'},
+  orangeDark:{ac:'#f6a75a',ac2:'#a15f21',soft:'#3a2612',acd:'#ffbb7a',herotxt:'#f0c896',bgBase:'#231708',bgR1:'#4a2f12',bgR2:'#3a2510',bgL1:'#231708',bgL2:'#1a1105',bgL3:'#231708'},
+  rose:{ac:'#ef5f83',ac2:'#f7aec1',soft:'#fde3ea',acd:'#d63e66',herotxt:'#a13350',bgBase:'#fff0f4',bgR1:'#f8c7d4',bgR2:'#fbdae2',bgL1:'#ffedf2',bgL2:'#fff8fa',bgL3:'#ffecf1'},
+  roseDark:{ac:'#f5738f',ac2:'#a13350',soft:'#3a1520',acd:'#ff9bb0',herotxt:'#f4b7c5',bgBase:'#26131a',bgR1:'#4d2130',bgR2:'#3a1a26',bgL1:'#26131a',bgL2:'#1c0e12',bgL3:'#26131a'},
+  teal:{ac:'#14b8a6',ac2:'#8fe4d9',soft:'#daf6f2',acd:'#0e9384',herotxt:'#0f6f66',bgBase:'#eafcfa',bgR1:'#b7ede5',bgR2:'#cdf2ec',bgL1:'#e3fbf8',bgL2:'#f5fefd',bgL3:'#e2f9f6'},
+  tealDark:{ac:'#2dd4c0',ac2:'#0f6f66',soft:'#0f2b28',acd:'#5fe6d5',herotxt:'#8fe4d9',bgBase:'#0b1f1d',bgR1:'#153c37',bgR2:'#112f2b',bgL1:'#0b1f1d',bgL2:'#081715',bgL3:'#0b1f1d'},
+  sunset:{ac:'#ff6b4a',ac2:'#ff9d80',soft:'#ffe4da',acd:'#e34a1f',herotxt:'#c1451f',bgBase:'#fff4ef',bgR1:'#ffcbb5',bgR2:'#ffdcc9',bgL1:'#fff0e9',bgL2:'#fffaf7',bgL3:'#ffeee5'},
+  sunsetDark:{ac:'#ff8a63',ac2:'#c1451f',soft:'#3d1f11',acd:'#ffab84',herotxt:'#ffbfa0',bgBase:'#22120a',bgR1:'#4a2513',bgR2:'#3a1d10',bgL1:'#22120a',bgL2:'#190d07',bgL3:'#22120a'},
+  electric:{ac:'#5b6bf6',ac2:'#3fd0ff',soft:'#e0e9ff',acd:'#3a4bd9',herotxt:'#3a4bd9',bgBase:'#f0f3ff',bgR1:'#c4d4ff',bgR2:'#c9ecff',bgL1:'#eef2ff',bgL2:'#f8faff',bgL3:'#eaf6ff'},
+  electricDark:{ac:'#7c89ff',ac2:'#3a4bd9',soft:'#1c2150',acd:'#9ea8ff',herotxt:'#b3bcff',bgBase:'#0f1130',bgR1:'#232a5e',bgR2:'#182252',bgL1:'#0f1130',bgL2:'#0b0c24',bgL3:'#0f1130'},
+  mono:{ac:'#111827',ac2:'#6b7280',soft:'#f1f3f6',acd:'#111827',herotxt:'#4b5566',bgBase:'#ffffff',bgR1:'#eef0f3',bgR2:'#f5f6f8',bgL1:'#ffffff',bgL2:'#fbfbfc',bgL3:'#f7f8fa'},
+  midnight:{ac:'#d4af5a',ac2:'#5b6bab',soft:'#1b2340',acd:'#e8c877',herotxt:'#b9c2e0',bgBase:'#0b0f22',bgR1:'#1b2450',bgR2:'#141a3a',bgL1:'#0b0f22',bgL2:'#070a18',bgL3:'#0b0f22'},
+  noir:{ac:'#b8536a',ac2:'#6b3a4a',soft:'#2a151b',acd:'#e08298',herotxt:'#d9a8b3',bgBase:'#160a0e',bgR1:'#341620',bgR2:'#241017',bgL1:'#160a0e',bgL2:'#0f0709',bgL3:'#160a0e'}
+ };
+ var THEMES={
+  blue:{light:soft.blue,dark:soft.blueDark,label:'Biru',cat:'soft'},
+  green:{light:soft.green,dark:soft.greenDark,label:'Hijau',cat:'soft'},
+  purple:{light:soft.purple,dark:soft.purpleDark,label:'Ungu',cat:'soft'},
+  orange:{light:soft.orange,dark:soft.orangeDark,label:'Oranye',cat:'soft'},
+  rose:{light:soft.rose,dark:soft.roseDark,label:'Merah Muda',cat:'soft'},
+  teal:{light:soft.teal,dark:soft.tealDark,label:'Teal',cat:'soft'},
+  sunset:{light:soft.sunset,dark:soft.sunsetDark,label:'Sunset',cat:'vibrant'},
+  electric:{light:soft.electric,dark:soft.electricDark,label:'Electric',cat:'vibrant'},
+  mono:{light:soft.mono,dark:soft.mono,label:'Mono Terang',cat:'minimal'},
+  midnight:{light:soft.midnight,dark:soft.midnight,label:'Midnight Gold',cat:'dark'},
+  noir:{light:soft.noir,dark:soft.noir,label:'Noir Rose',cat:'dark'}
+ };
+ var LAYOUTS={
+  standar:{r:{xl:'26px',lg:'20px',md:'14px'},surf:{bg:'linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,255,255,.66))',bgDark:'linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7))',bd:'rgba(255,255,255,.9)',bdDark:'rgba(255,255,255,.08)',blur:'0px'},shadow:function(o){return'0 8px 24px rgba('+o+',.13)'},hero:'normal',quickMode:'chips',toolsMode:'grid',materiMode:'grid',order:['banner','quick','activity','tools','materi','fasilitas','kontak','apk'],label:'Standar'},
+  dashboard:{r:{xl:'16px',lg:'14px',md:'10px'},surf:{bg:'#ffffff',bgDark:'#141b2c',bd:'rgba(0,0,0,.08)',bdDark:'rgba(255,255,255,.07)',blur:'0px'},shadow:function(){return'0 1px 3px rgba(0,0,0,.08)'},hero:'compact',quickMode:'grid',toolsMode:'grid',materiMode:'grid',order:['quick','tools','materi','activity','banner','fasilitas','kontak','apk'],label:'Dashboard Grid'},
+  ringkas:{r:{xl:'22px',lg:'18px',md:'12px'},surf:{bg:'rgba(255,255,255,.35)',bgDark:'rgba(20,28,46,.4)',bd:'rgba(255,255,255,.55)',bdDark:'rgba(255,255,255,.14)',blur:'16px'},shadow:function(o){return'0 10px 26px rgba('+o+',.16)'},hero:'compact',quickMode:'compact',toolsMode:'list',materiMode:'list',order:['activity','tools','materi','quick','fasilitas','kontak','banner','apk'],label:'Ringkas'}
+ };
+ function hexToRgb(h){var n=parseInt(h.slice(1),16);return((n>>16)&255)+','+((n>>8)&255)+','+(n&255)}
+ function applyThemeVars(id){
+  var t=THEMES[id]?id:'blue';
+  var dark=matchMedia('(prefers-color-scheme:dark)').matches;
+  var v=THEMES[t][dark?'dark':'light'];
+  var r=document.documentElement.style;
+  r.setProperty('--ac',v.ac);r.setProperty('--ac2',v.ac2);r.setProperty('--soft',v.soft);
+  r.setProperty('--acd',v.acd);r.setProperty('--herotxt',v.herotxt);
+  r.setProperty('--ac-rgb',hexToRgb(v.ac));r.setProperty('--ac2-rgb',hexToRgb(v.ac2));
+  r.setProperty('--bg-base',v.bgBase);r.setProperty('--bg-r1',v.bgR1);r.setProperty('--bg-r2',v.bgR2);
+  r.setProperty('--bg-l1',v.bgL1);r.setProperty('--bg-l2',v.bgL2);r.setProperty('--bg-l3',v.bgL3);
+  return t;
+ }
+ function applySurfaceVars(id){
+  var t=LAYOUTS[id]?id:'standar';
+  var L=LAYOUTS[t],dark=matchMedia('(prefers-color-scheme:dark)').matches;
+  var r=document.documentElement.style;
+  r.setProperty('--r-xl',L.r.xl);r.setProperty('--r-lg',L.r.lg);r.setProperty('--r-md',L.r.md);
+  r.setProperty('--surf-bg',dark?L.surf.bgDark:L.surf.bg);
+  r.setProperty('--bd',dark?L.surf.bdDark:L.surf.bd);
+  r.setProperty('--surf-blur',L.surf.blur);
+  var acRgb=r.getPropertyValue('--ac-rgb')||'91,155,239';
+  r.setProperty('--sh',L.shadow(acRgb.trim()));
+  return t;
+ }
+ window.THEMES=THEMES;window.LAYOUTS=LAYOUTS;window.hexToRgb=hexToRgb;
+ window.applyThemeVars=applyThemeVars;window.applySurfaceVars=applySurfaceVars;
+ var ct='blue',cl='standar';
+ try{ct=localStorage.getItem('tkj_theme')||'blue'}catch(e){}
+ try{cl=localStorage.getItem('tkj_layout')||'standar'}catch(e){}
+ window.currentTheme=applyThemeVars(ct);
+ window.currentLayout=applySurfaceVars(cl);
+})();
+</script>
 </head>
 <body>
 
@@ -269,40 +364,50 @@ input[type=range]{accent-color:var(--ac)}
     </div>
   </div>
 
-  <div class="bnr-wrap hide" id="bnr-wrap"><div class="bnr" id="bnr"></div><div class="bdots" id="bdots"></div></div>
+  <div class="blk" id="blk-banner"><div class="bnr-wrap hide" id="bnr-wrap"><div class="bnr" id="bnr"></div><div class="bdots" id="bdots"></div></div></div>
 
-  <div class="sh"><span>Tools Interaktif</span><a onclick="openConsole()">Buka</a></div>
-  <div class="chips">
-    <button class="chip g" onclick="go('send')"><i class="fa-solid fa-calculator"></i>Subnet</button>
-    <button class="chip g" onclick="openCable()"><i class="fa-solid fa-ethernet"></i>Kabel</button>
-    <button class="chip g" onclick="openPing()"><i class="fa-solid fa-satellite-dish"></i>Ping</button>
-    <button class="chip g add" onclick="openConsole()"><i class="fa-solid fa-terminal"></i></button>
-    <span style="font-size:11px;font-weight:700;align-self:center;padding-left:2px;color:var(--mut)">Console</span>
+  <div class="blk" id="blk-quick">
+    <div class="sh"><span>Tools Interaktif</span><a onclick="openConsole()">Buka</a></div>
+    <div id="quickWrap"></div>
   </div>
 
-  <div class="sh"><span>Aktivitas</span><a onclick="go('hist')">Lihat semua</a></div>
-  <div class="lw g" id="rl"></div>
-
-  <div class="sh" id="tools"><span>10 Tools Wajib</span><a onclick="listSheet('Tools Wajib','Tool')">Semua</a></div>
-  <div id="l-tool"></div>
-
-  <div class="sh" id="kurikulum"><span>Materi</span><a onclick="listSheet('Materi','Materi')">Semua</a></div>
-  <div id="l-mat"></div>
-
-  <div class="sh" id="fasilitas"><span>Fasilitas Lab</span><a onclick="listSheet('Fasilitas Lab','Fasilitas')">Semua</a></div>
-  <div class="lw g" id="l-fas"></div>
-
-  <div class="sh" id="kontak"><span>Kontak</span></div>
-  <div class="lw g" id="l-kon"></div>
-
-  <div class="apk g" onclick="openApk()">
-    <div class="ic"><i class="fa-brands fa-android"></i></div>
-    <div><b>Aplikasi Android</b><small>Unduh APK • v2.0.0</small></div>
-    <button class="pb" onclick="event.stopPropagation();openApk()"><i class="fa-solid fa-download"></i>Unduh</button>
+  <div class="blk" id="blk-activity">
+    <div class="sh"><span>Aktivitas</span><a onclick="go('hist')">Lihat semua</a></div>
+    <div class="lw g" id="rl"></div>
   </div>
 
-  <button class="cb g" onclick="openCreator()"><i class="fa-solid fa-code"></i>Created By<i class="fa-solid fa-arrow-up"></i></button>
-  <div class="ver" id="verTxt">v2.0.1 • PWA Ready • Offline Support</div>
+  <div class="blk" id="blk-tools">
+    <div class="sh" id="tools"><span>10 Tools Wajib</span><a onclick="listSheet('Tools Wajib','Tool')">Semua</a></div>
+    <div id="l-tool"></div>
+  </div>
+
+  <div class="blk" id="blk-materi">
+    <div class="sh" id="kurikulum"><span>Materi</span><a onclick="listSheet('Materi','Materi')">Semua</a></div>
+    <div id="l-mat"></div>
+  </div>
+
+  <div class="blk" id="blk-fasilitas">
+    <div class="sh" id="fasilitas"><span>Fasilitas Lab</span><a onclick="listSheet('Fasilitas Lab','Fasilitas')">Semua</a></div>
+    <div class="lw g" id="l-fas"></div>
+  </div>
+
+  <div class="blk" id="blk-kontak">
+    <div class="sh" id="kontak"><span>Kontak</span></div>
+    <div class="lw g" id="l-kon"></div>
+  </div>
+
+  <div class="blk" id="blk-apk">
+    <div class="apk g" onclick="openApk()">
+      <div class="ic"><i class="fa-brands fa-android"></i></div>
+      <div><b>Aplikasi Android</b><small>Unduh APK • v2.0.0</small></div>
+      <button class="pb" onclick="event.stopPropagation();openApk()"><i class="fa-solid fa-download"></i>Unduh</button>
+    </div>
+  </div>
+
+  <div id="blk-footer">
+    <button class="cb g" onclick="openCreator()"><i class="fa-solid fa-code"></i>Created By<i class="fa-solid fa-arrow-up"></i></button>
+    <div class="ver" id="verTxt">v2.0.1 • PWA Ready • Offline Support</div>
+  </div>
 </section>
 
 <!-- SUBNET -->
@@ -371,80 +476,50 @@ input[type=range]{accent-color:var(--ac)}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 
-/* ===== Tema Warna =====
-   Preset tema dipilih dari Admin Dashboard (menu "Tema"), tersimpan di Firebase
-   (content/theme), lalu diterapkan realtime di sini untuk SEMUA pengunjung —
-   bukan cuma di perangkat admin. Tiap tema punya versi warna untuk mode terang
-   & gelap, jadi tetap serasi walau HP pengunjung pakai dark mode. */
-const THEMES={
- blue:{light:{ac:'#5b9bef',ac2:'#8ec0fa',soft:'#dcebfd',acd:'#2f6fd0',herotxt:'#3d6ea8',bgBase:'#eaf3fe',bgR1:'#b9d8fb',bgR2:'#cfe3fd',bgL1:'#e4f0ff',bgL2:'#f5f9ff',bgL3:'#e1edff'},
-       dark:{ac:'#5b9bef',ac2:'#4577b8',soft:'#1c2c47',acd:'#7fb3f5',herotxt:'#9db8e0',bgBase:'#0f1626',bgR1:'#1c2c47',bgR2:'#16233b',bgL1:'#0f1626',bgL2:'#0b111d',bgL3:'#0f1626'}},
- green:{light:{ac:'#22b573',ac2:'#8fe0b9',soft:'#daf5e7',acd:'#159a5f',herotxt:'#1f7a52',bgBase:'#eafcf3',bgR1:'#b8f0d3',bgR2:'#cdf3df',bgL1:'#e2fbee',bgL2:'#f5fdf9',bgL3:'#e1f7ec'},
-        dark:{ac:'#2ecf8b',ac2:'#1f7a52',soft:'#123321',acd:'#3fe0a0',herotxt:'#8fd9b8',bgBase:'#0d1f17',bgR1:'#173d2b',bgR2:'#123024',bgL1:'#0d1f17',bgL2:'#0a1811',bgL3:'#0d1f17'}},
- purple:{light:{ac:'#8b5cf6',ac2:'#c3b1fb',soft:'#ece3fe',acd:'#6d3ff0',herotxt:'#5a3ea8',bgBase:'#f4f0ff',bgR1:'#d9c9fb',bgR2:'#e6dcfd',bgL1:'#f1ecff',bgL2:'#f9f7ff',bgL3:'#efe9ff'},
-         dark:{ac:'#a78bfa',ac2:'#5b3fa8',soft:'#241a3d',acd:'#c3aefb',herotxt:'#c3b1fb',bgBase:'#160f27',bgR1:'#2c1f4d',bgR2:'#231a3d',bgL1:'#160f27',bgL2:'#110c1e',bgL3:'#160f27'}},
- orange:{light:{ac:'#f0973d',ac2:'#f9cf9c',soft:'#fdecd6',acd:'#d97a1a',herotxt:'#a15f21',bgBase:'#fff6ea',bgR1:'#fbdfb4',bgR2:'#fdebcf',bgL1:'#fff3e2',bgL2:'#fffaf3',bgL3:'#fff0e0'},
-         dark:{ac:'#f6a75a',ac2:'#a15f21',soft:'#3a2612',acd:'#ffbb7a',herotxt:'#f0c896',bgBase:'#231708',bgR1:'#4a2f12',bgR2:'#3a2510',bgL1:'#231708',bgL2:'#1a1105',bgL3:'#231708'}},
- rose:{light:{ac:'#ef5f83',ac2:'#f7aec1',soft:'#fde3ea',acd:'#d63e66',herotxt:'#a13350',bgBase:'#fff0f4',bgR1:'#f8c7d4',bgR2:'#fbdae2',bgL1:'#ffedf2',bgL2:'#fff8fa',bgL3:'#ffecf1'},
-       dark:{ac:'#f5738f',ac2:'#a13350',soft:'#3a1520',acd:'#ff9bb0',herotxt:'#f4b7c5',bgBase:'#26131a',bgR1:'#4d2130',bgR2:'#3a1a26',bgL1:'#26131a',bgL2:'#1c0e12',bgL3:'#26131a'}},
- teal:{light:{ac:'#14b8a6',ac2:'#8fe4d9',soft:'#daf6f2',acd:'#0e9384',herotxt:'#0f6f66',bgBase:'#eafcfa',bgR1:'#b7ede5',bgR2:'#cdf2ec',bgL1:'#e3fbf8',bgL2:'#f5fefd',bgL3:'#e2f9f6'},
-       dark:{ac:'#2dd4c0',ac2:'#0f6f66',soft:'#0f2b28',acd:'#5fe6d5',herotxt:'#8fe4d9',bgBase:'#0b1f1d',bgR1:'#153c37',bgR2:'#112f2b',bgL1:'#0b1f1d',bgL2:'#081715',bgL3:'#0b1f1d'}}
-};
-const hexToRgb=h=>{const n=parseInt(h.slice(1),16);return`${(n>>16)&255},${(n>>8)&255},${n&255}`};
-let currentTheme='blue';
-function applyTheme(id){
- const t=THEMES[id]?id:'blue';currentTheme=t;
- const dark=matchMedia('(prefers-color-scheme:dark)').matches;
- const v=THEMES[t][dark?'dark':'light'];
- const r=document.documentElement.style;
- r.setProperty('--ac',v.ac);r.setProperty('--ac2',v.ac2);r.setProperty('--soft',v.soft);
- r.setProperty('--acd',v.acd);r.setProperty('--herotxt',v.herotxt);
- r.setProperty('--ac-rgb',hexToRgb(v.ac));r.setProperty('--ac2-rgb',hexToRgb(v.ac2));
- r.setProperty('--bg-base',v.bgBase);r.setProperty('--bg-r1',v.bgR1);r.setProperty('--bg-r2',v.bgR2);
- r.setProperty('--bg-l1',v.bgL1);r.setProperty('--bg-l2',v.bgL2);r.setProperty('--bg-l3',v.bgL3);
- recomputeShadow();
- try{localStorage.setItem('tkj_theme',t)}catch(e){}
-}
-
-/* ===== Gaya Tata Letak (Layout Style) =====
-   Sama seperti Tema Warna: dipilih dari Admin Dashboard (content/layout di Firebase),
-   berlaku realtime untuk semua pengunjung. Ini mengubah bentuk visual kartu/tombol
-   (sudut, permukaan kaca/flat/lembut, bayangan) — bukan warnanya (itu urusan Tema). */
-const LAYOUTS={
- lembut:{r:{xl:'26px',lg:'20px',md:'14px'},
-         surf:{bg:'linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,255,255,.66))',bgDark:'linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7))',
-               bd:'rgba(255,255,255,.9)',bdDark:'rgba(255,255,255,.08)',blur:'0px'},
-         shadow:o=>`0 8px 24px rgba(${o},.13)`},
- kaca:{r:{xl:'26px',lg:'20px',md:'14px'},
-       surf:{bg:'rgba(255,255,255,.35)',bgDark:'rgba(20,28,46,.4)',
-             bd:'rgba(255,255,255,.55)',bdDark:'rgba(255,255,255,.14)',blur:'16px'},
-       shadow:o=>`0 10px 26px rgba(${o},.16)`},
- flat:{r:{xl:'14px',lg:'12px',md:'10px'},
-       surf:{bg:'#ffffff',bgDark:'#141b2c',
-             bd:'rgba(0,0,0,.08)',bdDark:'rgba(255,255,255,.07)',blur:'0px'},
-       shadow:()=>`0 1px 3px rgba(0,0,0,.08)`}
-};
-let currentLayout='lembut';
+/* ===== Tema Warna & Tata Letak =====
+   Katalog THEMES/LAYOUTS sudah didefinisikan lebih awal di <head> (lihat komentar di sana) supaya
+   tidak ada "kedip" warna salah saat halaman pertama kali dibuka. Di sini kita pakai ulang objek
+   yang sama (window.THEMES/window.LAYOUTS) -- tidak didefinisikan dua kali -- lalu menambahkan
+   bagian yang butuh DOM body (reorder section, render ulang quick actions & grid tools/materi),
+   plus sinkronisasi dari Admin Dashboard (Firebase) dan localStorage. */
+const THEMES=window.THEMES,LAYOUTS=window.LAYOUTS,hexToRgb=window.hexToRgb;
+let currentTheme=window.currentTheme||'blue',currentLayout=window.currentLayout||'standar';
 function recomputeShadow(){
- const L=LAYOUTS[currentLayout]||LAYOUTS.lembut;
+ const L=LAYOUTS[currentLayout]||LAYOUTS.standar;
  const acRgb=document.documentElement.style.getPropertyValue('--ac-rgb')||'91,155,239';
  document.documentElement.style.setProperty('--sh',L.shadow(acRgb.trim()));
 }
-function applyLayout(id){
- const t=LAYOUTS[id]?id:'lembut';currentLayout=t;
- const L=LAYOUTS[t],dark=matchMedia('(prefers-color-scheme:dark)').matches;
- const r=document.documentElement.style;
- r.setProperty('--r-xl',L.r.xl);r.setProperty('--r-lg',L.r.lg);r.setProperty('--r-md',L.r.md);
- r.setProperty('--surf-bg',dark?L.surf.bgDark:L.surf.bg);
- r.setProperty('--bd',dark?L.surf.bdDark:L.surf.bd);
- r.setProperty('--surf-blur',L.surf.blur);
+function applyTheme(id){
+ currentTheme=window.applyThemeVars(id);
  recomputeShadow();
- try{localStorage.setItem('tkj_layout',t)}catch(e){}
+ try{localStorage.setItem('tkj_theme',currentTheme)}catch(e){}
 }
-/* Terapkan tema & layout tercache dulu (biar gak "kedip" balik ke default), lalu versi asli
-   dari Firebase akan menimpa begitu watchRemoteContent() dapat datanya (lihat di bawah). */
-{let cached='blue';try{cached=localStorage.getItem('tkj_theme')||'blue'}catch(e){}applyTheme(cached)}
-{let cached='lembut';try{cached=localStorage.getItem('tkj_layout')||'lembut'}catch(e){}applyLayout(cached)}
+function applyLayout(id){
+ currentLayout=window.applySurfaceVars(id);
+ const L=LAYOUTS[currentLayout];
+ document.body.classList.toggle('hero-compact',L.hero==='compact');
+ reorderHome(L.order);
+ renderQuick(L.quickMode);
+ if(typeof SETS!=='undefined'){fillSmart('l-tool','Tool',L.toolsMode);fillSmart('l-mat','Materi',L.materiMode)}
+ try{localStorage.setItem('tkj_layout',currentLayout)}catch(e){}
+}
+const BLOCK_MAP={banner:'blk-banner',quick:'blk-quick',activity:'blk-activity',tools:'blk-tools',materi:'blk-materi',fasilitas:'blk-fasilitas',kontak:'blk-kontak',apk:'blk-apk'};
+function reorderHome(order){
+ const home=$('s-home'),footer=$('blk-footer');
+ if(!home||!footer)return;
+ order.forEach(k=>{const el=$(BLOCK_MAP[k]);if(el)home.insertBefore(el,footer)});
+}
+const QUICK_ITEMS=[['Subnet','fa-calculator',"go('send')"],['Kabel','fa-ethernet','openCable()'],['Ping','fa-satellite-dish','openPing()'],['Console','fa-terminal','openConsole()']];
+function renderQuick(mode){
+ const w=$('quickWrap');if(!w)return;
+ if(mode==='grid'){
+  w.innerHTML=`<div class="qa">${QUICK_ITEMS.map(([l,i,fn])=>`<button class="qb g" onclick="${fn}"><i class="fa-solid ${i}"></i>${l}</button>`).join('')}</div>`;
+ }else if(mode==='compact'){
+  w.innerHTML=`<div class="chips">${QUICK_ITEMS.map(([l,i,fn])=>`<button class="chip g compact" onclick="${fn}"><i class="fa-solid ${i}"></i>${l}</button>`).join('')}</div>`;
+ }else{
+  w.innerHTML=`<div class="chips">${QUICK_ITEMS.slice(0,3).map(([l,i,fn])=>`<button class="chip g" onclick="${fn}"><i class="fa-solid ${i}"></i>${l}</button>`).join('')}<button class="chip g add" onclick="openConsole()"><i class="fa-solid fa-terminal"></i></button><span style="font-size:11px;font-weight:700;align-self:center;padding-left:2px;color:var(--mut)">Console</span></div>`;
+ }
+}
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{applyTheme(currentTheme);applyLayout(currentLayout)});
 const SETS={
 Tool:[
@@ -691,7 +766,15 @@ const rowL=(x,ty,i,ar=1)=>`<div class="tx" onclick="info(SETS.${ty}[${i}],'${ty}
 const gcard=(x,ty,i)=>`<div class="gcard g" onclick="info(SETS.${ty}[${i}],'${ty}')"><div class="ic"><i class="fa-solid ${x[1]}"></i></div><b>${x[0]}</b><small>${x[2]}</small>${x[3]?'<span class="tag"><i class="fa-solid fa-download"></i>Unduh</span>':''}</div>`;
 const fillGrid=(id,ty,n)=>$(id).innerHTML=`<div class="gwrap">${SETS[ty].slice(0,n).map((x,i)=>gcard(x,ty,i)).join('')}</div>`;
 const fill=(id,ty,n)=>$(id).innerHTML=SETS[ty].slice(0,n).map((x,i)=>rowL(x,ty,i)).join('');
-function renderAll(){fillGrid('l-tool','Tool',4);fillGrid('l-mat','Materi',4);fill('l-fas','Fasilitas',3);fill('l-kon','Kontak',3)}
+function fillSmart(id,ty,mode,n=4){
+ if(mode==='list')$(id).innerHTML=`<div class="lw g">${SETS[ty].slice(0,n).map((x,i)=>rowL(x,ty,i)).join('')}</div>`;
+ else fillGrid(id,ty,n);
+}
+function renderAll(){
+ const L=LAYOUTS[currentLayout]||LAYOUTS.standar;
+ fillSmart('l-tool','Tool',L.toolsMode);fillSmart('l-mat','Materi',L.materiMode);
+ fill('l-fas','Fasilitas',3);fill('l-kon','Kontak',3);
+}
 renderAll();
 function listSheet(t,ty){sheet(t,`<div class="gwrap">${SETS[ty].map((x,i)=>gcard(x,ty,i)).join('')}</div>`)}
 function info(x,ty){let a='';
@@ -907,6 +990,7 @@ if('serviceWorker' in navigator){
   });
 }
 
+applyLayout(currentLayout);
 setCidr(24);renderHist();
 </script>
 </body>
