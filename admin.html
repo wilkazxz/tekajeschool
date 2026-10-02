@@ -33,6 +33,7 @@ img[data-logo]{opacity:0;transition:opacity .3s}img[data-logo].ok{opacity:1}
 .fld label{font-size:11px;font-weight:700;color:var(--mut);display:block;margin-bottom:5px}
 .fld input,.fld textarea{width:100%;padding:11px 13px;border-radius:12px;background:#fff;border:1px solid #c5daf5;color:var(--ink);font-size:14px;outline:none}
 .fld input:focus,.fld textarea:focus{border-color:var(--ac)}
+.fld select{width:100%;padding:11px 13px;border-radius:12px;background:#fff;border:1px solid #c5daf5;color:var(--ink);font-size:14px;outline:none}
 .pb{width:100%;padding:13px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(91,155,239,.3);display:flex;align-items:center;justify-content:center;gap:8px}
 .pb:disabled{opacity:.55;cursor:default;box-shadow:none}
 .pb2{width:100%;padding:11px;border-radius:12px;background:#fff;border:1.5px solid #bcd8fa;color:#2f6fd0;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
@@ -92,6 +93,13 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 .lockcard .ic{margin-top:2px}
 .patw{display:inline-flex;gap:2px;vertical-align:middle;margin-left:4px}
 .patw b{font:700 11px 'Fira Code',monospace;background:var(--soft);color:#2f6fd0;padding:1px 6px;border-radius:6px}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px}
+.badge.on{background:#daf5e7;color:#159a5f}
+.badge.off{background:#f1f3f6;color:#6b7280}
+.lvl{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em}
+.lvl.info{background:#dcebfd;color:#2f6fd0}
+.lvl.warning{background:#fdecd6;color:#d97a1a}
+.lvl.urgent{background:#fde3ea;color:#d63e66}
 
 /* modal */
 #modal-ov{position:fixed;inset:0;background:rgba(29,53,87,.32);display:none;align-items:center;justify-content:center;z-index:80;padding:20px}
@@ -165,7 +173,7 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
   body:before{background:radial-gradient(circle at 0 0,#1c2c47,transparent 45%),radial-gradient(circle at 100% 100%,#16233b,transparent 50%),linear-gradient(160deg,#0f1626,#0b111d 50%,#0f1626)}
   .g,.card,.itemcard,.stat,.logorow,.modal,.lcard,.bncard,.themecard{background:linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7));box-shadow:0 4px 14px rgba(0,0,0,.35)}
   .sidebar{background:rgba(18,26,42,.92)}
-  .fld input,.fld textarea,.iconbtn,.hbtn,.lnote,.bnhint{background:#182238;border-color:#22314f;color:var(--ink)}
+  .fld input,.fld textarea,.fld select,.iconbtn,.hbtn,.lnote,.bnhint{background:#182238;border-color:#22314f;color:var(--ink)}
   #toast{background:#182238;border-color:#22314f;color:var(--ink)}
   .gbtn{background:#2d2f31;border-color:#3c4043;color:#e8eaed}
   .gbtn:hover{background:#35373a}
@@ -173,6 +181,11 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
   .bnactions button{background:rgba(24,34,56,.92);color:var(--ink)}
   .patw b{background:#22314f}
   .icbtn{background:#182238;border-color:#22314f;color:var(--ink)}
+  .badge.on{background:#123321;color:#3fe0a0}
+  .badge.off{background:#22314f;color:#8ea3c2}
+  .lvl.info{background:#1c2c47;color:#7fb3f5}
+  .lvl.warning{background:#3a2612;color:#ffbb7a}
+  .lvl.urgent{background:#3a1520;color:#ff9bb0}
 }
 </style>
 </head>
@@ -203,6 +216,8 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <button class="nav-i" data-p="materi" onclick="goPane('materi')"><i class="fa-solid fa-book"></i>Materi</button>
     <button class="nav-i" data-p="fasilitas" onclick="goPane('fasilitas')"><i class="fa-solid fa-building"></i>Fasilitas</button>
     <button class="nav-i" data-p="kontak" onclick="goPane('kontak')"><i class="fa-solid fa-envelope"></i>Kontak</button>
+    <button class="nav-i" data-p="broadcast" onclick="goPane('broadcast')"><i class="fa-solid fa-bullhorn"></i>Broadcast</button>
+    <button class="nav-i" data-p="push" onclick="goPane('push')"><i class="fa-solid fa-bell"></i>Push Notification</button>
     <button class="nav-i" data-p="banner" onclick="goPane('banner')"><i class="fa-solid fa-images"></i>Banner</button>
     <button class="nav-i" data-p="tema" onclick="goPane('tema')"><i class="fa-solid fa-palette"></i>Tema</button>
     <button class="nav-i" data-p="tataletak" onclick="goPane('tataletak')"><i class="fa-solid fa-shapes"></i>Tata Letak</button>
@@ -259,6 +274,33 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
     <section class="pane" id="p-kontak">
       <div class="sech"><h2>Kontak</h2><button class="addb" onclick="openItemModal('kontak',null)"><i class="fa-solid fa-plus"></i>Tambah</button></div>
       <div id="list-kontak"></div>
+    </section>
+
+    <!-- BROADCAST -->
+    <section class="pane" id="p-broadcast">
+      <div class="sech"><h2>Broadcast / Pengumuman</h2><button class="addb" onclick="openBroadcastModal(null)"><i class="fa-solid fa-plus"></i>Buat Baru</button></div>
+      <p style="font-size:11.5px;color:var(--mut);margin-bottom:14px;line-height:1.6">Pengumuman yang diaktifkan tampil realtime sebagai banner di halaman utama <b>semua siswa yang sedang membuka app</b>, lengkap dengan tingkat kepentingan (info/peringatan/darurat). Hanya boleh satu yang aktif dalam satu waktu — mengaktifkan salah satu otomatis menonaktifkan yang lain.</p>
+      <div id="list-broadcast"></div>
+    </section>
+
+    <!-- PUSH NOTIFICATION -->
+    <section class="pane" id="p-push">
+      <div class="sech"><h2>Push Notification</h2></div>
+      <div class="card g">
+        <b style="font-size:13px"><i class="fa-solid fa-tower-broadcast"></i> Kirim Notifikasi ke Semua Perangkat</b>
+        <p style="font-size:11.5px;color:var(--mut);margin:6px 0 12px;line-height:1.6">Notifikasi ini benar-benar dikirim lewat server (Firebase Cloud Messaging + Cloud Function), jadi tetap masuk ke HP siswa walau aplikasinya sedang tertutup — bukan sekadar alert di dalam app. Siswa harus sudah menekan "Aktifkan Notifikasi" di app untuk terdaftar sebagai penerima.</p>
+        <div class="fld"><label>Judul</label><input id="pushTitle" placeholder="Contoh: Libur Nasional"></div>
+        <div class="fld"><label>Isi pesan</label><textarea id="pushBody" rows="3" placeholder="Contoh: Besok sekolah diliburkan, kegiatan belajar mengajar diganti hari Sabtu."></textarea></div>
+        <div class="fld"><label>Link tujuan saat notifikasi diketuk (opsional)</label><input id="pushUrl" placeholder="./ (default membuka aplikasi)"></div>
+        <div class="err" id="push-err"></div>
+        <button class="pb" id="pushSendBtn" onclick="sendPush()"><i class="fa-solid fa-paper-plane"></i> Kirim Sekarang</button>
+        <p style="font-size:10.5px;color:var(--mut);margin-top:8px;line-height:1.6" id="pushDeviceInfo">Memeriksa jumlah perangkat terdaftar…</p>
+      </div>
+      <div class="lnote" style="margin-bottom:16px">
+        <b>Setup wajib sebelum fitur ini aktif</b> (sekali saja): (1) isi <code>VAPID_KEY</code> di index.html (Firebase Console → Project Settings → Cloud Messaging → Web Push certificates). (2) Deploy Cloud Function di folder <code>functions/</code> (lihat komentar lengkap di functions/index.js) supaya pesan yang masuk ke antrean benar-benar terkirim oleh server. Tanpa Cloud Function di-deploy, pesan akan tersimpan di antrean tapi tidak terkirim.
+      </div>
+      <div class="sech"><h2>Riwayat Pengiriman</h2></div>
+      <div id="list-push"></div>
     </section>
 
     <!-- BANNER -->
@@ -366,8 +408,8 @@ main{flex:1;min-width:0;padding:22px 26px 60px}
 <!-- BOTTOM NAV: cuma tampil di layar HP, biar gak perlu mode desktop buat pindah tab -->
 <nav class="adminnav g" id="adminnav">
   <button class="on" data-p="ringkasan" onclick="goPane('ringkasan')"><i class="fa-solid fa-gauge"></i>Ringkasan</button>
-  <button data-p="tools" onclick="goPane('tools')"><i class="fa-solid fa-toolbox"></i>Tools</button>
-  <button data-p="materi" onclick="goPane('materi')"><i class="fa-solid fa-book"></i>Materi</button>
+  <button data-p="broadcast" onclick="goPane('broadcast')"><i class="fa-solid fa-bullhorn"></i>Broadcast</button>
+  <button data-p="push" onclick="goPane('push')"><i class="fa-solid fa-bell"></i>Push</button>
   <button data-p="kunci" onclick="goPane('kunci')"><i class="fa-solid fa-lock"></i>Kunci</button>
   <button id="adminMoreBtn" onclick="openMoreSheet()"><i class="fa-solid fa-ellipsis"></i>Lainnya</button>
 </nav>
@@ -449,8 +491,8 @@ onAuthStateChanged(auth,user=>{
 });
 
 /* ===== nav ===== */
-const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',banner:'Banner Beranda',tema:'Tema Warna',tataletak:'Tata Letak',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat',github:'File Web (GitHub)'};
-const ADMINNAV_MORE=['fasilitas','kontak','banner','tema','tataletak','apk','github'];
+const titles={ringkasan:'Ringkasan',tools:'Tools Wajib',materi:'Materi',fasilitas:'Fasilitas Lab',kontak:'Kontak',broadcast:'Broadcast / Pengumuman',push:'Push Notification',banner:'Banner Beranda',tema:'Tema Warna',tataletak:'Tata Letak',apk:'Aplikasi Android',kunci:'Pola Kunci Perangkat',github:'File Web (GitHub)'};
+const ADMINNAV_MORE=['tools','materi','fasilitas','kontak','banner','tema','tataletak','apk','github'];
 window.goPane=function(p){
   document.querySelectorAll('.pane').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));
   document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
@@ -461,10 +503,11 @@ window.goPane=function(p){
 };
 
 /* Sheet "Lainnya" khusus tampilan HP: nampung tab yang gak muat di bottom nav
-   (Fasilitas, Kontak, Banner, Tema, APK, File Web) + tombol Keluar. Pakai modal yang sama
-   dengan editor item, tapi isinya daftar navigasi biasa. */
+   (Tools, Materi, Fasilitas, Kontak, Banner, Tema, Tata Letak, APK, File Web) + tombol Keluar. */
 window.openMoreSheet=function(){
   const items=[
+    ['tools','fa-solid fa-toolbox','Tools Wajib'],
+    ['materi','fa-solid fa-book','Materi'],
     ['fasilitas','fa-solid fa-building','Fasilitas Lab'],
     ['kontak','fa-solid fa-envelope','Kontak'],
     ['banner','fa-solid fa-images','Banner Beranda'],
@@ -677,14 +720,15 @@ function listenTheme(){
   },()=>renderThemeGrid());
 }
 
-/* ===== tata letak: sekarang mengatur SUSUNAN halaman beranda (urutan section, mode
-   grid/list untuk tools & materi, bentuk aksi cepat), bukan cuma bentuk sudut kartu.
-   Tetap membawa gaya permukaan (rounded/flat/kaca) sebagai bagian dari identitas tiap
-   varian, tapi itu bukan lagi fokus utamanya. Klik = simpan id ke content/layout. ===== */
+/* ===== tata letak: mengatur SUSUNAN halaman beranda (urutan section, mode grid/list untuk
+   tools & materi, bentuk aksi cepat, gaya permukaan kartu). Klik = simpan id ke content/layout,
+   realtime untuk semua pengunjung. ===== */
 const LAYOUT_CATALOG=[
   ['standar','Standar','Urutan bawaan: hero → aksi cepat (chip) → aktivitas → tools & materi (grid) → fasilitas → kontak.','Susunan default, cocok untuk kebanyakan pengunjung.'],
   ['dashboard','Dashboard Grid','Aksi cepat & tools/materi dipindah ke atas sebagai grid kartu padat gaya flat, aktivitas & banner turun ke bawah.','Padat & langsung ke tools, gaya kartu flat/tegas.'],
-  ['ringkas','Ringkas','Semua section (aktivitas, tools, materi, fasilitas, kontak) tampil sebagai list rapat gaya kaca transparan, hemat scroll.','List serba ringkas, gaya glass/kaca, hemat layar.']
+  ['ringkas','Ringkas','Semua section (aktivitas, tools, materi, fasilitas, kontak) tampil sebagai list rapat gaya kaca transparan, hemat scroll.','List serba ringkas, gaya glass/kaca, hemat layar.'],
+  ['kompak','Kompak','Sudut nyaris siku, bayangan tipis, semua list rapat (bukan grid) — mirip aplikasi utilitas/teknis.','Paling padat & flat, cocok tampilan teknisi.'],
+  ['majalah','Majalah','Banner tampil paling atas seperti cover majalah, sudut besar & lembut, bayangan lebih tebal untuk kesan editorial.','Gaya visual/editorial, banner jadi sorotan utama.']
 ];
 let activeLayout='standar';
 function renderLayoutGrid(){
@@ -717,6 +761,121 @@ window.saveApk=async function(){
   try{await set(ref(db,'content/apk'),{url,version});toast('Tersimpan ✓')}
   catch(e){toast('Gagal menyimpan: cek Firebase Rules')}
 };
+
+/* ===== BROADCAST: pengumuman realtime ke semua siswa =====
+   content/broadcasts/{key} = {title,message,level,active,t}. Hanya satu boleh active:true —
+   mengaktifkan salah satu otomatis menonaktifkan yang lain lewat update() multi-path. */
+function broadcastRow(key,d){
+  const active=!!d.active;
+  const lvl=d.level||'info';
+  const lvlLabel={info:'Info',warning:'Peringatan',urgent:'Darurat'}[lvl]||'Info';
+  const t=d.t?new Date(d.t).toLocaleString('id-ID'):'-';
+  return `<div class="itemcard g"><div class="ic"><i class="fa-solid fa-bullhorn"></i></div>
+  <div class="tx"><b>${esc(d.title)} <span class="lvl ${lvl}">${lvlLabel}</span></b><small>${esc(d.message||'')}</small><small style="opacity:.7">${t}</small></div>
+  <div class="acts">
+    <span class="badge ${active?'on':'off'}">${active?'Aktif':'Nonaktif'}</span>
+    <button class="iconbtn" title="${active?'Nonaktifkan':'Aktifkan'}" onclick="toggleBroadcast('${key}',${active})"><i class="fa-solid ${active?'fa-toggle-on':'fa-toggle-off'}"></i></button>
+    <button class="iconbtn" onclick="openBroadcastModal('${key}')"><i class="fa-solid fa-pen"></i></button>
+    <button class="iconbtn del" onclick="delBroadcast('${key}')"><i class="fa-solid fa-trash"></i></button>
+  </div></div>`;
+}
+function renderBroadcastList(data){
+  const entries=Object.entries(data||{}).sort((a,b)=>(b[1].t||0)-(a[1].t||0));
+  $('list-broadcast').innerHTML=entries.length?entries.map(([k,d])=>broadcastRow(k,d)).join(''):'<div class="empty2">Belum ada pengumuman. Klik Buat Baru untuk mulai.</div>';
+}
+let currentBroadcastKey=null;
+window.openBroadcastModal=async function(key){
+  currentBroadcastKey=key;
+  let d={title:'',message:'',level:'info'};
+  if(key){const snap=await get(ref(db,'content/broadcasts/'+key));if(snap.exists())d=snap.val()}
+  $('modalBox').innerHTML=`<h3>${key?'Edit':'Buat'} Pengumuman</h3>
+    <div class="fld"><label>Judul</label><input id="bc-title" placeholder="Contoh: Libur Nasional" value="${esc(d.title)}"></div>
+    <div class="fld"><label>Isi pesan</label><textarea id="bc-message" rows="3" placeholder="Isi pengumuman...">${esc(d.message||'')}</textarea></div>
+    <div class="fld"><label>Tingkat kepentingan</label>
+      <select id="bc-level">
+        <option value="info"${d.level==='info'?' selected':''}>Info (biru)</option>
+        <option value="warning"${d.level==='warning'?' selected':''}>Peringatan (oranye)</option>
+        <option value="urgent"${d.level==='urgent'?' selected':''}>Darurat (merah)</option>
+      </select>
+    </div>
+    <div class="err" id="bc-err"></div>
+    <div class="mrow"><button class="pb2" onclick="closeModal()">Batal</button><button class="pb" style="flex:1" onclick="saveBroadcast()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>`;
+  $('modal-ov').classList.add('on');
+};
+window.saveBroadcast=async function(){
+  const title=$('bc-title').value.trim(),message=$('bc-message').value.trim(),level=$('bc-level').value;
+  if(!title||!message){$('bc-err').textContent='Judul dan isi pesan wajib diisi.';return}
+  try{
+    if(currentBroadcastKey){
+      await update(ref(db,'content/broadcasts/'+currentBroadcastKey),{title,message,level});
+    }else{
+      await push(ref(db,'content/broadcasts'),{title,message,level,active:false,t:Date.now()});
+    }
+    toast('Pengumuman tersimpan ✓');closeModal();
+  }catch(e){$('bc-err').textContent='Gagal menyimpan: cek Firebase Rules'}
+};
+window.toggleBroadcast=async function(key,isActive){
+  try{
+    if(isActive){
+      await update(ref(db,'content/broadcasts/'+key),{active:false});
+      toast('Pengumuman dinonaktifkan');
+    }else{
+      const snap=await get(ref(db,'content/broadcasts'));
+      const updates={};
+      if(snap.exists())Object.keys(snap.val()).forEach(k=>updates['content/broadcasts/'+k+'/active']=false);
+      updates['content/broadcasts/'+key+'/active']=true;
+      updates['content/broadcasts/'+key+'/t']=Date.now();
+      await update(ref(db),updates);
+      toast('Pengumuman diaktifkan ✓ — tampil realtime ke semua siswa');
+    }
+  }catch(e){toast('Gagal mengubah status: cek Firebase Rules')}
+};
+window.delBroadcast=async function(key){
+  if(!confirm('Hapus pengumuman ini?'))return;
+  try{await remove(ref(db,'content/broadcasts/'+key));toast('Dihapus')}
+  catch(e){toast('Gagal menghapus: cek Firebase Rules')}
+};
+function listenBroadcast(){
+  listen('content/broadcasts',renderBroadcastList);
+}
+
+/* ===== PUSH NOTIFICATION: menulis ke pushQueue, dieksekusi nyata oleh Cloud Function =====
+   admin.html TIDAK mengirim FCM langsung (butuh kredensial server yang tidak aman di browser).
+   Ia hanya menaruh pesan ke antrean; Cloud Function (functions/index.js) yang mengirim sungguhan. */
+window.sendPush=async function(){
+  $('push-err').textContent='';
+  const title=$('pushTitle').value.trim(),body=$('pushBody').value.trim(),url=$('pushUrl').value.trim()||'./';
+  if(!title||!body){$('push-err').textContent='Judul dan isi pesan wajib diisi.';return}
+  const btn=$('pushSendBtn');btn.disabled=true;
+  try{
+    await push(ref(db,'pushQueue'),{title,body,url,t:Date.now(),by:auth.currentUser?.email||'admin'});
+    toast('Pesan masuk antrean ✓ — akan dikirim otomatis oleh server');
+    $('pushTitle').value='';$('pushBody').value='';$('pushUrl').value='';
+  }catch(e){$('push-err').textContent='Gagal mengirim: cek Firebase Rules (pushQueue harus bisa ditulis admin)'}
+  finally{btn.disabled=false}
+};
+function pushHistoryRow(key,d){
+  const t=d.t?new Date(d.t).toLocaleString('id-ID'):'-';
+  const r=d.result;
+  let statusHtml;
+  if(!r)statusHtml=`<span class="badge off"><i class="fa-solid fa-clock"></i> Menunggu Cloud Function</span>`;
+  else statusHtml=`<span class="badge on"><i class="fa-solid fa-check"></i> Terkirim ${r.sent}/${r.total}</span>${r.failed?` <span class="badge off">${r.failed} gagal</span>`:''}`;
+  return `<div class="itemcard g"><div class="ic"><i class="fa-solid fa-paper-plane"></i></div>
+  <div class="tx"><b>${esc(d.title)}</b><small>${esc(d.body||'')}</small><small style="opacity:.7">${t} • ${esc(d.by||'admin')}</small></div>
+  <div class="acts">${statusHtml}</div></div>`;
+}
+function renderPushHistory(data){
+  const entries=Object.entries(data||{}).sort((a,b)=>(b[1].t||0)-(a[1].t||0)).slice(0,30);
+  $('list-push').innerHTML=entries.length?entries.map(([k,d])=>pushHistoryRow(k,d)).join(''):'<div class="empty2">Belum pernah mengirim notifikasi.</div>';
+}
+function listenPush(){
+  listen('pushQueue',renderPushHistory);
+  onValue(ref(db,'pushTokens'),snap=>{
+    const n=snap.exists()?Object.keys(snap.val()).length:0;
+    const el=$('pushDeviceInfo');
+    if(el)el.textContent=n?`${n} perangkat siswa terdaftar untuk menerima notifikasi.`:'Belum ada perangkat yang mengaktifkan notifikasi.';
+  },()=>{const el=$('pushDeviceInfo');if(el)el.textContent='Tidak bisa membaca jumlah perangkat (cek Firebase Rules pushTokens).'});
+}
 
 /* ===== kunci pengguna: pola asli + device + IP (data real, bukan dummy) ===== */
 function lockRow(dev,d){
@@ -775,6 +934,8 @@ function initDashboard(){
   listenPresence();
   listenTheme();
   listenLayout();
+  listenBroadcast();
+  listenPush();
 }
 
 document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target.id==='modal-ov')closeModal()});
