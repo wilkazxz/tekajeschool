@@ -226,6 +226,14 @@ body.hero-compact .act i{width:40px;height:40px;font-size:14px}
 .chip{color:var(--ink)}
 input[type=range]{accent-color:var(--ac)}
 }
+
+/* ===== galeri sekolah (foto tkj1..3, tersusun ke bawah, bukan slide) ===== */
+.gal{margin:22px 0 4px}
+.gal .gi{border-radius:var(--r-lg);overflow:hidden;margin-bottom:16px}
+.gal .gi img{width:100%;display:block;aspect-ratio:16/10;object-fit:cover;background:var(--soft)}
+.gal .gi .gt{padding:14px 16px 16px}
+.gal .gi h3{font-size:15px;font-weight:800;margin-bottom:8px}
+.gal .gi p{font-size:12.5px;line-height:1.85;color:var(--mut);text-align:justify}
 </style>
 <script>
 /* ===== anti-flash tema & tata letak =====
@@ -275,7 +283,9 @@ input[type=range]{accent-color:var(--ac)}
  var LAYOUTS={
   standar:{r:{xl:'26px',lg:'20px',md:'14px'},surf:{bg:'linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,255,255,.66))',bgDark:'linear-gradient(145deg,rgba(28,38,60,.9),rgba(20,28,46,.7))',bd:'rgba(255,255,255,.9)',bdDark:'rgba(255,255,255,.08)',blur:'0px'},shadow:function(o){return'0 8px 24px rgba('+o+',.13)'},hero:'normal',quickMode:'chips',toolsMode:'grid',materiMode:'grid',order:['banner','quick','activity','tools','materi','fasilitas','kontak','apk'],label:'Standar'},
   dashboard:{r:{xl:'16px',lg:'14px',md:'10px'},surf:{bg:'#ffffff',bgDark:'#141b2c',bd:'rgba(0,0,0,.08)',bdDark:'rgba(255,255,255,.07)',blur:'0px'},shadow:function(){return'0 1px 3px rgba(0,0,0,.08)'},hero:'compact',quickMode:'grid',toolsMode:'grid',materiMode:'grid',order:['quick','tools','materi','activity','banner','fasilitas','kontak','apk'],label:'Dashboard Grid'},
-  ringkas:{r:{xl:'22px',lg:'18px',md:'12px'},surf:{bg:'rgba(255,255,255,.35)',bgDark:'rgba(20,28,46,.4)',bd:'rgba(255,255,255,.55)',bdDark:'rgba(255,255,255,.14)',blur:'16px'},shadow:function(o){return'0 10px 26px rgba('+o+',.16)'},hero:'compact',quickMode:'compact',toolsMode:'list',materiMode:'list',order:['activity','tools','materi','quick','fasilitas','kontak','banner','apk'],label:'Ringkas'}
+  ringkas:{r:{xl:'22px',lg:'18px',md:'12px'},surf:{bg:'rgba(255,255,255,.35)',bgDark:'rgba(20,28,46,.4)',bd:'rgba(255,255,255,.55)',bdDark:'rgba(255,255,255,.14)',blur:'16px'},shadow:function(o){return'0 10px 26px rgba('+o+',.16)'},hero:'compact',quickMode:'compact',toolsMode:'list',materiMode:'list',order:['activity','tools','materi','quick','fasilitas','kontak','banner','apk'],label:'Ringkas'},
+  kompak:{r:{xl:'12px',lg:'10px',md:'8px'},surf:{bg:'#ffffff',bgDark:'#121a2c',bd:'rgba(0,0,0,.06)',bdDark:'rgba(255,255,255,.06)',blur:'0px'},shadow:function(){return'0 1px 2px rgba(0,0,0,.06)'},hero:'compact',quickMode:'compact',toolsMode:'list',materiMode:'list',order:['quick','activity','tools','materi','banner','fasilitas','kontak','apk'],label:'Kompak'},
+  majalah:{r:{xl:'30px',lg:'24px',md:'16px'},surf:{bg:'linear-gradient(160deg,rgba(255,255,255,.96),rgba(255,255,255,.72))',bgDark:'linear-gradient(160deg,rgba(30,40,64,.95),rgba(22,30,50,.75))',bd:'rgba(255,255,255,.9)',bdDark:'rgba(255,255,255,.1)',blur:'0px'},shadow:function(o){return'0 16px 34px rgba('+o+',.2)'},hero:'normal',quickMode:'chips',toolsMode:'grid',materiMode:'grid',order:['banner','activity','quick','tools','materi','fasilitas','kontak','apk'],label:'Majalah'}
  };
  function hexToRgb(h){var n=parseInt(h.slice(1),16);return((n>>16)&255)+','+((n>>8)&255)+','+(n&255)}
  function applyThemeVars(id){
@@ -349,8 +359,9 @@ input[type=range]{accent-color:var(--ac)}
   <div class="top">
     <div class="who"><img class="lg" data-logo="tkj" data-ph="fa-network-wired" alt="TKJ"><div><small>Selamat datang,</small><b>TKJ SMKN 2</b></div></div>
     <button class="ib" onclick="openConsole()" aria-label="Console"><i class="fa-solid fa-terminal"></i><span class="dot"></span></button>
-    <button class="ib" onclick="toast('Tidak ada notifikasi baru')" aria-label="Notifikasi"><i class="fa-regular fa-bell"></i></button>
+    <button class="ib" onclick="openNotifSheet()" aria-label="Notifikasi"><i class="fa-regular fa-bell"></i></button>
   </div>
+  <div id="bcBox"></div>
   <div class="hero">
     <div class="lb" style="display:flex;justify-content:space-between;align-items:center">SMKN 2 TEMBILAHAN<button class="onl" onclick="openOnline()" aria-label="User online"><i class="live"></i><b id="on-n">1</b> online</button></div>
     <h2>Teknik Jaringan Komputer</h2>
@@ -365,6 +376,8 @@ input[type=range]{accent-color:var(--ac)}
   </div>
 
   <div class="blk" id="blk-banner"><div class="bnr-wrap hide" id="bnr-wrap"><div class="bnr" id="bnr"></div><div class="bdots" id="bdots"></div></div></div>
+
+  <div class="blk" id="blk-gallery"><div class="gal" id="galBox"></div></div>
 
   <div class="blk" id="blk-quick">
     <div class="sh"><span>Tools Interaktif</span><a onclick="openConsole()">Buka</a></div>
@@ -508,6 +521,7 @@ function reorderHome(order){
  const home=$('s-home'),footer=$('blk-footer');
  if(!home||!footer)return;
  order.forEach(k=>{const el=$(BLOCK_MAP[k]);if(el)home.insertBefore(el,footer)});
+ const bn=$('blk-banner'),gl=$('blk-gallery');if(bn&&gl)bn.insertAdjacentElement('afterend',gl);
 }
 const QUICK_ITEMS=[['Subnet','fa-calculator',"go('send')"],['Kabel','fa-ethernet','openCable()'],['Ping','fa-satellite-dish','openPing()'],['Console','fa-terminal','openConsole()']];
 function renderQuick(mode){
@@ -568,12 +582,35 @@ let APK='tkj.apk';
        "presence": {
          ".read": true,
          ".write": true
+       },
+       "pushTokens": {
+         ".read": false,
+         ".write": true
+       },
+       "pushQueue": {
+         ".read": "auth != null && auth.token.email === 'wilkaaffah@gmail.com'",
+         ".write": "auth != null && auth.token.email === 'wilkaaffah@gmail.com'"
        }
      }
    }
    Kalau nanti admin diganti orang lain, ubah email di DUA tempat: Rules ini, dan variabel
    ADMIN_EMAIL di admin.html. */
 const FIREBASE_URL='https://wilka-5e33d-default-rtdb.asia-southeast1.firebasedatabase.app';
+/* Config lengkap dipakai untuk Firebase Cloud Messaging (push notification) & sinkron dengan admin.html.
+   Nilai persis sama dengan firebaseConfig di admin.html (Project Settings → Your apps). */
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyCL-KRiZQkGvFqJDbshY1-ab9g-HIjguq8",
+  authDomain:"wilka-5e33d.firebaseapp.com",
+  databaseURL:FIREBASE_URL,
+  projectId:"wilka-5e33d",
+  storageBucket:"wilka-5e33d.firebasestorage.app",
+  messagingSenderId:"269739240644",
+  appId:"1:269739240644:web:693e7944eb595cdcfded91"
+};
+/* VAPID public key untuk Web Push (Firebase Console → Project Settings → Cloud Messaging →
+   Web configuration → Web Push certificates → Generate key pair). Wajib diisi supaya tombol
+   "Aktifkan Notifikasi" bisa dapat token FCM. Kosong = fitur push dinonaktifkan otomatis (tidak error). */
+const VAPID_KEY='';
 let deferred=null,hist=[],pi=null;
 try{hist=JSON.parse(localStorage.getItem('tkjh')||'[]')}catch(e){}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e});
@@ -636,7 +673,7 @@ async function getPublicIP(){
 }
 
 /* ===== koneksi firebase bersama (dipakai lock & online) ===== */
-let fbdb=null,fbInitP=null;
+let fbdb=null,fbInitP=null,fbApp=null;
 function getDb(){
   if(fbdb)return Promise.resolve(fbdb);
   if(!FIREBASE_URL)return Promise.resolve(null);
@@ -645,8 +682,8 @@ function getDb(){
     try{
       const V='https://www.gstatic.com/firebasejs/10.12.2/';
       const[A,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-database.js')]);
-      const app=A.initializeApp({databaseURL:FIREBASE_URL.replace(/\/$/,'')});
-      fbdb={d:D,db:D.getDatabase(app)};
+      fbApp=A.initializeApp(FIREBASE_CONFIG);
+      fbdb={d:D,db:D.getDatabase(fbApp),app:fbApp};
       return fbdb;
     }catch(e){return null}
   })();
@@ -922,6 +959,26 @@ initBannerLocal();
 
 {const t0=lgGet('tkj');if(t0){$('fav').href=t0;$('ati').href=t0}else findLogo('tkj').then(u=>{if(u){$('fav').href=u;$('ati').href=u}})}
 
+/* ===== GALERI SEKOLAH: tkj1/tkj2/tkj3 (.jpeg/.jpg/.png/.webp) di folder yang sama dengan banner.
+   Ditampilkan berurutan ke bawah (tanpa slide), teks panjang di bawah tiap foto.
+   Ubah judul & deskripsi di array GALLERY ini. Foto yang tidak ditemukan otomatis dilewati. */
+const GALLERY=[
+ {f:'tkj1',t:'Gedung SMKN 2 Tembilahan',d:'Gedung sekolah menjadi pusat kegiatan belajar mengajar bagi seluruh siswa, termasuk siswa Jurusan Teknik Jaringan Komputer. Bangunan ini menyediakan ruang kelas teori, area belajar, dan lingkungan yang mendukung siswa untuk berkembang, baik dalam pengetahuan umum maupun keterampilan kejuruan. Dari sinilah siswa TKJ memulai perjalanan belajar mereka sebelum masuk ke ruang praktik.'},
+ {f:'tkj2',t:'Laboratorium Komputer TKJ',d:'Laboratorium komputer adalah tempat siswa mempraktikkan langsung materi yang dipelajari di kelas, mulai dari instalasi sistem operasi, pengaturan jaringan dasar, hingga simulasi topologi jaringan. Dengan suasana yang tertata, siswa dapat belajar secara mandiri maupun berkelompok, sehingga keterampilan teknis terbentuk lewat latihan yang berulang dan terarah.'},
+ {f:'tkj3',t:'Ruang Praktik Jaringan',d:'Ruang praktik jaringan dipakai untuk latihan konfigurasi perangkat seperti router dan switch, penarikan serta pemasangan kabel jaringan, dan pengujian koneksi. Pengalaman langsung dengan perangkat nyata membantu siswa memahami cara kerja jaringan komputer di dunia kerja dan menyiapkan mereka menghadapi sertifikasi maupun kebutuhan industri.'}
+];
+async function initGallery(){
+ const box=$('galBox');if(!box)return;
+ const ext=['jpeg','jpg','png','webp'];
+ const found=await Promise.all(GALLERY.map(async g=>{
+  for(const b of [g.f,cap(g.f),g.f.toUpperCase()])for(const e of ext){const u=await probe(b+'.'+e);if(u)return{...g,u}}
+  return null;
+ }));
+ const list=found.filter(Boolean);
+ box.innerHTML=list.map(g=>`<div class="gi g"><img src="${g.u}" alt="${esc(g.t)}" loading="lazy"><div class="gt"><h3>${esc(g.t)}</h3><p>${esc(g.d)}</p></div></div>`).join('');
+}
+initGallery();
+
 /* ===== user online realtime ===== */
 let fbState='Menyambung…';
 const setStatus=t=>{fbState=t;const el=$('on-st');if(el)el.textContent=t};
@@ -946,7 +1003,7 @@ async function startFB(){
   let conn=false,active=!document.hidden,hideT;
   const denied=()=>{setStatus('Ditolak · cek Rules Firebase lalu Publish');setDot(false)};
   const register=()=>{if(conn&&active)D.onDisconnect(me).remove().then(()=>D.set(me,true)).catch(denied)};
-  D.onValue(D.ref(db,'.info/connected'),s=>{conn=s.val()===true;setDot(conn);setStatus(conn?'Terhubung · realtime':'Menyambung…');register()});
+  D.onValue(D.ref(db,'.info/connected'),s=>{conn=s.val()===true;setDot(conn);setStatus(conn?'Terhubung · realtime':'Menyambung…');register();onConnStateChange(conn)});
   D.onValue(D.ref(db,'presence'),s=>{const v=s.val()||{};let n=0;
    for(const k in v){const d=v[k];if(d&&typeof d==='object')for(const t in d)if(d[t]===true){n++;break}}
    setOnline(Math.max(n,1))},denied);
@@ -959,16 +1016,15 @@ async function startFB(){
 }
 /* ===== konten dari Admin Dashboard (admin.html): Tools/Materi/Fasilitas/Kontak/Banner/APK =====
    Dipantau realtime (onValue), bukan cuma sekali baca (get) — jadi begitu admin ubah/tambah data,
-   termasuk banner, langsung tampil di sini tanpa perlu tutup-buka app. */
+   termasuk banner, langsung tampil di sini tanpa perlu tutup-buka app.
+   POLLING CADANGAN: kalau koneksi realtime putus cukup lama (>12 detik), applyContentSnapshot juga
+   dipanggil lewat get() satu-kali secara berkala (polling) sampai realtime nyambung lagi -- supaya
+   data tetap ter-update walau listener realtime sempat gagal diam-diam. */
 const toList=obj=>Object.values(obj||{}).sort((a,b)=>(a.order||0)-(b.order||0));
-async function watchRemoteContent(){
-  const F=await getDb();if(!F)return;
-  const D=F.d,db=F.db;
-  const asArr=o=>[o.name,o.icon,o.desc,o.link||null,o.detail||null];
-  const asArr3=o=>[o.name,o.icon,o.desc];
-  D.onValue(D.ref(db,'content'),snap=>{
-    if(!snap.exists())return;
-    const c=snap.val();
+function applyContentSnapshot(c){
+    if(!c)return;
+    const asArr=o=>[o.name,o.icon,o.desc,o.link||null,o.detail||null];
+    const asArr3=o=>[o.name,o.icon,o.desc];
     if(c.tools){const l=toList(c.tools);if(l.length)SETS.Tool=l.map(asArr)}
     if(c.materi){const l=toList(c.materi);if(l.length)SETS.Materi=l.map(asArr)}
     if(c.fasilitas){const l=toList(c.fasilitas);if(l.length)SETS.Fasilitas=l.map(asArr3)}
@@ -979,11 +1035,128 @@ async function watchRemoteContent(){
     if(c.layout)applyLayout(c.layout);
     remoteBanners=c.banners?toList(c.banners).map(o=>o.url).filter(Boolean):[];
     renderBanner(combineBanners());
+}
+let pollTimer=null,pollActive=false,connWasDown=false,downSince=0;
+function onConnStateChange(conn){
+  if(!conn){
+    if(!downSince)downSince=Date.now();
+  }else{
+    downSince=0;
+    if(pollActive)stopPolling();
+  }
+}
+async function pollTick(){
+  const F=await getDb();if(!F)return;
+  try{
+    const snap=await F.d.get(F.d.ref(F.db,'content'));
+    applyContentSnapshot(snap.exists()?snap.val():null);
+  }catch(e){}
+}
+function startPolling(){
+  if(pollActive)return;pollActive=true;
+  const st=$('on-st');if(st)st.textContent='Polling · sinkron berkala';
+  pollTick();
+  pollTimer=setInterval(pollTick,20000);
+}
+function stopPolling(){
+  if(!pollActive)return;pollActive=false;
+  clearInterval(pollTimer);pollTimer=null;
+}
+setInterval(()=>{
+  if(downSince&&Date.now()-downSince>12000&&!pollActive)startPolling();
+},4000);
+async function watchRemoteContent(){
+  const F=await getDb();if(!F)return;
+  const D=F.d,db=F.db;
+  D.onValue(D.ref(db,'content'),snap=>{
+    applyContentSnapshot(snap.exists()?snap.val():null);
   },()=>{/* Rules Firebase belum mengizinkan baca 'content', app tetap pakai data bawaan */});
 }
 FIREBASE_URL?startFB().then(watchRemoteContent):startLocal();
 
-/* ===== service worker: dukungan offline dasar ===== */
+/* ===== BROADCAST: pengumuman admin realtime =====
+   content/broadcasts/{key} = {title,message,level,active,t}. Hanya satu yang active=true pada
+   satu waktu (dijaga dari sisi admin.html). Ditampilkan sebagai banner di atas hero, bisa
+   ditutup per-perangkat (localStorage) dan otomatis muncul lagi kalau admin bikin pengumuman baru. */
+function bcDismissedSet(){try{return new Set(JSON.parse(localStorage.getItem('tkj_bc_dismissed')||'[]'))}catch(e){return new Set()}}
+function bcDismiss(id){const s=bcDismissedSet();s.add(id);try{localStorage.setItem('tkj_bc_dismissed',JSON.stringify([...s].slice(-30)))}catch(e){}renderBroadcast(null)}
+let lastBroadcast=null;
+function renderBroadcast(item){
+  const box=$('bcBox');if(!box)return;
+  lastBroadcast=item;
+  if(!item){box.innerHTML='';return}
+  const dismissed=bcDismissedSet();
+  if(dismissed.has(item.id)){box.innerHTML='';return}
+  const icons={info:'fa-circle-info',warning:'fa-triangle-exclamation',urgent:'fa-bell'};
+  const colors={info:'var(--acd)',warning:'#d97a1a',urgent:'#d2566b'};
+  box.innerHTML=`<div class="g" style="border-radius:var(--r-lg);padding:13px 14px;margin-bottom:14px;display:flex;gap:11px;align-items:flex-start;border-left:4px solid ${colors[item.level]||colors.info}">
+    <i class="fa-solid ${icons[item.level]||icons.info}" style="color:${colors[item.level]||colors.info};font-size:16px;margin-top:2px"></i>
+    <div style="flex:1;min-width:0"><b style="font-size:13px;display:block;margin-bottom:2px">${esc(item.title)}</b><small style="color:var(--mut);font-size:11.5px;line-height:1.5;display:block">${esc(item.message)}</small></div>
+    <button onclick="bcDismiss('${item.id}')" style="background:none;border:0;color:var(--mut);cursor:pointer;font-size:13px;padding:2px" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+  </div>`;
+}
+async function watchBroadcast(){
+  const F=await getDb();if(!F)return;
+  const D=F.d,db=F.db;
+  D.onValue(D.ref(db,'content/broadcasts'),snap=>{
+    const v=snap.val()||{};
+    const entries=Object.entries(v).filter(([,x])=>x&&x.active).sort((a,b)=>(b[1].t||0)-(a[1].t||0));
+    if(entries.length){const[key,d]=entries[0];renderBroadcast({id:key,title:d.title,message:d.message,level:d.level||'info'})}
+    else renderBroadcast(null);
+  },()=>{});
+}
+if(FIREBASE_URL)getDb().then(F=>{if(F)watchBroadcast()});
+
+/* ===== PUSH NOTIFICATION (skala real, via Firebase Cloud Messaging) =====
+   Alur: perangkat minta izin notifikasi -> dapat token FCM -> token disimpan ke pushTokens/{DEV}.
+   Admin menulis pesan ke pushQueue lewat admin.html -> Cloud Function (functions/index.js, lihat
+   paket file terpisah) otomatis terpicu dan mengirim notifikasi ke SEMUA token terdaftar lewat
+   Firebase Admin SDK -- ini yang bikin notifikasi tetap masuk walau aplikasi/browser tertutup,
+   karena dikirim dari server (Cloud Functions), bukan disimulasikan dari browser. */
+let pushMsgApp=null,pushMsg=null;
+function pushSupported(){return 'serviceWorker' in navigator && 'PushManager' in window && !!VAPID_KEY && !!FIREBASE_URL}
+function pushStatusLabel(){
+  if(!FIREBASE_URL)return'Firebase belum disambungkan';
+  if(!VAPID_KEY)return'Belum dikonfigurasi admin (VAPID key kosong)';
+  if(!('serviceWorker' in navigator))return'Browser tidak mendukung';
+  if(Notification.permission==='denied')return'Diblokir di pengaturan browser';
+  if(Notification.permission==='granted')return'Aktif ✓';
+  return'Belum diaktifkan';
+}
+window.openNotifSheet=function(){
+  const active=Notification.permission==='granted';
+  sheet('Notifikasi',`<p style="font-size:12px;color:var(--mut);line-height:1.7;margin-bottom:14px">Aktifkan supaya HP kamu menerima notifikasi pengumuman dari sekolah secara realtime, bahkan saat aplikasi ini sedang tertutup.</p>
+  <div class="kv"><span>Status</span><b id="pushStLbl">${esc(pushStatusLabel())}</b></div>
+  ${active?'':`<button class="pb" style="margin-top:14px" onclick="enablePush()"><i class="fa-solid fa-bell"></i> Aktifkan Notifikasi</button>`}
+  ${!pushSupported()&&FIREBASE_URL?`<p style="font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.6">Catatan: fitur ini butuh konfigurasi VAPID key oleh admin di kode aplikasi (Firebase Console → Cloud Messaging) sebelum bisa dipakai.</p>`:''}`);
+  log('Buka Notifikasi',pushStatusLabel(),'fa-bell','Info');
+};
+async function enablePush(){
+  if(!pushSupported()){toast(!VAPID_KEY?'VAPID key belum diisi admin di index.html':'Perangkat/browser ini tidak mendukung push');return}
+  try{
+    const perm=await Notification.requestPermission();
+    if(perm!=='granted'){toast('Izin notifikasi ditolak');return}
+    const reg=await navigator.serviceWorker.register('sw.js');
+    await navigator.serviceWorker.ready;
+    const V='https://www.gstatic.com/firebasejs/10.12.2/';
+    const[MApp,MMsg]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-messaging.js')]);
+    pushMsgApp=pushMsgApp||MApp.initializeApp(FIREBASE_CONFIG,'messaging');
+    pushMsg=MMsg.getMessaging(pushMsgApp);
+    const token=await MMsg.getToken(pushMsg,{vapidKey:VAPID_KEY,serviceWorkerRegistration:reg});
+    if(!token){toast('Gagal mendapatkan token notifikasi');return}
+    const F=await getDb();
+    if(F)await F.d.set(F.d.ref(F.db,'pushTokens/'+DEV),{token,ua:navigator.userAgent.slice(0,140),t:Date.now()});
+    MMsg.onMessage(pushMsg,payload=>{
+      const n=payload.notification||{};
+      toast('🔔 '+(n.title||'Notifikasi baru'));
+      log(n.title||'Notifikasi',n.body||'','fa-bell','Masuk');
+    });
+    toast('Notifikasi diaktifkan ✓');
+    const lbl=$('pushStLbl');if(lbl)lbl.textContent=pushStatusLabel();
+  }catch(e){toast('Gagal mengaktifkan notifikasi: '+(e.message||e))}
+}
+
+/* ===== service worker: dukungan offline dasar + penerima push notification ===== */
 if('serviceWorker' in navigator){
   addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js').catch(()=>{/* sw.js belum diunggah ke server, lewati diam-diam */});
