@@ -1,13 +1,24 @@
 {
-  "name": "tkj-smkn2-push-functions",
-  "description": "Cloud Functions untuk push notification realtime TKJ SMKN 2 Tembilahan",
-  "engines": {
-    "node": "20"
-  },
-  "main": "index.js",
-  "dependencies": {
-    "firebase-admin": "^12.1.0",
-    "firebase-functions": "^5.0.0"
-  },
-  "private": true
+  "rules": {
+    "content": {
+      ".read": true,
+      ".write": "auth != null && auth.token.email === 'wilkaaffah@gmail.com'"
+    },
+    "locks": {
+      ".read": true,
+      ".write": true
+    },
+    "presence": {
+      ".read": true,
+      ".write": true
+    },
+    "pushTokens": {
+      ".read": "auth != null && auth.token.email === 'wilkaaffah@gmail.com'",
+      ".write": true
+    },
+    "pushQueue": {
+      ".read": "auth != null && auth.token.email === 'wilkaaffah@gmail.com'",
+      ".write": "auth != null && auth.token.email === 'wilkaaffah@gmail.com'"
+    }
+  }
 }
